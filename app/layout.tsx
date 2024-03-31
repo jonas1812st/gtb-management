@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import TopBar from "@/components/navigation/topbar";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -24,8 +25,9 @@ export default function RootLayout({
           inter.variable,
         )}
       >
+        <Toaster />
         <TopBar />
-        <main>{children}</main>
+        <main className="max-w-screen-md mx-auto py-3">{children}</main>
       </body>
     </html>
   );

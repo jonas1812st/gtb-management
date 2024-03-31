@@ -2,11 +2,16 @@ import Link from "next/link";
 
 export default function TopBar() {
   return (
-    <div className="flex justify-between p-2 bg-navigation text-navigation-foreground">
-      {[{ label: "Home", url: "/" }].map((element, index) => (
+    <div className="flex p-2 bg-navigation text-navigation-foreground">
+      {[
+        { label: "Home", url: "/" },
+        { label: "Liste", url: "/list" },
+        { label: "Neuer Schüler", url: "/students/create" },
+      ].map((element, index) => (
         <Link
           href={element.url}
           className="text-lg font-semibold p-3 rounded-full transition hover:bg-blue-700"
+          key={index + "_top_bar_element"}
         >
           {element.label}
         </Link>
