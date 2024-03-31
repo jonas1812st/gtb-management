@@ -8,20 +8,35 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Student {
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  firstName   String
+  lastName    String
+  notes       String?      @db.Text
+  grade       Int
+  className   String
+  attendances Attendance[]
+}
+
+model Attendance {
   id        Int      @id @default(autoincrement())
-  firstName String
-  lastName  String
-  notes     String?  @db.Text
-  grade     Int
-  className String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  day       Int
+  end       Int  
+  Student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
 }
 
 model User {

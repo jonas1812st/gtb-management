@@ -1,16 +1,44 @@
 "use server";
 
+import {
+  AttendanceCreateWithoutStudentInputSchema,
+  StudentCreateInputSchema,
+  StudentCreateWithoutAttendancesInputSchema,
+} from "@/prisma/generated/zod";
 import prisma from "@/utils/prisma";
-import { StudentInputSchema } from "@/utils/zodSchema";
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-export async function createStudent(data: z.infer<typeof StudentInputSchema>) {
-  const result = StudentInputSchema.parse(data);
+const InputSchema = z.object({
+  student: StudentCreateWithoutAttendancesInputSchema.transform((values) => ({
+    firstName: values.firstName.trim(),
+    lastName: values.lastName.trim(),
+    notes: values.notes?.trim() || null,
+    grade: values.grade,
+    className: values.className.toUpperCase().trim(),
+  })),
+  attendances: z.array(
+    AttendanceCreateWithoutStudentInputSchema.transform((values) => ({
+      day: values.day,
+      end: values.end,
+    })),
+  ),
+});
+
+export async function createStudent(data: z.infer<typeof InputSchema>) {
+  const result = InputSchema.parse(data);
 
   try {
     await prisma.student.create({
-      data: result,
+      data: {
+        ...result.student,
+        attendances: {
+          createMany: {
+            data: result.attendances,
+          },
+        },
+      },
     });
   } catch (error) {
     return {
