@@ -2,11 +2,9 @@
 
 import {
   AttendanceCreateWithoutStudentInputSchema,
-  StudentCreateInputSchema,
   StudentCreateWithoutAttendancesInputSchema,
 } from "@/prisma/generated/zod";
 import prisma from "@/utils/prisma";
-import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 

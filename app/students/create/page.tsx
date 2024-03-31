@@ -44,7 +44,13 @@ export default function Page() {
 
   const onSubmit: SubmitHandler<z.infer<typeof InputSchema>> = async (data) => {
     const response = await createStudent({
-      student: data.student,
+      student: {
+        firstName: data.student.firstName,
+        lastName: data.student.lastName,
+        grade: data.student.grade,
+        notes: data.student.notes || null,
+        className: data.student.className,
+      },
       attendances: data.attendances.filter(
         (
           attendance,

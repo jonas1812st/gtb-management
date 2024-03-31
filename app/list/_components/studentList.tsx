@@ -1,12 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { StudentResponseSchema } from "@/utils/zodSchema";
-import { useRef, useState } from "react";
-import { z } from "zod";
+import { Prisma } from "@prisma/client";
+import { useState } from "react";
 
-type Students = z.infer<typeof StudentResponseSchema>[];
+type Students = Prisma.StudentCreateWithoutAttendancesInput[];
 
 export default function StudentList({ students }: { students: Students }) {
   const [filteredStudents, setFilteredStudents] = useState(students);
