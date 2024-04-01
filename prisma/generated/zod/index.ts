@@ -156,7 +156,7 @@ export const StudentWhereInputSchema: z.ZodType<Prisma.StudentWhereInput> = z.ob
   grade: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   className: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   attendances: z.lazy(() => AttendanceListRelationFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentWhereInput>;
 
 export const StudentOrderByWithRelationInputSchema: z.ZodType<Prisma.StudentOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -168,7 +168,7 @@ export const StudentOrderByWithRelationInputSchema: z.ZodType<Prisma.StudentOrde
   grade: z.lazy(() => SortOrderSchema).optional(),
   className: z.lazy(() => SortOrderSchema).optional(),
   attendances: z.lazy(() => AttendanceOrderByRelationAggregateInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentOrderByWithRelationInput>;
 
 export const StudentWhereUniqueInputSchema: z.ZodType<Prisma.StudentWhereUniqueInput> = z.object({
   id: z.number().int()
@@ -186,7 +186,7 @@ export const StudentWhereUniqueInputSchema: z.ZodType<Prisma.StudentWhereUniqueI
   grade: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
   className: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   attendances: z.lazy(() => AttendanceListRelationFilterSchema).optional()
-}).strict());
+}).strict()) as z.ZodType<Prisma.StudentWhereUniqueInput>;
 
 export const StudentOrderByWithAggregationInputSchema: z.ZodType<Prisma.StudentOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -202,7 +202,7 @@ export const StudentOrderByWithAggregationInputSchema: z.ZodType<Prisma.StudentO
   _max: z.lazy(() => StudentMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => StudentMinOrderByAggregateInputSchema).optional(),
   _sum: z.lazy(() => StudentSumOrderByAggregateInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentOrderByWithAggregationInput>;
 
 export const StudentScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.StudentScalarWhereWithAggregatesInput> = z.object({
   AND: z.union([ z.lazy(() => StudentScalarWhereWithAggregatesInputSchema),z.lazy(() => StudentScalarWhereWithAggregatesInputSchema).array() ]).optional(),
@@ -216,7 +216,7 @@ export const StudentScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Stude
   notes: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   grade: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   className: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentScalarWhereWithAggregatesInput>;
 
 export const AttendanceWhereInputSchema: z.ZodType<Prisma.AttendanceWhereInput> = z.object({
   AND: z.union([ z.lazy(() => AttendanceWhereInputSchema),z.lazy(() => AttendanceWhereInputSchema).array() ]).optional(),
@@ -229,7 +229,7 @@ export const AttendanceWhereInputSchema: z.ZodType<Prisma.AttendanceWhereInput> 
   end: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   studentId: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
   Student: z.union([ z.lazy(() => StudentNullableRelationFilterSchema),z.lazy(() => StudentWhereInputSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceWhereInput>;
 
 export const AttendanceOrderByWithRelationInputSchema: z.ZodType<Prisma.AttendanceOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -239,7 +239,7 @@ export const AttendanceOrderByWithRelationInputSchema: z.ZodType<Prisma.Attendan
   end: z.lazy(() => SortOrderSchema).optional(),
   studentId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   Student: z.lazy(() => StudentOrderByWithRelationInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceOrderByWithRelationInput>;
 
 export const AttendanceWhereUniqueInputSchema: z.ZodType<Prisma.AttendanceWhereUniqueInput> = z.object({
   id: z.number().int()
@@ -255,7 +255,7 @@ export const AttendanceWhereUniqueInputSchema: z.ZodType<Prisma.AttendanceWhereU
   end: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
   studentId: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
   Student: z.union([ z.lazy(() => StudentNullableRelationFilterSchema),z.lazy(() => StudentWhereInputSchema) ]).optional().nullable(),
-}).strict());
+}).strict()) as z.ZodType<Prisma.AttendanceWhereUniqueInput>;
 
 export const AttendanceOrderByWithAggregationInputSchema: z.ZodType<Prisma.AttendanceOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -269,7 +269,7 @@ export const AttendanceOrderByWithAggregationInputSchema: z.ZodType<Prisma.Atten
   _max: z.lazy(() => AttendanceMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => AttendanceMinOrderByAggregateInputSchema).optional(),
   _sum: z.lazy(() => AttendanceSumOrderByAggregateInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceOrderByWithAggregationInput>;
 
 export const AttendanceScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.AttendanceScalarWhereWithAggregatesInput> = z.object({
   AND: z.union([ z.lazy(() => AttendanceScalarWhereWithAggregatesInputSchema),z.lazy(() => AttendanceScalarWhereWithAggregatesInputSchema).array() ]).optional(),
@@ -281,7 +281,7 @@ export const AttendanceScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.At
   day: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   end: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   studentId: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceScalarWhereWithAggregatesInput>;
 
 export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   AND: z.union([ z.lazy(() => UserWhereInputSchema),z.lazy(() => UserWhereInputSchema).array() ]).optional(),
@@ -290,13 +290,13 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   id: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   email: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.UserWhereInput>;
 
 export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   name: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.UserOrderByWithRelationInput>;
 
 export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> = z.union([
   z.object({
@@ -317,7 +317,7 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
   OR: z.lazy(() => UserWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => UserWhereInputSchema),z.lazy(() => UserWhereInputSchema).array() ]).optional(),
   name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-}).strict());
+}).strict()) as z.ZodType<Prisma.UserWhereUniqueInput>;
 
 export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -328,7 +328,7 @@ export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderBy
   _max: z.lazy(() => UserMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => UserMinOrderByAggregateInputSchema).optional(),
   _sum: z.lazy(() => UserSumOrderByAggregateInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.UserOrderByWithAggregationInput>;
 
 export const UserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UserScalarWhereWithAggregatesInput> = z.object({
   AND: z.union([ z.lazy(() => UserScalarWhereWithAggregatesInputSchema),z.lazy(() => UserScalarWhereWithAggregatesInputSchema).array() ]).optional(),
@@ -337,7 +337,7 @@ export const UserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UserScal
   id: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   email: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.UserScalarWhereWithAggregatesInput>;
 
 export const StudentCreateInputSchema: z.ZodType<Prisma.StudentCreateInput> = z.object({
   createdAt: z.coerce.date().optional(),
@@ -348,7 +348,7 @@ export const StudentCreateInputSchema: z.ZodType<Prisma.StudentCreateInput> = z.
   grade: z.number().int(),
   className: z.string(),
   attendances: z.lazy(() => AttendanceCreateNestedManyWithoutStudentInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentCreateInput>;
 
 export const StudentUncheckedCreateInputSchema: z.ZodType<Prisma.StudentUncheckedCreateInput> = z.object({
   id: z.number().int().optional(),
@@ -360,7 +360,7 @@ export const StudentUncheckedCreateInputSchema: z.ZodType<Prisma.StudentUnchecke
   grade: z.number().int(),
   className: z.string(),
   attendances: z.lazy(() => AttendanceUncheckedCreateNestedManyWithoutStudentInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUncheckedCreateInput>;
 
 export const StudentUpdateInputSchema: z.ZodType<Prisma.StudentUpdateInput> = z.object({
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -371,7 +371,7 @@ export const StudentUpdateInputSchema: z.ZodType<Prisma.StudentUpdateInput> = z.
   grade: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   className: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   attendances: z.lazy(() => AttendanceUpdateManyWithoutStudentNestedInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUpdateInput>;
 
 export const StudentUncheckedUpdateInputSchema: z.ZodType<Prisma.StudentUncheckedUpdateInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -383,7 +383,7 @@ export const StudentUncheckedUpdateInputSchema: z.ZodType<Prisma.StudentUnchecke
   grade: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   className: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   attendances: z.lazy(() => AttendanceUncheckedUpdateManyWithoutStudentNestedInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUncheckedUpdateInput>;
 
 export const StudentCreateManyInputSchema: z.ZodType<Prisma.StudentCreateManyInput> = z.object({
   id: z.number().int().optional(),
@@ -394,7 +394,7 @@ export const StudentCreateManyInputSchema: z.ZodType<Prisma.StudentCreateManyInp
   notes: z.string().optional().nullable(),
   grade: z.number().int(),
   className: z.string()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentCreateManyInput>;
 
 export const StudentUpdateManyMutationInputSchema: z.ZodType<Prisma.StudentUpdateManyMutationInput> = z.object({
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -404,7 +404,7 @@ export const StudentUpdateManyMutationInputSchema: z.ZodType<Prisma.StudentUpdat
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   grade: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   className: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUpdateManyMutationInput>;
 
 export const StudentUncheckedUpdateManyInputSchema: z.ZodType<Prisma.StudentUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -415,7 +415,7 @@ export const StudentUncheckedUpdateManyInputSchema: z.ZodType<Prisma.StudentUnch
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   grade: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   className: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUncheckedUpdateManyInput>;
 
 export const AttendanceCreateInputSchema: z.ZodType<Prisma.AttendanceCreateInput> = z.object({
   createdAt: z.coerce.date().optional(),
@@ -423,7 +423,7 @@ export const AttendanceCreateInputSchema: z.ZodType<Prisma.AttendanceCreateInput
   day: z.number().int(),
   end: z.number().int(),
   Student: z.lazy(() => StudentCreateNestedOneWithoutAttendancesInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceCreateInput>;
 
 export const AttendanceUncheckedCreateInputSchema: z.ZodType<Prisma.AttendanceUncheckedCreateInput> = z.object({
   id: z.number().int().optional(),
@@ -432,7 +432,7 @@ export const AttendanceUncheckedCreateInputSchema: z.ZodType<Prisma.AttendanceUn
   day: z.number().int(),
   end: z.number().int(),
   studentId: z.number().int().optional().nullable()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUncheckedCreateInput>;
 
 export const AttendanceUpdateInputSchema: z.ZodType<Prisma.AttendanceUpdateInput> = z.object({
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -440,7 +440,7 @@ export const AttendanceUpdateInputSchema: z.ZodType<Prisma.AttendanceUpdateInput
   day: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   end: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   Student: z.lazy(() => StudentUpdateOneWithoutAttendancesNestedInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUpdateInput>;
 
 export const AttendanceUncheckedUpdateInputSchema: z.ZodType<Prisma.AttendanceUncheckedUpdateInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -449,7 +449,7 @@ export const AttendanceUncheckedUpdateInputSchema: z.ZodType<Prisma.AttendanceUn
   day: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   end: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   studentId: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUncheckedUpdateInput>;
 
 export const AttendanceCreateManyInputSchema: z.ZodType<Prisma.AttendanceCreateManyInput> = z.object({
   id: z.number().int().optional(),
@@ -458,14 +458,14 @@ export const AttendanceCreateManyInputSchema: z.ZodType<Prisma.AttendanceCreateM
   day: z.number().int(),
   end: z.number().int(),
   studentId: z.number().int().optional().nullable()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceCreateManyInput>;
 
 export const AttendanceUpdateManyMutationInputSchema: z.ZodType<Prisma.AttendanceUpdateManyMutationInput> = z.object({
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   day: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   end: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUpdateManyMutationInput>;
 
 export const AttendanceUncheckedUpdateManyInputSchema: z.ZodType<Prisma.AttendanceUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -474,46 +474,46 @@ export const AttendanceUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Attendan
   day: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   end: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   studentId: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUncheckedUpdateManyInput>;
 
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object({
   email: z.string(),
   name: z.string().optional().nullable()
-}).strict();
+}).strict() as z.ZodType<Prisma.UserCreateInput>;
 
 export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreateInput> = z.object({
   id: z.number().int().optional(),
   email: z.string(),
   name: z.string().optional().nullable()
-}).strict();
+}).strict() as z.ZodType<Prisma.UserUncheckedCreateInput>;
 
 export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object({
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.UserUpdateInput>;
 
 export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdateInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.UserUncheckedUpdateInput>;
 
 export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> = z.object({
   id: z.number().int().optional(),
   email: z.string(),
   name: z.string().optional().nullable()
-}).strict();
+}).strict() as z.ZodType<Prisma.UserCreateManyInput>;
 
 export const UserUpdateManyMutationInputSchema: z.ZodType<Prisma.UserUpdateManyMutationInput> = z.object({
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.UserUpdateManyMutationInput>;
 
 export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.UserUncheckedUpdateManyInput>;
 
 export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
   equals: z.number().optional(),
@@ -524,7 +524,7 @@ export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
   gt: z.number().optional(),
   gte: z.number().optional(),
   not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.IntFilter>;
 
 export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.object({
   equals: z.coerce.date().optional(),
@@ -535,7 +535,7 @@ export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.object({
   gt: z.coerce.date().optional(),
   gte: z.coerce.date().optional(),
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.DateTimeFilter>;
 
 export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
   equals: z.string().optional(),
@@ -549,7 +549,7 @@ export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
   startsWith: z.string().optional(),
   endsWith: z.string().optional(),
   not: z.union([ z.string(),z.lazy(() => NestedStringFilterSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.StringFilter>;
 
 export const StringNullableFilterSchema: z.ZodType<Prisma.StringNullableFilter> = z.object({
   equals: z.string().optional().nullable(),
@@ -563,22 +563,22 @@ export const StringNullableFilterSchema: z.ZodType<Prisma.StringNullableFilter> 
   startsWith: z.string().optional(),
   endsWith: z.string().optional(),
   not: z.union([ z.string(),z.lazy(() => NestedStringNullableFilterSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.StringNullableFilter>;
 
 export const AttendanceListRelationFilterSchema: z.ZodType<Prisma.AttendanceListRelationFilter> = z.object({
   every: z.lazy(() => AttendanceWhereInputSchema).optional(),
   some: z.lazy(() => AttendanceWhereInputSchema).optional(),
   none: z.lazy(() => AttendanceWhereInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceListRelationFilter>;
 
 export const SortOrderInputSchema: z.ZodType<Prisma.SortOrderInput> = z.object({
   sort: z.lazy(() => SortOrderSchema),
   nulls: z.lazy(() => NullsOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.SortOrderInput>;
 
 export const AttendanceOrderByRelationAggregateInputSchema: z.ZodType<Prisma.AttendanceOrderByRelationAggregateInput> = z.object({
   _count: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceOrderByRelationAggregateInput>;
 
 export const StudentCountOrderByAggregateInputSchema: z.ZodType<Prisma.StudentCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -589,12 +589,12 @@ export const StudentCountOrderByAggregateInputSchema: z.ZodType<Prisma.StudentCo
   notes: z.lazy(() => SortOrderSchema).optional(),
   grade: z.lazy(() => SortOrderSchema).optional(),
   className: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentCountOrderByAggregateInput>;
 
 export const StudentAvgOrderByAggregateInputSchema: z.ZodType<Prisma.StudentAvgOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   grade: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentAvgOrderByAggregateInput>;
 
 export const StudentMaxOrderByAggregateInputSchema: z.ZodType<Prisma.StudentMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -605,7 +605,7 @@ export const StudentMaxOrderByAggregateInputSchema: z.ZodType<Prisma.StudentMaxO
   notes: z.lazy(() => SortOrderSchema).optional(),
   grade: z.lazy(() => SortOrderSchema).optional(),
   className: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentMaxOrderByAggregateInput>;
 
 export const StudentMinOrderByAggregateInputSchema: z.ZodType<Prisma.StudentMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -616,12 +616,12 @@ export const StudentMinOrderByAggregateInputSchema: z.ZodType<Prisma.StudentMinO
   notes: z.lazy(() => SortOrderSchema).optional(),
   grade: z.lazy(() => SortOrderSchema).optional(),
   className: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentMinOrderByAggregateInput>;
 
 export const StudentSumOrderByAggregateInputSchema: z.ZodType<Prisma.StudentSumOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   grade: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentSumOrderByAggregateInput>;
 
 export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
   equals: z.number().optional(),
@@ -637,7 +637,7 @@ export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFi
   _sum: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedIntFilterSchema).optional(),
   _max: z.lazy(() => NestedIntFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.IntWithAggregatesFilter>;
 
 export const DateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.DateTimeWithAggregatesFilter> = z.object({
   equals: z.coerce.date().optional(),
@@ -651,7 +651,7 @@ export const DateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.DateTimeWithAg
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedDateTimeFilterSchema).optional(),
   _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.DateTimeWithAggregatesFilter>;
 
 export const StringWithAggregatesFilterSchema: z.ZodType<Prisma.StringWithAggregatesFilter> = z.object({
   equals: z.string().optional(),
@@ -668,7 +668,7 @@ export const StringWithAggregatesFilterSchema: z.ZodType<Prisma.StringWithAggreg
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedStringFilterSchema).optional(),
   _max: z.lazy(() => NestedStringFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StringWithAggregatesFilter>;
 
 export const StringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.StringNullableWithAggregatesFilter> = z.object({
   equals: z.string().optional().nullable(),
@@ -685,7 +685,7 @@ export const StringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.StringNu
   _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedStringNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedStringNullableFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StringNullableWithAggregatesFilter>;
 
 export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> = z.object({
   equals: z.number().optional().nullable(),
@@ -696,12 +696,12 @@ export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> = z.ob
   gt: z.number().optional(),
   gte: z.number().optional(),
   not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.IntNullableFilter>;
 
 export const StudentNullableRelationFilterSchema: z.ZodType<Prisma.StudentNullableRelationFilter> = z.object({
   is: z.lazy(() => StudentWhereInputSchema).optional().nullable(),
   isNot: z.lazy(() => StudentWhereInputSchema).optional().nullable()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentNullableRelationFilter>;
 
 export const AttendanceCountOrderByAggregateInputSchema: z.ZodType<Prisma.AttendanceCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -710,14 +710,14 @@ export const AttendanceCountOrderByAggregateInputSchema: z.ZodType<Prisma.Attend
   day: z.lazy(() => SortOrderSchema).optional(),
   end: z.lazy(() => SortOrderSchema).optional(),
   studentId: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceCountOrderByAggregateInput>;
 
 export const AttendanceAvgOrderByAggregateInputSchema: z.ZodType<Prisma.AttendanceAvgOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   day: z.lazy(() => SortOrderSchema).optional(),
   end: z.lazy(() => SortOrderSchema).optional(),
   studentId: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceAvgOrderByAggregateInput>;
 
 export const AttendanceMaxOrderByAggregateInputSchema: z.ZodType<Prisma.AttendanceMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -726,7 +726,7 @@ export const AttendanceMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Attendan
   day: z.lazy(() => SortOrderSchema).optional(),
   end: z.lazy(() => SortOrderSchema).optional(),
   studentId: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceMaxOrderByAggregateInput>;
 
 export const AttendanceMinOrderByAggregateInputSchema: z.ZodType<Prisma.AttendanceMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -735,14 +735,14 @@ export const AttendanceMinOrderByAggregateInputSchema: z.ZodType<Prisma.Attendan
   day: z.lazy(() => SortOrderSchema).optional(),
   end: z.lazy(() => SortOrderSchema).optional(),
   studentId: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceMinOrderByAggregateInput>;
 
 export const AttendanceSumOrderByAggregateInputSchema: z.ZodType<Prisma.AttendanceSumOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   day: z.lazy(() => SortOrderSchema).optional(),
   end: z.lazy(() => SortOrderSchema).optional(),
   studentId: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceSumOrderByAggregateInput>;
 
 export const IntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.IntNullableWithAggregatesFilter> = z.object({
   equals: z.number().optional().nullable(),
@@ -758,59 +758,59 @@ export const IntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.IntNullable
   _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedIntNullableFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.IntNullableWithAggregatesFilter>;
 
 export const UserCountOrderByAggregateInputSchema: z.ZodType<Prisma.UserCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.UserCountOrderByAggregateInput>;
 
 export const UserAvgOrderByAggregateInputSchema: z.ZodType<Prisma.UserAvgOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.UserAvgOrderByAggregateInput>;
 
 export const UserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.UserMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.UserMaxOrderByAggregateInput>;
 
 export const UserMinOrderByAggregateInputSchema: z.ZodType<Prisma.UserMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.UserMinOrderByAggregateInput>;
 
 export const UserSumOrderByAggregateInputSchema: z.ZodType<Prisma.UserSumOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.UserSumOrderByAggregateInput>;
 
 export const AttendanceCreateNestedManyWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceCreateNestedManyWithoutStudentInput> = z.object({
   create: z.union([ z.lazy(() => AttendanceCreateWithoutStudentInputSchema),z.lazy(() => AttendanceCreateWithoutStudentInputSchema).array(),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => AttendanceCreateOrConnectWithoutStudentInputSchema),z.lazy(() => AttendanceCreateOrConnectWithoutStudentInputSchema).array() ]).optional(),
   createMany: z.lazy(() => AttendanceCreateManyStudentInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => AttendanceWhereUniqueInputSchema),z.lazy(() => AttendanceWhereUniqueInputSchema).array() ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceCreateNestedManyWithoutStudentInput>;
 
 export const AttendanceUncheckedCreateNestedManyWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceUncheckedCreateNestedManyWithoutStudentInput> = z.object({
   create: z.union([ z.lazy(() => AttendanceCreateWithoutStudentInputSchema),z.lazy(() => AttendanceCreateWithoutStudentInputSchema).array(),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => AttendanceCreateOrConnectWithoutStudentInputSchema),z.lazy(() => AttendanceCreateOrConnectWithoutStudentInputSchema).array() ]).optional(),
   createMany: z.lazy(() => AttendanceCreateManyStudentInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => AttendanceWhereUniqueInputSchema),z.lazy(() => AttendanceWhereUniqueInputSchema).array() ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUncheckedCreateNestedManyWithoutStudentInput>;
 
 export const DateTimeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.DateTimeFieldUpdateOperationsInput> = z.object({
   set: z.coerce.date().optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.DateTimeFieldUpdateOperationsInput>;
 
 export const StringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.StringFieldUpdateOperationsInput> = z.object({
   set: z.string().optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StringFieldUpdateOperationsInput>;
 
 export const NullableStringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableStringFieldUpdateOperationsInput> = z.object({
   set: z.string().optional().nullable()
-}).strict();
+}).strict() as z.ZodType<Prisma.NullableStringFieldUpdateOperationsInput>;
 
 export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
   set: z.number().optional(),
@@ -818,7 +818,7 @@ export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdat
   decrement: z.number().optional(),
   multiply: z.number().optional(),
   divide: z.number().optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.IntFieldUpdateOperationsInput>;
 
 export const AttendanceUpdateManyWithoutStudentNestedInputSchema: z.ZodType<Prisma.AttendanceUpdateManyWithoutStudentNestedInput> = z.object({
   create: z.union([ z.lazy(() => AttendanceCreateWithoutStudentInputSchema),z.lazy(() => AttendanceCreateWithoutStudentInputSchema).array(),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema).array() ]).optional(),
@@ -832,7 +832,7 @@ export const AttendanceUpdateManyWithoutStudentNestedInputSchema: z.ZodType<Pris
   update: z.union([ z.lazy(() => AttendanceUpdateWithWhereUniqueWithoutStudentInputSchema),z.lazy(() => AttendanceUpdateWithWhereUniqueWithoutStudentInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => AttendanceUpdateManyWithWhereWithoutStudentInputSchema),z.lazy(() => AttendanceUpdateManyWithWhereWithoutStudentInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => AttendanceScalarWhereInputSchema),z.lazy(() => AttendanceScalarWhereInputSchema).array() ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUpdateManyWithoutStudentNestedInput>;
 
 export const AttendanceUncheckedUpdateManyWithoutStudentNestedInputSchema: z.ZodType<Prisma.AttendanceUncheckedUpdateManyWithoutStudentNestedInput> = z.object({
   create: z.union([ z.lazy(() => AttendanceCreateWithoutStudentInputSchema),z.lazy(() => AttendanceCreateWithoutStudentInputSchema).array(),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema).array() ]).optional(),
@@ -846,13 +846,13 @@ export const AttendanceUncheckedUpdateManyWithoutStudentNestedInputSchema: z.Zod
   update: z.union([ z.lazy(() => AttendanceUpdateWithWhereUniqueWithoutStudentInputSchema),z.lazy(() => AttendanceUpdateWithWhereUniqueWithoutStudentInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => AttendanceUpdateManyWithWhereWithoutStudentInputSchema),z.lazy(() => AttendanceUpdateManyWithWhereWithoutStudentInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => AttendanceScalarWhereInputSchema),z.lazy(() => AttendanceScalarWhereInputSchema).array() ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUncheckedUpdateManyWithoutStudentNestedInput>;
 
 export const StudentCreateNestedOneWithoutAttendancesInputSchema: z.ZodType<Prisma.StudentCreateNestedOneWithoutAttendancesInput> = z.object({
   create: z.union([ z.lazy(() => StudentCreateWithoutAttendancesInputSchema),z.lazy(() => StudentUncheckedCreateWithoutAttendancesInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => StudentCreateOrConnectWithoutAttendancesInputSchema).optional(),
   connect: z.lazy(() => StudentWhereUniqueInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentCreateNestedOneWithoutAttendancesInput>;
 
 export const StudentUpdateOneWithoutAttendancesNestedInputSchema: z.ZodType<Prisma.StudentUpdateOneWithoutAttendancesNestedInput> = z.object({
   create: z.union([ z.lazy(() => StudentCreateWithoutAttendancesInputSchema),z.lazy(() => StudentUncheckedCreateWithoutAttendancesInputSchema) ]).optional(),
@@ -862,7 +862,7 @@ export const StudentUpdateOneWithoutAttendancesNestedInputSchema: z.ZodType<Pris
   delete: z.union([ z.boolean(),z.lazy(() => StudentWhereInputSchema) ]).optional(),
   connect: z.lazy(() => StudentWhereUniqueInputSchema).optional(),
   update: z.union([ z.lazy(() => StudentUpdateToOneWithWhereWithoutAttendancesInputSchema),z.lazy(() => StudentUpdateWithoutAttendancesInputSchema),z.lazy(() => StudentUncheckedUpdateWithoutAttendancesInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUpdateOneWithoutAttendancesNestedInput>;
 
 export const NullableIntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableIntFieldUpdateOperationsInput> = z.object({
   set: z.number().optional().nullable(),
@@ -870,7 +870,7 @@ export const NullableIntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.Nulla
   decrement: z.number().optional(),
   multiply: z.number().optional(),
   divide: z.number().optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.NullableIntFieldUpdateOperationsInput>;
 
 export const NestedIntFilterSchema: z.ZodType<Prisma.NestedIntFilter> = z.object({
   equals: z.number().optional(),
@@ -881,7 +881,7 @@ export const NestedIntFilterSchema: z.ZodType<Prisma.NestedIntFilter> = z.object
   gt: z.number().optional(),
   gte: z.number().optional(),
   not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedIntFilter>;
 
 export const NestedDateTimeFilterSchema: z.ZodType<Prisma.NestedDateTimeFilter> = z.object({
   equals: z.coerce.date().optional(),
@@ -892,7 +892,7 @@ export const NestedDateTimeFilterSchema: z.ZodType<Prisma.NestedDateTimeFilter> 
   gt: z.coerce.date().optional(),
   gte: z.coerce.date().optional(),
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedDateTimeFilter>;
 
 export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.object({
   equals: z.string().optional(),
@@ -906,7 +906,7 @@ export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.
   startsWith: z.string().optional(),
   endsWith: z.string().optional(),
   not: z.union([ z.string(),z.lazy(() => NestedStringFilterSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedStringFilter>;
 
 export const NestedStringNullableFilterSchema: z.ZodType<Prisma.NestedStringNullableFilter> = z.object({
   equals: z.string().optional().nullable(),
@@ -920,7 +920,7 @@ export const NestedStringNullableFilterSchema: z.ZodType<Prisma.NestedStringNull
   startsWith: z.string().optional(),
   endsWith: z.string().optional(),
   not: z.union([ z.string(),z.lazy(() => NestedStringNullableFilterSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedStringNullableFilter>;
 
 export const NestedIntWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntWithAggregatesFilter> = z.object({
   equals: z.number().optional(),
@@ -936,7 +936,7 @@ export const NestedIntWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntWith
   _sum: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedIntFilterSchema).optional(),
   _max: z.lazy(() => NestedIntFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedIntWithAggregatesFilter>;
 
 export const NestedFloatFilterSchema: z.ZodType<Prisma.NestedFloatFilter> = z.object({
   equals: z.number().optional(),
@@ -947,7 +947,7 @@ export const NestedFloatFilterSchema: z.ZodType<Prisma.NestedFloatFilter> = z.ob
   gt: z.number().optional(),
   gte: z.number().optional(),
   not: z.union([ z.number(),z.lazy(() => NestedFloatFilterSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedFloatFilter>;
 
 export const NestedDateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedDateTimeWithAggregatesFilter> = z.object({
   equals: z.coerce.date().optional(),
@@ -961,7 +961,7 @@ export const NestedDateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedDa
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedDateTimeFilterSchema).optional(),
   _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedDateTimeWithAggregatesFilter>;
 
 export const NestedStringWithAggregatesFilterSchema: z.ZodType<Prisma.NestedStringWithAggregatesFilter> = z.object({
   equals: z.string().optional(),
@@ -978,7 +978,7 @@ export const NestedStringWithAggregatesFilterSchema: z.ZodType<Prisma.NestedStri
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedStringFilterSchema).optional(),
   _max: z.lazy(() => NestedStringFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedStringWithAggregatesFilter>;
 
 export const NestedStringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedStringNullableWithAggregatesFilter> = z.object({
   equals: z.string().optional().nullable(),
@@ -995,7 +995,7 @@ export const NestedStringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.Ne
   _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedStringNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedStringNullableFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedStringNullableWithAggregatesFilter>;
 
 export const NestedIntNullableFilterSchema: z.ZodType<Prisma.NestedIntNullableFilter> = z.object({
   equals: z.number().optional().nullable(),
@@ -1006,7 +1006,7 @@ export const NestedIntNullableFilterSchema: z.ZodType<Prisma.NestedIntNullableFi
   gt: z.number().optional(),
   gte: z.number().optional(),
   not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedIntNullableFilter>;
 
 export const NestedIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntNullableWithAggregatesFilter> = z.object({
   equals: z.number().optional().nullable(),
@@ -1022,7 +1022,7 @@ export const NestedIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.Neste
   _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedIntNullableFilterSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedIntNullableWithAggregatesFilter>;
 
 export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullableFilter> = z.object({
   equals: z.number().optional().nullable(),
@@ -1033,14 +1033,14 @@ export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullab
   gt: z.number().optional(),
   gte: z.number().optional(),
   not: z.union([ z.number(),z.lazy(() => NestedFloatNullableFilterSchema) ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.NestedFloatNullableFilter>;
 
 export const AttendanceCreateWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceCreateWithoutStudentInput> = z.object({
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   day: z.number().int(),
   end: z.number().int()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceCreateWithoutStudentInput>;
 
 export const AttendanceUncheckedCreateWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceUncheckedCreateWithoutStudentInput> = z.object({
   id: z.number().int().optional(),
@@ -1048,33 +1048,33 @@ export const AttendanceUncheckedCreateWithoutStudentInputSchema: z.ZodType<Prism
   updatedAt: z.coerce.date().optional(),
   day: z.number().int(),
   end: z.number().int()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUncheckedCreateWithoutStudentInput>;
 
 export const AttendanceCreateOrConnectWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceCreateOrConnectWithoutStudentInput> = z.object({
   where: z.lazy(() => AttendanceWhereUniqueInputSchema),
   create: z.union([ z.lazy(() => AttendanceCreateWithoutStudentInputSchema),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema) ]),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceCreateOrConnectWithoutStudentInput>;
 
 export const AttendanceCreateManyStudentInputEnvelopeSchema: z.ZodType<Prisma.AttendanceCreateManyStudentInputEnvelope> = z.object({
   data: z.union([ z.lazy(() => AttendanceCreateManyStudentInputSchema),z.lazy(() => AttendanceCreateManyStudentInputSchema).array() ]),
   skipDuplicates: z.boolean().optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceCreateManyStudentInputEnvelope>;
 
 export const AttendanceUpsertWithWhereUniqueWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceUpsertWithWhereUniqueWithoutStudentInput> = z.object({
   where: z.lazy(() => AttendanceWhereUniqueInputSchema),
   update: z.union([ z.lazy(() => AttendanceUpdateWithoutStudentInputSchema),z.lazy(() => AttendanceUncheckedUpdateWithoutStudentInputSchema) ]),
   create: z.union([ z.lazy(() => AttendanceCreateWithoutStudentInputSchema),z.lazy(() => AttendanceUncheckedCreateWithoutStudentInputSchema) ]),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUpsertWithWhereUniqueWithoutStudentInput>;
 
 export const AttendanceUpdateWithWhereUniqueWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceUpdateWithWhereUniqueWithoutStudentInput> = z.object({
   where: z.lazy(() => AttendanceWhereUniqueInputSchema),
   data: z.union([ z.lazy(() => AttendanceUpdateWithoutStudentInputSchema),z.lazy(() => AttendanceUncheckedUpdateWithoutStudentInputSchema) ]),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUpdateWithWhereUniqueWithoutStudentInput>;
 
 export const AttendanceUpdateManyWithWhereWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceUpdateManyWithWhereWithoutStudentInput> = z.object({
   where: z.lazy(() => AttendanceScalarWhereInputSchema),
   data: z.union([ z.lazy(() => AttendanceUpdateManyMutationInputSchema),z.lazy(() => AttendanceUncheckedUpdateManyWithoutStudentInputSchema) ]),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUpdateManyWithWhereWithoutStudentInput>;
 
 export const AttendanceScalarWhereInputSchema: z.ZodType<Prisma.AttendanceScalarWhereInput> = z.object({
   AND: z.union([ z.lazy(() => AttendanceScalarWhereInputSchema),z.lazy(() => AttendanceScalarWhereInputSchema).array() ]).optional(),
@@ -1086,7 +1086,7 @@ export const AttendanceScalarWhereInputSchema: z.ZodType<Prisma.AttendanceScalar
   day: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   end: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   studentId: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceScalarWhereInput>;
 
 export const StudentCreateWithoutAttendancesInputSchema: z.ZodType<Prisma.StudentCreateWithoutAttendancesInput> = z.object({
   createdAt: z.coerce.date().optional(),
@@ -1096,7 +1096,7 @@ export const StudentCreateWithoutAttendancesInputSchema: z.ZodType<Prisma.Studen
   notes: z.string().optional().nullable(),
   grade: z.number().int(),
   className: z.string()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentCreateWithoutAttendancesInput>;
 
 export const StudentUncheckedCreateWithoutAttendancesInputSchema: z.ZodType<Prisma.StudentUncheckedCreateWithoutAttendancesInput> = z.object({
   id: z.number().int().optional(),
@@ -1107,23 +1107,23 @@ export const StudentUncheckedCreateWithoutAttendancesInputSchema: z.ZodType<Pris
   notes: z.string().optional().nullable(),
   grade: z.number().int(),
   className: z.string()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUncheckedCreateWithoutAttendancesInput>;
 
 export const StudentCreateOrConnectWithoutAttendancesInputSchema: z.ZodType<Prisma.StudentCreateOrConnectWithoutAttendancesInput> = z.object({
   where: z.lazy(() => StudentWhereUniqueInputSchema),
   create: z.union([ z.lazy(() => StudentCreateWithoutAttendancesInputSchema),z.lazy(() => StudentUncheckedCreateWithoutAttendancesInputSchema) ]),
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentCreateOrConnectWithoutAttendancesInput>;
 
 export const StudentUpsertWithoutAttendancesInputSchema: z.ZodType<Prisma.StudentUpsertWithoutAttendancesInput> = z.object({
   update: z.union([ z.lazy(() => StudentUpdateWithoutAttendancesInputSchema),z.lazy(() => StudentUncheckedUpdateWithoutAttendancesInputSchema) ]),
   create: z.union([ z.lazy(() => StudentCreateWithoutAttendancesInputSchema),z.lazy(() => StudentUncheckedCreateWithoutAttendancesInputSchema) ]),
   where: z.lazy(() => StudentWhereInputSchema).optional()
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUpsertWithoutAttendancesInput>;
 
 export const StudentUpdateToOneWithWhereWithoutAttendancesInputSchema: z.ZodType<Prisma.StudentUpdateToOneWithWhereWithoutAttendancesInput> = z.object({
   where: z.lazy(() => StudentWhereInputSchema).optional(),
   data: z.union([ z.lazy(() => StudentUpdateWithoutAttendancesInputSchema),z.lazy(() => StudentUncheckedUpdateWithoutAttendancesInputSchema) ]),
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUpdateToOneWithWhereWithoutAttendancesInput>;
 
 export const StudentUpdateWithoutAttendancesInputSchema: z.ZodType<Prisma.StudentUpdateWithoutAttendancesInput> = z.object({
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1133,7 +1133,7 @@ export const StudentUpdateWithoutAttendancesInputSchema: z.ZodType<Prisma.Studen
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   grade: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   className: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUpdateWithoutAttendancesInput>;
 
 export const StudentUncheckedUpdateWithoutAttendancesInputSchema: z.ZodType<Prisma.StudentUncheckedUpdateWithoutAttendancesInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1144,7 +1144,7 @@ export const StudentUncheckedUpdateWithoutAttendancesInputSchema: z.ZodType<Pris
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   grade: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   className: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.StudentUncheckedUpdateWithoutAttendancesInput>;
 
 export const AttendanceCreateManyStudentInputSchema: z.ZodType<Prisma.AttendanceCreateManyStudentInput> = z.object({
   id: z.number().int().optional(),
@@ -1152,14 +1152,14 @@ export const AttendanceCreateManyStudentInputSchema: z.ZodType<Prisma.Attendance
   updatedAt: z.coerce.date().optional(),
   day: z.number().int(),
   end: z.number().int()
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceCreateManyStudentInput>;
 
 export const AttendanceUpdateWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceUpdateWithoutStudentInput> = z.object({
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   day: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   end: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUpdateWithoutStudentInput>;
 
 export const AttendanceUncheckedUpdateWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceUncheckedUpdateWithoutStudentInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1167,7 +1167,7 @@ export const AttendanceUncheckedUpdateWithoutStudentInputSchema: z.ZodType<Prism
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   day: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   end: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUncheckedUpdateWithoutStudentInput>;
 
 export const AttendanceUncheckedUpdateManyWithoutStudentInputSchema: z.ZodType<Prisma.AttendanceUncheckedUpdateManyWithoutStudentInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1175,7 +1175,7 @@ export const AttendanceUncheckedUpdateManyWithoutStudentInputSchema: z.ZodType<P
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   day: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   end: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-}).strict();
+}).strict() as z.ZodType<Prisma.AttendanceUncheckedUpdateManyWithoutStudentInput>;
 
 /////////////////////////////////////////
 // ARGS
@@ -1190,7 +1190,7 @@ export const StudentFindFirstArgsSchema: z.ZodType<Prisma.StudentFindFirstArgs> 
   take: z.number().optional(),
   skip: z.number().optional(),
   distinct: z.union([ StudentScalarFieldEnumSchema,StudentScalarFieldEnumSchema.array() ]).optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentFindFirstArgs>;
 
 export const StudentFindFirstOrThrowArgsSchema: z.ZodType<Prisma.StudentFindFirstOrThrowArgs> = z.object({
   select: StudentSelectSchema.optional(),
@@ -1201,7 +1201,7 @@ export const StudentFindFirstOrThrowArgsSchema: z.ZodType<Prisma.StudentFindFirs
   take: z.number().optional(),
   skip: z.number().optional(),
   distinct: z.union([ StudentScalarFieldEnumSchema,StudentScalarFieldEnumSchema.array() ]).optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentFindFirstOrThrowArgs>;
 
 export const StudentFindManyArgsSchema: z.ZodType<Prisma.StudentFindManyArgs> = z.object({
   select: StudentSelectSchema.optional(),
@@ -1212,7 +1212,7 @@ export const StudentFindManyArgsSchema: z.ZodType<Prisma.StudentFindManyArgs> = 
   take: z.number().optional(),
   skip: z.number().optional(),
   distinct: z.union([ StudentScalarFieldEnumSchema,StudentScalarFieldEnumSchema.array() ]).optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentFindManyArgs>;
 
 export const StudentAggregateArgsSchema: z.ZodType<Prisma.StudentAggregateArgs> = z.object({
   where: StudentWhereInputSchema.optional(),
@@ -1220,7 +1220,7 @@ export const StudentAggregateArgsSchema: z.ZodType<Prisma.StudentAggregateArgs> 
   cursor: StudentWhereUniqueInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentAggregateArgs>;
 
 export const StudentGroupByArgsSchema: z.ZodType<Prisma.StudentGroupByArgs> = z.object({
   where: StudentWhereInputSchema.optional(),
@@ -1229,19 +1229,19 @@ export const StudentGroupByArgsSchema: z.ZodType<Prisma.StudentGroupByArgs> = z.
   having: StudentScalarWhereWithAggregatesInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentGroupByArgs>;
 
 export const StudentFindUniqueArgsSchema: z.ZodType<Prisma.StudentFindUniqueArgs> = z.object({
   select: StudentSelectSchema.optional(),
   include: StudentIncludeSchema.optional(),
   where: StudentWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentFindUniqueArgs>;
 
 export const StudentFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.StudentFindUniqueOrThrowArgs> = z.object({
   select: StudentSelectSchema.optional(),
   include: StudentIncludeSchema.optional(),
   where: StudentWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentFindUniqueOrThrowArgs>;
 
 export const AttendanceFindFirstArgsSchema: z.ZodType<Prisma.AttendanceFindFirstArgs> = z.object({
   select: AttendanceSelectSchema.optional(),
@@ -1252,7 +1252,7 @@ export const AttendanceFindFirstArgsSchema: z.ZodType<Prisma.AttendanceFindFirst
   take: z.number().optional(),
   skip: z.number().optional(),
   distinct: z.union([ AttendanceScalarFieldEnumSchema,AttendanceScalarFieldEnumSchema.array() ]).optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceFindFirstArgs>;
 
 export const AttendanceFindFirstOrThrowArgsSchema: z.ZodType<Prisma.AttendanceFindFirstOrThrowArgs> = z.object({
   select: AttendanceSelectSchema.optional(),
@@ -1263,7 +1263,7 @@ export const AttendanceFindFirstOrThrowArgsSchema: z.ZodType<Prisma.AttendanceFi
   take: z.number().optional(),
   skip: z.number().optional(),
   distinct: z.union([ AttendanceScalarFieldEnumSchema,AttendanceScalarFieldEnumSchema.array() ]).optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceFindFirstOrThrowArgs>;
 
 export const AttendanceFindManyArgsSchema: z.ZodType<Prisma.AttendanceFindManyArgs> = z.object({
   select: AttendanceSelectSchema.optional(),
@@ -1274,7 +1274,7 @@ export const AttendanceFindManyArgsSchema: z.ZodType<Prisma.AttendanceFindManyAr
   take: z.number().optional(),
   skip: z.number().optional(),
   distinct: z.union([ AttendanceScalarFieldEnumSchema,AttendanceScalarFieldEnumSchema.array() ]).optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceFindManyArgs>;
 
 export const AttendanceAggregateArgsSchema: z.ZodType<Prisma.AttendanceAggregateArgs> = z.object({
   where: AttendanceWhereInputSchema.optional(),
@@ -1282,7 +1282,7 @@ export const AttendanceAggregateArgsSchema: z.ZodType<Prisma.AttendanceAggregate
   cursor: AttendanceWhereUniqueInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceAggregateArgs>;
 
 export const AttendanceGroupByArgsSchema: z.ZodType<Prisma.AttendanceGroupByArgs> = z.object({
   where: AttendanceWhereInputSchema.optional(),
@@ -1291,19 +1291,19 @@ export const AttendanceGroupByArgsSchema: z.ZodType<Prisma.AttendanceGroupByArgs
   having: AttendanceScalarWhereWithAggregatesInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceGroupByArgs>;
 
 export const AttendanceFindUniqueArgsSchema: z.ZodType<Prisma.AttendanceFindUniqueArgs> = z.object({
   select: AttendanceSelectSchema.optional(),
   include: AttendanceIncludeSchema.optional(),
   where: AttendanceWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceFindUniqueArgs>;
 
 export const AttendanceFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.AttendanceFindUniqueOrThrowArgs> = z.object({
   select: AttendanceSelectSchema.optional(),
   include: AttendanceIncludeSchema.optional(),
   where: AttendanceWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceFindUniqueOrThrowArgs>;
 
 export const UserFindFirstArgsSchema: z.ZodType<Prisma.UserFindFirstArgs> = z.object({
   select: UserSelectSchema.optional(),
@@ -1313,7 +1313,7 @@ export const UserFindFirstArgsSchema: z.ZodType<Prisma.UserFindFirstArgs> = z.ob
   take: z.number().optional(),
   skip: z.number().optional(),
   distinct: z.union([ UserScalarFieldEnumSchema,UserScalarFieldEnumSchema.array() ]).optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserFindFirstArgs>;
 
 export const UserFindFirstOrThrowArgsSchema: z.ZodType<Prisma.UserFindFirstOrThrowArgs> = z.object({
   select: UserSelectSchema.optional(),
@@ -1323,7 +1323,7 @@ export const UserFindFirstOrThrowArgsSchema: z.ZodType<Prisma.UserFindFirstOrThr
   take: z.number().optional(),
   skip: z.number().optional(),
   distinct: z.union([ UserScalarFieldEnumSchema,UserScalarFieldEnumSchema.array() ]).optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserFindFirstOrThrowArgs>;
 
 export const UserFindManyArgsSchema: z.ZodType<Prisma.UserFindManyArgs> = z.object({
   select: UserSelectSchema.optional(),
@@ -1333,7 +1333,7 @@ export const UserFindManyArgsSchema: z.ZodType<Prisma.UserFindManyArgs> = z.obje
   take: z.number().optional(),
   skip: z.number().optional(),
   distinct: z.union([ UserScalarFieldEnumSchema,UserScalarFieldEnumSchema.array() ]).optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserFindManyArgs>;
 
 export const UserAggregateArgsSchema: z.ZodType<Prisma.UserAggregateArgs> = z.object({
   where: UserWhereInputSchema.optional(),
@@ -1341,7 +1341,7 @@ export const UserAggregateArgsSchema: z.ZodType<Prisma.UserAggregateArgs> = z.ob
   cursor: UserWhereUniqueInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserAggregateArgs>;
 
 export const UserGroupByArgsSchema: z.ZodType<Prisma.UserGroupByArgs> = z.object({
   where: UserWhereInputSchema.optional(),
@@ -1350,23 +1350,23 @@ export const UserGroupByArgsSchema: z.ZodType<Prisma.UserGroupByArgs> = z.object
   having: UserScalarWhereWithAggregatesInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserGroupByArgs>;
 
 export const UserFindUniqueArgsSchema: z.ZodType<Prisma.UserFindUniqueArgs> = z.object({
   select: UserSelectSchema.optional(),
   where: UserWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserFindUniqueArgs>;
 
 export const UserFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.UserFindUniqueOrThrowArgs> = z.object({
   select: UserSelectSchema.optional(),
   where: UserWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserFindUniqueOrThrowArgs>;
 
 export const StudentCreateArgsSchema: z.ZodType<Prisma.StudentCreateArgs> = z.object({
   select: StudentSelectSchema.optional(),
   include: StudentIncludeSchema.optional(),
   data: z.union([ StudentCreateInputSchema,StudentUncheckedCreateInputSchema ]),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentCreateArgs>;
 
 export const StudentUpsertArgsSchema: z.ZodType<Prisma.StudentUpsertArgs> = z.object({
   select: StudentSelectSchema.optional(),
@@ -1374,40 +1374,40 @@ export const StudentUpsertArgsSchema: z.ZodType<Prisma.StudentUpsertArgs> = z.ob
   where: StudentWhereUniqueInputSchema,
   create: z.union([ StudentCreateInputSchema,StudentUncheckedCreateInputSchema ]),
   update: z.union([ StudentUpdateInputSchema,StudentUncheckedUpdateInputSchema ]),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentUpsertArgs>;
 
 export const StudentCreateManyArgsSchema: z.ZodType<Prisma.StudentCreateManyArgs> = z.object({
   data: z.union([ StudentCreateManyInputSchema,StudentCreateManyInputSchema.array() ]),
   skipDuplicates: z.boolean().optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentCreateManyArgs>;
 
 export const StudentDeleteArgsSchema: z.ZodType<Prisma.StudentDeleteArgs> = z.object({
   select: StudentSelectSchema.optional(),
   include: StudentIncludeSchema.optional(),
   where: StudentWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentDeleteArgs>;
 
 export const StudentUpdateArgsSchema: z.ZodType<Prisma.StudentUpdateArgs> = z.object({
   select: StudentSelectSchema.optional(),
   include: StudentIncludeSchema.optional(),
   data: z.union([ StudentUpdateInputSchema,StudentUncheckedUpdateInputSchema ]),
   where: StudentWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentUpdateArgs>;
 
 export const StudentUpdateManyArgsSchema: z.ZodType<Prisma.StudentUpdateManyArgs> = z.object({
   data: z.union([ StudentUpdateManyMutationInputSchema,StudentUncheckedUpdateManyInputSchema ]),
   where: StudentWhereInputSchema.optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentUpdateManyArgs>;
 
 export const StudentDeleteManyArgsSchema: z.ZodType<Prisma.StudentDeleteManyArgs> = z.object({
   where: StudentWhereInputSchema.optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.StudentDeleteManyArgs>;
 
 export const AttendanceCreateArgsSchema: z.ZodType<Prisma.AttendanceCreateArgs> = z.object({
   select: AttendanceSelectSchema.optional(),
   include: AttendanceIncludeSchema.optional(),
   data: z.union([ AttendanceCreateInputSchema,AttendanceUncheckedCreateInputSchema ]),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceCreateArgs>;
 
 export const AttendanceUpsertArgsSchema: z.ZodType<Prisma.AttendanceUpsertArgs> = z.object({
   select: AttendanceSelectSchema.optional(),
@@ -1415,68 +1415,68 @@ export const AttendanceUpsertArgsSchema: z.ZodType<Prisma.AttendanceUpsertArgs> 
   where: AttendanceWhereUniqueInputSchema,
   create: z.union([ AttendanceCreateInputSchema,AttendanceUncheckedCreateInputSchema ]),
   update: z.union([ AttendanceUpdateInputSchema,AttendanceUncheckedUpdateInputSchema ]),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceUpsertArgs>;
 
 export const AttendanceCreateManyArgsSchema: z.ZodType<Prisma.AttendanceCreateManyArgs> = z.object({
   data: z.union([ AttendanceCreateManyInputSchema,AttendanceCreateManyInputSchema.array() ]),
   skipDuplicates: z.boolean().optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceCreateManyArgs>;
 
 export const AttendanceDeleteArgsSchema: z.ZodType<Prisma.AttendanceDeleteArgs> = z.object({
   select: AttendanceSelectSchema.optional(),
   include: AttendanceIncludeSchema.optional(),
   where: AttendanceWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceDeleteArgs>;
 
 export const AttendanceUpdateArgsSchema: z.ZodType<Prisma.AttendanceUpdateArgs> = z.object({
   select: AttendanceSelectSchema.optional(),
   include: AttendanceIncludeSchema.optional(),
   data: z.union([ AttendanceUpdateInputSchema,AttendanceUncheckedUpdateInputSchema ]),
   where: AttendanceWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceUpdateArgs>;
 
 export const AttendanceUpdateManyArgsSchema: z.ZodType<Prisma.AttendanceUpdateManyArgs> = z.object({
   data: z.union([ AttendanceUpdateManyMutationInputSchema,AttendanceUncheckedUpdateManyInputSchema ]),
   where: AttendanceWhereInputSchema.optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceUpdateManyArgs>;
 
 export const AttendanceDeleteManyArgsSchema: z.ZodType<Prisma.AttendanceDeleteManyArgs> = z.object({
   where: AttendanceWhereInputSchema.optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.AttendanceDeleteManyArgs>;
 
 export const UserCreateArgsSchema: z.ZodType<Prisma.UserCreateArgs> = z.object({
   select: UserSelectSchema.optional(),
   data: z.union([ UserCreateInputSchema,UserUncheckedCreateInputSchema ]),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserCreateArgs>;
 
 export const UserUpsertArgsSchema: z.ZodType<Prisma.UserUpsertArgs> = z.object({
   select: UserSelectSchema.optional(),
   where: UserWhereUniqueInputSchema,
   create: z.union([ UserCreateInputSchema,UserUncheckedCreateInputSchema ]),
   update: z.union([ UserUpdateInputSchema,UserUncheckedUpdateInputSchema ]),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserUpsertArgs>;
 
 export const UserCreateManyArgsSchema: z.ZodType<Prisma.UserCreateManyArgs> = z.object({
   data: z.union([ UserCreateManyInputSchema,UserCreateManyInputSchema.array() ]),
   skipDuplicates: z.boolean().optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserCreateManyArgs>;
 
 export const UserDeleteArgsSchema: z.ZodType<Prisma.UserDeleteArgs> = z.object({
   select: UserSelectSchema.optional(),
   where: UserWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserDeleteArgs>;
 
 export const UserUpdateArgsSchema: z.ZodType<Prisma.UserUpdateArgs> = z.object({
   select: UserSelectSchema.optional(),
   data: z.union([ UserUpdateInputSchema,UserUncheckedUpdateInputSchema ]),
   where: UserWhereUniqueInputSchema,
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserUpdateArgs>;
 
 export const UserUpdateManyArgsSchema: z.ZodType<Prisma.UserUpdateManyArgs> = z.object({
   data: z.union([ UserUpdateManyMutationInputSchema,UserUncheckedUpdateManyInputSchema ]),
   where: UserWhereInputSchema.optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserUpdateManyArgs>;
 
 export const UserDeleteManyArgsSchema: z.ZodType<Prisma.UserDeleteManyArgs> = z.object({
   where: UserWhereInputSchema.optional(),
-}).strict() ;
+}).strict() as z.ZodType<Prisma.UserDeleteManyArgs>;

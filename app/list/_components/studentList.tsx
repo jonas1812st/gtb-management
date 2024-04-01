@@ -1,10 +1,14 @@
 "use client";
 
+import { Table, Td, Th, Tr } from "@/components/form/table";
 import { Input } from "@/components/ui/input";
+import { mdiInformationOutline } from "@mdi/js";
+import Icon from "@mdi/react";
 import { Prisma } from "@prisma/client";
+import Link from "next/link";
 import { useState } from "react";
 
-type Students = Prisma.StudentCreateWithoutAttendancesInput[];
+type Students = Prisma.StudentGetPayload<{}>[];
 
 export default function StudentList({ students }: { students: Students }) {
   const [filteredStudents, setFilteredStudents] = useState(students);
@@ -36,43 +40,50 @@ export default function StudentList({ students }: { students: Students }) {
         <Input
           type="text"
           onChange={(e) => filterStudents(e.target.value)}
-          placeholder="Filtern"
+          placeholder="Suchen"
         />
       </div>
-      <StudentTable students={filteredStudents} />
+      <div className="overflow-auto">
+        <StudentTable students={filteredStudents} />
+      </div>
     </div>
   );
 }
 
 const StudentTable = ({ students }: { students: Students }) => (
-  <table className="w-full border-collapse">
+  <Table>
     <thead>
       <tr>
         {["Anwesend", "Name", "Klasse"].map((header, index) => (
-          <th className="p-3 text-left" key={index + "_header_element"}>
-            {header}
-          </th>
+          <Th key={index + "_header_element"}>{header}</Th>
         ))}
       </tr>
     </thead>
     <tbody>
       {students.map((student, index) => (
-        <tr key={index + "_student"} className="border-b last:border-b-0">
+        <Tr key={index + "_student"}>
           <Td>
             <input type="checkbox" />
           </Td>
           <Td>
-            {student.firstName} {student.lastName}
+            <Link href={"/students/" + student.id}>
+              {student.firstName} {student.lastName}
+            </Link>
           </Td>
           <Td>
             {student.grade}
             {student.className}
           </Td>
-        </tr>
+          <td>
+            <Link
+              href={"/students/" + student.id}
+              className="text-gray-600 h-full w-full"
+            >
+              <Icon size={0.8} path={mdiInformationOutline} />
+            </Link>
+          </td>
+        </Tr>
       ))}
     </tbody>
-  </table>
-);
-const Td = ({ children }: { children: React.ReactNode }) => (
-  <td className="p-3">{children}</td>
+  </Table>
 );
