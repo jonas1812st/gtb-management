@@ -36,11 +36,12 @@ export default function StudentList({ students }: { students: Students }) {
 
   return (
     <div className="flex flex-col space-y-2">
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 items-center justify-end">
         <Input
           type="text"
           onChange={(e) => filterStudents(e.target.value)}
           placeholder="Suchen"
+          className="w-[340px]"
         />
       </div>
       <div className="overflow-auto">
