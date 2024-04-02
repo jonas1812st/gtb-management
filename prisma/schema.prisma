@@ -9,8 +9,8 @@ generator client {
 }
 
 generator zod {
-  provider                  = "zod-prisma-types"
-  useTypeAssertions         = true
+  provider          = "zod-prisma-types"
+  useTypeAssertions = true
 }
 
 datasource db {
@@ -41,7 +41,7 @@ model Attendance {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
 }
