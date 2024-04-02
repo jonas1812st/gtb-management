@@ -5,7 +5,6 @@ export const authConfig = {
   pages: {
     signIn: "/auth/login",
   },
-
   callbacks: {
     async authorized({ request, auth }) {
       // Logged in users are authenticated, otherwise redirect to login page
@@ -19,4 +18,7 @@ export const authConfig = {
     },
   },
   providers: [], // Add providers with an empty array for now
+  session: {
+    maxAge: 60 * 60 * 12, // idle session expires after 12 hours
+  },
 } satisfies NextAuthConfig;

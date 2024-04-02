@@ -3,16 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authenticate } from "@/lib/actions";
+import { mdiLogin } from "@mdi/js";
+import Icon from "@mdi/react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
 
 export default function Page() {
   const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
   );
-  const { pending } = useFormStatus();
 
   const handleSubmit = async (data: FormData) => {
     const response = await authenticate({
@@ -54,8 +54,12 @@ export default function Page() {
         <p className="text-red-600 font-medium text-sm">{errorMessage}</p>
       )}
       <div>
-        <Button type="submit" className="w-full" disabled={pending}>
-          Sign in
+        <Button
+          type="submit"
+          className="w-full flex justify-center space-x-2 items-center"
+        >
+          <Icon size={0.7} path={mdiLogin} />
+          <span>Login</span>
         </Button>
       </div>
     </form>
