@@ -1,3 +1,5 @@
+"use server";
+
 import {
   Dialog,
   DialogContent,
@@ -40,7 +42,7 @@ export const InputSchema = z
     },
   );
 
-export const EditTimeDialog = ({
+export default async function EditTimeDialog({
   studentId,
   open,
   closeDialog,
@@ -48,7 +50,7 @@ export const EditTimeDialog = ({
   studentId: number;
   open: boolean;
   closeDialog: () => void;
-}) => {
+}) {
   const {
     register,
     formState: { errors },
@@ -116,4 +118,4 @@ export const EditTimeDialog = ({
       </DialogContent>
     </Dialog>
   );
-};
+}

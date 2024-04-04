@@ -1,5 +1,3 @@
-import StudentForm from "../_components/form";
-
 export default function Page() {
-  return <StudentForm action="create" />;
+  return <span>test</span>; //<StudentForm action="create" actionMethod={createStudent} />;
 }

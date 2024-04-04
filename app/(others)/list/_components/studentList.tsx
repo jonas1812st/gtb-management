@@ -15,7 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { EditTimeDialog } from "./time";
+import EditTimeDialog from "./time";
 
 type Students = Prisma.StudentGetPayload<{
   include: {

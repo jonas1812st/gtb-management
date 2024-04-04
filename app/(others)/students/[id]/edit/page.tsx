@@ -1,5 +1,4 @@
 import prisma from "@/utils/prisma";
-import StudentForm from "../../_components/form";
 import { Button } from "@/components/ui/button";
 import Icon from "@mdi/react";
 import { mdiArrowLeft } from "@mdi/js";
@@ -30,8 +29,10 @@ export default async function Page({ params }: { params: { id: string } }) {
         </Link>
         <h2 className="text-2xl font-semibold">Schüler bearbeiten</h2>
       </div>
-      <StudentForm
+      <span>test</span>
+      {/* <StudentForm
         action="edit"
+        actionMethod={editStudent}
         id={parseInt(params.id, 10)}
         values={{
           student: {
@@ -46,7 +47,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             end: attendance.end,
           })),
         }}
-      />
+      /> */}
     </div>
   );
 }
