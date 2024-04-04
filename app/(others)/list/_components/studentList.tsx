@@ -2,19 +2,32 @@
 
 import { Table, Td, Th, Tr } from "@/components/form/table";
 import { Input } from "@/components/ui/input";
-import { mdiInformationOutline } from "@mdi/js";
+import { mdiDotsVertical, mdiTimerEditOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Prisma } from "@prisma/client";
+import dayjs from "dayjs";
 import Link from "next/link";
 import { useState } from "react";
+import { onVisiting } from "../methods/visit";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { EditTimeDialog } from "./time";
 
-type Students = Prisma.StudentGetPayload<{}>[];
+type Students = Prisma.StudentGetPayload<{
+  include: {
+    visitations: true;
+  };
+}>[];
 
 export default function StudentList({ students }: { students: Students }) {
   const [filteredStudents, setFilteredStudents] = useState(students);
+  const [edit, setEdit] = useState<number | null>(null);
 
   let filterTimeout: NodeJS.Timeout;
-
   const filterStudents = (inputValue: string) => {
     clearTimeout(filterTimeout);
 
@@ -35,56 +48,115 @@ export default function StudentList({ students }: { students: Students }) {
   };
 
   return (
-    <div className="flex flex-col space-y-2">
-      <div className="flex space-x-2 items-center justify-end">
-        <Input
-          type="text"
-          onChange={(e) => filterStudents(e.target.value)}
-          placeholder="Suchen"
-          className="w-[340px]"
+    <>
+      <div className="flex flex-col space-y-2">
+        <div className="flex space-x-2 items-center justify-end">
+          <Input
+            type="text"
+            onChange={(e) => filterStudents(e.target.value)}
+            placeholder="Suchen"
+            className="w-[340px]"
+          />
+        </div>
+        <div className="overflow-auto">
+          <StudentTable students={filteredStudents} setEdit={setEdit} />
+        </div>
+      </div>
+      {edit !== null ? (
+        <EditTimeDialog
+          open={edit !== null}
+          closeDialog={() => setEdit(null)}
+          studentId={edit}
         />
-      </div>
-      <div className="overflow-auto">
-        <StudentTable students={filteredStudents} />
-      </div>
-    </div>
+      ) : null}
+    </>
   );
 }
 
-const StudentTable = ({ students }: { students: Students }) => (
-  <Table>
-    <thead>
-      <tr>
-        {["Anwesend", "Name", "Klasse"].map((header, index) => (
-          <Th key={index + "_header_element"}>{header}</Th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {students.map((student, index) => (
-        <Tr key={index + "_student"}>
-          <Td>
-            <input type="checkbox" />
-          </Td>
-          <Td>
-            <Link href={"/students/" + student.id}>
-              {student.firstName} {student.lastName}
-            </Link>
-          </Td>
-          <Td>
-            {student.grade}
-            {student.className}
-          </Td>
-          <td>
-            <Link
-              href={"/students/" + student.id}
-              className="text-gray-600 h-full w-full"
+const StudentTable = ({
+  students,
+  setEdit,
+}: {
+  students: Students;
+  setEdit: (studentId: number) => void;
+}) => {
+  return (
+    <Table>
+      <thead>
+        <tr>
+          {["Anwesend", "Name", "Klasse"].map((header, index) => (
+            <Th key={index + "_header_element"}>{header}</Th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {students.map((student, index) => {
+          const currentVisitation = student.visitations.find(
+            (visitation) =>
+              visitation.date.toISOString() ===
+              dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString(),
+          );
+          const visitationState: "visiting" | "visited" | "default" =
+            currentVisitation !== undefined
+              ? currentVisitation.end !== null
+                ? "visited"
+                : "visiting"
+              : "default";
+
+          return (
+            <Tr
+              key={index + "_student"}
+              className={
+                visitationState === "visiting"
+                  ? "bg-yellow-100"
+                  : visitationState === "visited"
+                    ? "bg-green-100"
+                    : ""
+              }
             >
-              <Icon size={0.8} path={mdiInformationOutline} />
-            </Link>
-          </td>
-        </Tr>
-      ))}
-    </tbody>
-  </Table>
-);
+              <Td>
+                <input
+                  type="checkbox"
+                  defaultChecked={
+                    currentVisitation !== undefined &&
+                    currentVisitation.end === null
+                  }
+                  onClick={() => onVisiting(student.id, currentVisitation)}
+                />
+              </Td>
+              <Td>
+                <Link href={"/students/" + student.id}>
+                  {student.firstName} {student.lastName}
+                </Link>
+              </Td>
+              <Td>
+                {student.grade}
+                {student.className}
+              </Td>
+              <Td>
+                <div className="flex items-center">
+                  <Popover>
+                    <PopoverTrigger>
+                      <Icon size={0.8} path={mdiDotsVertical} />
+                    </PopoverTrigger>
+                    <PopoverContent className="p-2 w-fit">
+                      <div className="flex flex-col">
+                        <PopoverClose
+                          onClick={() => setEdit(student.id)}
+                          className="p-2 hover:bg-gray-100 transition rounded-md text-left flex space-x-2 items-center pe-5"
+                        >
+                          <Icon size={0.9} path={mdiTimerEditOutline} />
+                          <span>Anwesenheit bearbeiten</span>
+                        </PopoverClose>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </Td>
+            </Tr>
+          );
+        })}
+      </tbody>
+    </Table>
+  );
+};

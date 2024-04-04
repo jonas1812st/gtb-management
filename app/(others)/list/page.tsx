@@ -13,6 +13,20 @@ export default async function Page() {
         },
       },
     },
+    include: {
+      visitations: {
+        where: {
+          date: {
+            equals: dayjs()
+              .hour(0)
+              .minute(0)
+              .second(0)
+              .millisecond(0)
+              .toISOString(),
+          },
+        },
+      },
+    },
   });
 
   return <StudentList students={students} />;

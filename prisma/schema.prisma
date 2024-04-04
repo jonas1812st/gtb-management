@@ -28,6 +28,7 @@ model Student {
   grade       Int
   className   String
   attendances Attendance[]
+  visitations Visitation[]
 }
 
 model Attendance {
@@ -36,6 +37,15 @@ model Attendance {
   updatedAt DateTime @updatedAt
   day       Int
   end       Int
+  Student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
+}
+
+model Visitation {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @unique
+  start     Int
+  end       Int?
   Student   Student? @relation(fields: [studentId], references: [id])
   studentId Int?
 }

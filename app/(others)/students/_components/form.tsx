@@ -258,7 +258,7 @@ export default function StudentForm(
   );
 }
 
-const FormLabel = ({
+export const FormLabel = ({
   children,
   htmlFor,
 }: {
@@ -270,7 +270,7 @@ const FormLabel = ({
   </label>
 );
 
-const ErrorMessage = ({
+export const ErrorMessage = ({
   children,
 }: {
   children: React.ReactNode | undefined;
