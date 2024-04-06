@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { InputSchema } from "./schema";
+import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
 import { revalidatePath } from "next/cache";
 import prisma from "@/utils/prisma";
 
@@ -17,7 +17,7 @@ export async function editStudent(
         id: id,
       },
       data: {
-        ...result.student,
+        ...result,
         attendances: {
           deleteMany: {
             studentId: id,

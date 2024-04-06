@@ -8,11 +8,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator zod {
-  provider          = "zod-prisma-types"
-  useTypeAssertions = true
-}
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")

@@ -3,7 +3,7 @@
 import prisma from "@/utils/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { InputSchema } from "./schema";
+import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
 
 export async function createStudent(data: z.infer<typeof InputSchema>) {
   const result = InputSchema.parse(data);
@@ -11,7 +11,7 @@ export async function createStudent(data: z.infer<typeof InputSchema>) {
   try {
     await prisma.student.create({
       data: {
-        ...result.student,
+        ...result,
         attendances: {
           createMany: {
             data: result.attendances,

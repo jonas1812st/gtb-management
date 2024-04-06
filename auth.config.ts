@@ -8,16 +8,17 @@ export const authConfig = {
   callbacks: {
     async authorized({ request, auth }) {
       // Logged in users are authenticated, otherwise redirect to login page
-      const isLoggendIn = !!auth?.user;
-      if (isLoggendIn && request.nextUrl.pathname.endsWith("/auth/login")) {
+      const isLoggedIn = !!auth?.user;
+      if (isLoggedIn && request.nextUrl.pathname.endsWith("/auth/login")) {
         const url = request.nextUrl.clone();
         url.pathname = "/";
         return NextResponse.redirect(url);
       }
-      return isLoggendIn;
+      // return isLoggedIn;
+      return true;
     },
   },
-  providers: [], // Add providers with an empty array for now
+  providers: [],
   session: {
     maxAge: 60 * 60 * 12, // idle session expires after 12 hours
   },

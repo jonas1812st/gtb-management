@@ -1,28 +1,15 @@
 import { z } from "zod";
 
-export const AttendanceResponseSchema = z.object({
-  id: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date().nullable(),
-  day: z.number(),
-  end: z.number(),
-  studentId: z.number(),
+export const CreateAttendanceInputSchema = z.object({
+  day: z.number().gte(0).lte(5),
+  end: z.number().gte(0).lte(1439),
 });
 
-export const StudentResponseSchema = z.object({
-  id: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date().nullable(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  notes: z.string().min(1).nullable(),
+export const CreateStudentInputSchema = z.object({
+  firstName: z.string().trim().min(1).max(50),
+  lastName: z.string().trim().min(1).max(50),
+  notes: z.string().trim().min(1).max(500).nullish(),
   grade: z.number(),
-  className: z.string().toUpperCase().min(1),
-  attendances: z.array(AttendanceResponseSchema),
-});
-
-export const StudentInputSchema = StudentResponseSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+  className: z.string().length(1),
+  attendances: z.array(CreateAttendanceInputSchema),
 });

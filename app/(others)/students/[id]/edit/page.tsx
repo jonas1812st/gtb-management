@@ -1,8 +1,10 @@
 import prisma from "@/utils/prisma";
+import StudentForm from "../../_components/form";
 import { Button } from "@/components/ui/button";
 import Icon from "@mdi/react";
 import { mdiArrowLeft } from "@mdi/js";
 import Link from "next/link";
+import { editStudent } from "../../methods/editStudent";
 
 export default async function Page({ params }: { params: { id: string } }) {
   if (params.id === "" || typeof parseInt(params.id, 10) !== "number")
@@ -30,24 +32,22 @@ export default async function Page({ params }: { params: { id: string } }) {
         <h2 className="text-2xl font-semibold">Schüler bearbeiten</h2>
       </div>
       <span>test</span>
-      {/* <StudentForm
+      <StudentForm
         action="edit"
         actionMethod={editStudent}
         id={parseInt(params.id, 10)}
         values={{
-          student: {
-            grade: student.grade,
-            notes: student.notes,
-            lastName: student.lastName,
-            className: student.className,
-            firstName: student.firstName,
-          },
+          grade: student.grade,
+          notes: student.notes,
+          lastName: student.lastName,
+          className: student.className,
+          firstName: student.firstName,
           attendances: student.attendances.map((attendance) => ({
             day: attendance.day,
             end: attendance.end,
           })),
         }}
-      /> */}
+      />
     </div>
   );
 }
