@@ -62,7 +62,7 @@ export default function StudentForm(
           className: "",
           attendances: Array.from({ length: 5 }).map((_, index) => ({
             day: index,
-            end: 0,
+            end: 960,
           })),
         },
   });

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const CreateAttendanceInputSchema = z.object({
   day: z.number().gte(0).lte(5),
-  end: z.number().gte(0).lte(1439),
+  end: z.number().gte(0).lte(1439).default(960),
 });
 
 export const CreateStudentInputSchema = z.object({
