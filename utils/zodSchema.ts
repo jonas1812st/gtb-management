@@ -10,6 +10,6 @@ export const CreateStudentInputSchema = z.object({
   lastName: z.string().trim().min(1).max(50),
   notes: z.string().trim().min(1).max(500).nullish(),
   grade: z.number(),
-  className: z.string().length(1),
-  attendances: z.array(CreateAttendanceInputSchema),
+  className: z.string().length(1).toUpperCase(),
+  attendances: z.array(CreateAttendanceInputSchema.optional()),
 });

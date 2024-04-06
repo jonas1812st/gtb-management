@@ -4,6 +4,7 @@ import { z } from "zod";
 import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
 import { revalidatePath } from "next/cache";
 import prisma from "@/utils/prisma";
+import { Prisma } from "@prisma/client";
 
 export async function editStudent(
   data: z.infer<typeof InputSchema>,
@@ -22,7 +23,12 @@ export async function editStudent(
           deleteMany: {
             studentId: id,
           },
-          create: result.attendances,
+          create: result.attendances.filter(
+            (
+              attendance,
+            ): attendance is Prisma.AttendanceCreateWithoutStudentInput =>
+              !!attendance,
+          ),
         },
       },
     });
