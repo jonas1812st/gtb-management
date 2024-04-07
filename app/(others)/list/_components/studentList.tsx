@@ -90,6 +90,16 @@ const StudentTable = ({
         </tr>
       </thead>
       <tbody>
+        {students.length === 0 && (
+          <Tr>
+            {/* should span the whole table */}
+            <Td colSpan={100}>
+              <div className="flex items-center justify-center text-gray-500">
+                <span className="font-medium">Keine Schüler verfügbar</span>
+              </div>
+            </Td>
+          </Tr>
+        )}
         {students.map((student, index) => {
           const currentVisitation = student.visitations.find(
             (visitation) =>

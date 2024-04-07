@@ -1,7 +1,15 @@
 import { cn } from "@/lib/utils";
 
-export const Td = ({ children }: { children: React.ReactNode }) => (
-  <td className="p-3">{children}</td>
+export const Td = ({
+  children,
+  colSpan,
+}: {
+  children: React.ReactNode;
+  colSpan?: number;
+}) => (
+  <td className="p-3" colSpan={colSpan}>
+    {children}
+  </td>
 );
 
 export const Tr = ({

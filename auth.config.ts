@@ -14,8 +14,7 @@ export const authConfig = {
         url.pathname = "/";
         return NextResponse.redirect(url);
       }
-      // return isLoggedIn;
-      return true;
+      return isLoggedIn;
     },
   },
   providers: [],
