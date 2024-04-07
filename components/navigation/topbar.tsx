@@ -7,6 +7,7 @@ export default function TopBar() {
         { label: "Home", url: "/" },
         { label: "Liste", url: "/list" },
         { label: "Neuer Schüler", url: "/students/create" },
+        { label: "Schüler verwalten", url: "/students" },
       ].map((element, index) => (
         <Link
           href={element.url}

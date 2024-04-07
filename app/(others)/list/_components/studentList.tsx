@@ -1,7 +1,6 @@
 "use client";
 
 import { Table, Td, Th, Tr } from "@/components/form/table";
-import { Input } from "@/components/ui/input";
 import { mdiDotsVertical, mdiTimerEditOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Prisma } from "@prisma/client";
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import EditTimeDialog from "./time";
+import { SearchStudentsInput } from "@/components/form/search";
 
 type Students = Prisma.StudentGetPayload<{
   include: {
@@ -27,35 +27,17 @@ export default function StudentList({ students }: { students: Students }) {
   const [filteredStudents, setFilteredStudents] = useState(students);
   const [edit, setEdit] = useState<number | null>(null);
 
-  let filterTimeout: NodeJS.Timeout;
-  const filterStudents = (inputValue: string) => {
-    clearTimeout(filterTimeout);
-
-    filterTimeout = setTimeout(() => {
-      const filtered = students.filter((student) => {
-        const name =
-          student.firstName.toLowerCase() +
-          " " +
-          student.lastName.toLowerCase();
-
-        if (name.includes(inputValue.toLowerCase())) return true;
-      });
-
-      if (inputValue === "") return setFilteredStudents(students);
-
-      setFilteredStudents(filtered);
-    }, 500);
-  };
-
   return (
     <>
       <div className="flex flex-col space-y-2">
-        <div className="flex space-x-2 items-center justify-end">
-          <Input
-            type="text"
-            onChange={(e) => filterStudents(e.target.value)}
-            placeholder="Suchen"
-            className="w-[340px]"
+        <div className="flex items-center justify-end">
+          <SearchStudentsInput
+            students={students}
+            setFiltered={(ids) =>
+              setFilteredStudents(
+                students.filter((student) => ids.includes(student.id)),
+              )
+            }
           />
         </div>
         <div className="overflow-auto">
