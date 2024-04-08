@@ -4,8 +4,8 @@ import prisma from "@/utils/prisma";
 import { stringToTime } from "@/utils/time";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { InputSchema } from "../_components/time";
+import { revalidatePath } from "next/cache";
+import { InputSchema } from "../_components/timeSchema";
 
 export async function onVisiting(
   studentId: number,

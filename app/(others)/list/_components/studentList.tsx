@@ -54,7 +54,6 @@ export default function StudentList({ students }: { students: Students }) {
     </>
   );
 }
-
 const StudentTable = ({
   students,
   setEdit,

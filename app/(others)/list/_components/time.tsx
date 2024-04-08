@@ -1,5 +1,3 @@
-"use server";
-
 import {
   Dialog,
   DialogContent,
@@ -13,36 +11,10 @@ import { Button } from "@/components/ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { stringToTime } from "@/utils/time";
 import { deleteVisitation, updateVisitation } from "../methods/visit";
+import { InputSchema } from "./timeSchema";
 
-export const InputSchema = z
-  .object({
-    start: z
-      .string()
-      .regex(
-        /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/g,
-        "Error: Input does not match the required format.",
-      ),
-    end: z
-      .string()
-      .regex(
-        /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/g,
-        "Error: Input does not match the required format.",
-      )
-      .optional(),
-  })
-  .refine(
-    (values) =>
-      values.end === undefined ||
-      stringToTime(values.start)! < stringToTime(values.end)!,
-    {
-      message: "End time cannot be lower than start time.",
-      path: ["end"],
-    },
-  );
-
-export default async function EditTimeDialog({
+export default function EditTimeDialog({
   studentId,
   open,
   closeDialog,
@@ -80,7 +52,7 @@ export default async function EditTimeDialog({
         </DialogHeader>
         <form
           className="grid grid-cols-2 gap-2"
-          onSubmit={handleSubmit(onSubmit, (data) => console.log(data))}
+          onSubmit={handleSubmit(onSubmit, (data) => console.error(data))}
         >
           <div>
             <FormLabel htmlFor="start-time-input">Startzeit</FormLabel>
