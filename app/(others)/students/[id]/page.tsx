@@ -1,9 +1,21 @@
 import { Table, Td, Tr } from "@/components/form/table";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import prisma from "@/utils/prisma";
 import dayjs from "dayjs";
 import "dayjs/locale/de";
 import Link from "next/link";
+import { deleteStudent } from "../methods/deleteStudent";
+import { DeleteButton } from "../_components/deleteStudent";
 dayjs.locale("de");
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -63,12 +75,37 @@ export default async function Page({ params }: { params: { id: string } }) {
           ))}
         </tbody>
       </Table>
-      <div className="self-end">
+      <div className="flex items-center justify-between">
         <Link href={"/students/" + student.id + "/edit"}>
           <Button variant={"outline"} size={"sm"}>
             Bearbeiten
           </Button>
         </Link>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant={"destructive"} size={"sm"}>
+              Löschen
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Möchtest du diesen Schüler löschen?</DialogTitle>
+              <DialogDescription>
+                Diese Aktion kann nicht rückgängig gemacht werden. Dieser
+                Schüler und seine Daten werden permanent von diesem System
+                gelöscht.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Abbrechen
+                </Button>
+              </DialogClose>
+              <DeleteButton action={deleteStudent} studentId={student.id} />
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
