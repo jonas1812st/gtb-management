@@ -21,4 +21,5 @@ export const authConfig = {
   session: {
     maxAge: 60 * 60 * 12, // idle session expires after 12 hours
   },
+  trustHost: true,
 } satisfies NextAuthConfig;
