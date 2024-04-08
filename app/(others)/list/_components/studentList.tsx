@@ -49,6 +49,9 @@ export default function StudentList({ students }: { students: Students }) {
           open={edit !== null}
           closeDialog={() => setEdit(null)}
           studentId={edit}
+          visitation={
+            students.find((student) => student.id === edit)?.visitations[0]
+          }
         />
       ) : null}
     </>

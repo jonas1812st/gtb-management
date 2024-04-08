@@ -13,15 +13,19 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteVisitation, updateVisitation } from "../methods/visit";
 import { InputSchema } from "./timeSchema";
+import { Prisma } from "@prisma/client";
+import { timeToString } from "@/utils/time";
 
 export default function EditTimeDialog({
   studentId,
   open,
   closeDialog,
+  visitation,
 }: {
   studentId: number;
   open: boolean;
   closeDialog: () => void;
+  visitation: Prisma.VisitationGetPayload<{}> | undefined;
 }) {
   const {
     register,
@@ -29,6 +33,10 @@ export default function EditTimeDialog({
     handleSubmit,
   } = useForm<z.infer<typeof InputSchema>>({
     resolver: zodResolver(InputSchema),
+    defaultValues: {
+      start: timeToString(visitation?.start),
+      end: timeToString(visitation?.end || undefined),
+    },
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof InputSchema>> = async (data) => {

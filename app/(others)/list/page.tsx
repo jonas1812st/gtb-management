@@ -29,5 +29,5 @@ export default async function Page() {
     },
   });
 
-  return <StudentList students={students} />;
+  return <StudentList students={students} key={crypto.randomUUID()} />;
 }
