@@ -38,11 +38,11 @@ model Attendance {
 
 model Visitation {
   id        Int      @id @default(autoincrement())
-  date      DateTime @unique
+  date      DateTime
   start     Int
   end       Int?
   Student   Student? @relation(fields: [studentId], references: [id])
-  studentId Int?
+  studentId Int      @unique
 }
 
 model User {
