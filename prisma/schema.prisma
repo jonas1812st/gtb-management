@@ -41,8 +41,9 @@ model Visitation {
   date      DateTime
   start     Int
   end       Int?
-  Student   Student? @relation(fields: [studentId], references: [id])
-  studentId Int      @unique
+  Student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+  @@unique([date, studentId])
 }
 
 model User {

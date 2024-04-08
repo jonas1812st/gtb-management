@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export async function deleteStudent(studentId: number) {
-  console.log(studentId);
   const result = z.number().parse(studentId);
 
   try {
@@ -15,6 +14,7 @@ export async function deleteStudent(studentId: number) {
       },
     });
   } catch (error) {
+    console.error(error);
     return {
       success: false,
       message: "Database Error: Please check your inputs.",

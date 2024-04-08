@@ -43,6 +43,16 @@ export function StudentList({ students }: { students: Students }) {
           </Tr>
         </thead>
         <tbody>
+          {students.length === 0 && (
+            <Tr>
+              {/* should span the whole table */}
+              <Td colSpan={100}>
+                <div className="flex items-center justify-center text-gray-500">
+                  <span className="font-medium">Keine Schüler existieren</span>
+                </div>
+              </Td>
+            </Tr>
+          )}
           {filteredStudents.map((student, index) => (
             <Tr key={index + "_student"}>
               <Td>

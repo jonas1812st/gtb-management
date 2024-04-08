@@ -18,8 +18,10 @@ export async function onVisiting(
     if (visitation?.end === null) {
       await prisma.visitation.update({
         where: {
-          date,
-          studentId,
+          date_studentId: {
+            date,
+            studentId,
+          },
         },
         data: {
           end: time,
@@ -32,8 +34,10 @@ export async function onVisiting(
           end: null,
         },
         where: {
-          date,
-          studentId,
+          date_studentId: {
+            date,
+            studentId,
+          },
         },
         create: {
           date,
@@ -82,8 +86,10 @@ export async function updateVisitation(
         end: stringToTime(end) || null,
       },
       where: {
-        studentId,
-        date,
+        date_studentId: {
+          date,
+          studentId,
+        },
       },
     });
   } catch (error) {

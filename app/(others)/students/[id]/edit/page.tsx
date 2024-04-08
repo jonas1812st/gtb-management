@@ -31,7 +31,6 @@ export default async function Page({ params }: { params: { id: string } }) {
         </Link>
         <h2 className="text-2xl font-semibold">Schüler bearbeiten</h2>
       </div>
-      <span>test</span>
       <StudentForm
         action="edit"
         actionMethod={editStudent}
