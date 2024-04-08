@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export async function deleteStudent(studentId: number) {
+  console.log(studentId);
   const result = z.number().parse(studentId);
 
   try {
@@ -21,6 +22,7 @@ export async function deleteStudent(studentId: number) {
   }
 
   revalidatePath("/students");
+  revalidatePath("/list");
 
   return {
     success: true,

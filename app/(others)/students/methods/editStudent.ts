@@ -40,6 +40,8 @@ export async function editStudent(
   }
 
   revalidatePath("/students/" + id);
+  revalidatePath("/students");
+  revalidatePath("/list");
 
   return {
     success: true,

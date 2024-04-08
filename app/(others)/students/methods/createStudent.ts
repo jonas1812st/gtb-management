@@ -33,6 +33,7 @@ export async function createStudent(data: z.infer<typeof InputSchema>) {
   }
 
   revalidatePath("/list");
+  revalidatePath("/students");
 
   return {
     success: true,

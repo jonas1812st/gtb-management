@@ -10,3 +10,5 @@ export async function GET() {
   });
   return NextResponse.json({ data: students });
 }
+
+export const dynamic = "force-dynamic";
