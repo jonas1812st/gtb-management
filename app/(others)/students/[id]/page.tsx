@@ -16,22 +16,25 @@ import "dayjs/locale/de";
 import Link from "next/link";
 import { deleteStudent } from "../methods/deleteStudent";
 import { DeleteButton } from "../_components/deleteStudent";
+import Error from "@/components/navigation/error";
 dayjs.locale("de");
 
 export default async function Page({ params }: { params: { id: string } }) {
-  if (params.id === "" || typeof parseInt(params.id, 10) !== "number")
-    throw new Error("Id not valid.");
+  const studentId = parseInt(params.id) || 0;
+
+  if (params.id === "" || studentId === 0)
+    return <Error error="Id not valid." />;
 
   const student = await prisma.student.findUnique({
     where: {
-      id: parseInt(params.id, 10),
+      id: studentId,
     },
     include: {
       attendances: true,
     },
   });
 
-  if (!student) throw new Error("Student not found.");
+  if (!student) return <Error error="Student not found." />;
 
   return (
     <div className="flex flex-col space-y-2">
@@ -43,7 +46,10 @@ export default async function Page({ params }: { params: { id: string } }) {
               value: student.firstName + " " + student.lastName,
             },
             { label: "Klasse", value: student.grade + student.className },
-            { label: "Anmerkungen", value: student.notes || "Keine Anmerkung" },
+            {
+              label: "Anmerkungen",
+              value: student.notes || "Keine Anmerkung",
+            },
             {
               label: "Erscheint am",
               value:
