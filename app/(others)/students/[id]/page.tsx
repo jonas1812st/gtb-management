@@ -1,4 +1,4 @@
-import { Table, Td, Tr } from "@/components/form/table";
+import { Table, Td, Th, Tr } from "@/components/form/table";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,56 +31,100 @@ export default async function Page({ params }: { params: { id: string } }) {
     },
     include: {
       attendances: true,
+      visitations: {
+        orderBy: {
+          date: "desc",
+        },
+      },
     },
   });
 
   if (!student) return <Error error="Student not found." />;
 
   return (
-    <div className="flex flex-col space-y-2">
-      <Table>
-        <tbody>
-          {[
-            {
-              label: "Name",
-              value: student.firstName + " " + student.lastName,
-            },
-            { label: "Klasse", value: student.grade + student.className },
-            {
-              label: "Anmerkungen",
-              value: student.notes || "Keine Anmerkung",
-            },
-            {
-              label: "Erscheint am",
-              value:
-                student.attendances.length !== 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {student.attendances.map((attendance, index) => (
-                      <span
-                        key={index + "_attendance_element"}
-                        className="text-sm p-1.5 border rounded-md"
-                      >
-                        {dayjs()
-                          .day(attendance.day + 1)
-                          .format("ddd")}{" "}
-                        {dayjs().hour(0).minute(attendance.end).format("HH:mm")}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  "Keine Zeiten"
-                ),
-            },
-          ].map((information, index) => (
-            <Tr key={index + "_information_row"}>
-              <td className="font-semibold text-gray-600">
-                {information.label}
-              </td>
-              <Td>{information.value}</Td>
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
+    <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-2">
+        <h1 className="text-xl font-semibold">Informationen</h1>
+        <div className="border rounded-lg">
+          <Table>
+            <tbody>
+              {[
+                {
+                  label: "Name",
+                  value: student.firstName + " " + student.lastName,
+                },
+                { label: "Klasse", value: student.grade + student.className },
+                {
+                  label: "Anmerkungen",
+                  value: student.notes || "Keine Anmerkung",
+                },
+                {
+                  label: "Erscheint am",
+                  value:
+                    student.attendances.length !== 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {student.attendances.map((attendance, index) => (
+                          <span
+                            key={index + "_attendance_element"}
+                            className="text-sm p-1.5 border rounded-md"
+                          >
+                            {dayjs()
+                              .day(attendance.day + 1)
+                              .format("ddd")}{" "}
+                            {dayjs()
+                              .hour(0)
+                              .minute(attendance.end)
+                              .format("HH:mm")}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      "Keine Zeiten"
+                    ),
+                },
+              ].map((information, index) => (
+                <Tr key={index + "_information_row"}>
+                  <td className="font-semibold text-gray-600 p-3">
+                    {information.label}
+                  </td>
+                  <Td>{information.value}</Td>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      </div>
+      <div className="flex flex-col space-y-2">
+        <h1 className="text-xl font-semibold">Erschien am</h1>
+        <div className="border rounded-lg max-h-[400px] overflow-auto">
+          <Table>
+            <thead>
+              <Tr>
+                <Th>Datum</Th>
+                <Th>Zeitraum</Th>
+              </Tr>
+            </thead>
+            <tbody>
+              {student.visitations.map((visitation, index) => (
+                <Tr key={index + "_" + visitation.id + "_" + "_visitation"}>
+                  <Td>{dayjs(visitation.date).format("ddd DD.MM.YYYY")}</Td>
+                  <Td>
+                    {dayjs(visitation.date)
+                      .minute(visitation.start)
+                      .format("HH:mm") +
+                      " - " +
+                      (visitation.end
+                        ? dayjs(visitation.date)
+                            .minute(visitation.end)
+                            .format("HH:mm")
+                        : "--:--")}
+                  </Td>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      </div>
       <div className="flex items-center justify-between">
         <Link href={"/students/" + student.id + "/edit"}>
           <Button variant={"outline"} size={"sm"}>

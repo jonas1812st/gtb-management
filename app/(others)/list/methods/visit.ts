@@ -98,4 +98,5 @@ export async function updateVisitation(
   }
 
   revalidatePath("/list");
+  revalidatePath("/student/" + studentId);
 }
