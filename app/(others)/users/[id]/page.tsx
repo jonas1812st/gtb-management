@@ -19,9 +19,11 @@ import { DeleteButton } from "@/components/form/deleteBtn";
 import { deleteUser } from "../methods/deleteUser";
 import { getAccessRights } from "@/utils/accessRights";
 import NotAllowed from "@/components/navigation/not-allowed";
+import { auth } from "@/auth";
 dayjs.locale("de");
 
 export default async function Page({ params }: { params: { id: string } }) {
+  const session = await auth();
   const rights = await getAccessRights();
 
   if (!rights.manageUsers)
@@ -88,7 +90,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </Link>
           ) : null}
         </div>
-        {user.role !== "OWNER" ? (
+        {user.role !== "OWNER" && user.username !== session?.user?.username ? (
           <Dialog>
             <DialogTrigger asChild>
               <Button variant={"destructive"} size={"sm"}>

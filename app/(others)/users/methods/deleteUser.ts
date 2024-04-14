@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export async function deleteUser(userId: number) {
   const rights = await getAccessRights();
-  if (!rights.updateUser) throw new Error("Not allowed.");
+  if (!rights.deleteUser) throw new Error("Not allowed.");
 
   const result = z.number().parse(userId);
 
