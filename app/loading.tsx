@@ -1,3 +1,5 @@
+import Loader from "@/components/navigation/loading";
+
 export default function Loading() {
-  return <span>Loading...</span>;
+  return <Loader />;
 }

@@ -1,4 +1,5 @@
 import TopBar from "@/components/navigation/topbar";
+import Provider from "@/components/provider";
 import { Toaster } from "react-hot-toast";
 
 export default function Layout({
@@ -10,7 +11,9 @@ export default function Layout({
     <>
       <Toaster />
       <TopBar />
-      <main className="max-w-screen-md mx-auto py-3 px-2">{children}</main>
+      <Provider>
+        <main className="max-w-screen-md mx-auto py-3 px-2">{children}</main>
+      </Provider>
     </>
   );
 }
