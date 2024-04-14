@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { mdiAccount, mdiLogout } from "@mdi/js";
 import Icon from "@mdi/react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Popover,
   PopoverContent,
@@ -14,7 +14,6 @@ import { signOut } from "next-auth/react";
 
 export default function TopBar() {
   const pathname = usePathname();
-  const router = useRouter();
 
   return (
     <nav className="p-3 shadow-md bg-[#4d7c8a] flex justify-center">
@@ -59,7 +58,6 @@ export default function TopBar() {
                 <PopoverBtn
                   onClick={async () => {
                     await signOut();
-                    router.push("/auth/login");
                   }}
                 >
                   <Icon size={0.8} path={mdiLogout} />
