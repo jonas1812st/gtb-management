@@ -105,6 +105,16 @@ export default async function Page({ params }: { params: { id: string } }) {
               </Tr>
             </thead>
             <tbody>
+              {student.visitations.length === 0 && (
+                <Tr>
+                  {/* should span the whole table */}
+                  <Td colSpan={100}>
+                    <div className="flex items-center justify-center text-gray-500">
+                      <span className="font-medium">Keine Einträge</span>
+                    </div>
+                  </Td>
+                </Tr>
+              )}
               {student.visitations.map((visitation, index) => (
                 <Tr key={index + "_" + visitation.id + "_" + "_visitation"}>
                   <Td>{dayjs(visitation.date).format("ddd DD.MM.YYYY")}</Td>
@@ -115,8 +125,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                       " - " +
                       (visitation.end
                         ? dayjs(visitation.date)
-                            .minute(visitation.end)
-                            .format("HH:mm")
+                          .minute(visitation.end)
+                          .format("HH:mm")
                         : "--:--")}
                   </Td>
                 </Tr>

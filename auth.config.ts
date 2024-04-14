@@ -1,4 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
 export const authConfig = {
@@ -15,6 +16,22 @@ export const authConfig = {
         return NextResponse.redirect(url);
       }
       return isLoggedIn;
+    },
+    async jwt({ token, user, trigger }) {
+      if (trigger === "signIn") {
+        token.username = user.username;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      if (session) {
+        session.user.username = token.username;
+        session.user.role = token.role;
+      }
+
+      return session;
     },
   },
   providers: [],

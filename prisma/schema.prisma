@@ -43,11 +43,18 @@ model Visitation {
   end       Int?
   Student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int
+
   @@unique([date, studentId])
 }
 
 model User {
   id       Int    @id @default(autoincrement())
+  role     Role   @default(DEFAULT)
   username String @unique
   password String
+}
+
+enum Role {
+  ADMIN
+  DEFAULT
 }

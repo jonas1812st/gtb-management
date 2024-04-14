@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { mdiAccount, mdiLogout } from "@mdi/js";
+import { mdiAccount, mdiCog, mdiLogout } from "@mdi/js";
 import Icon from "@mdi/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { signOut } from "next-auth/react";
+import { PopoverClose } from "@radix-ui/react-popover";
 
 export default function TopBar() {
   const pathname = usePathname();
@@ -55,6 +56,10 @@ export default function TopBar() {
                   <Icon size={0.8} path={mdiAccount} />
                   <span>Profil</span>
                 </PopoverBtn>
+                <PopoverBtn onClick={"/manage"}>
+                  <Icon size={0.8} path={mdiCog} />
+                  <span>Verwaltung</span>
+                </PopoverBtn>
                 <PopoverBtn
                   onClick={async () => {
                     await signOut();
@@ -77,12 +82,23 @@ const PopoverBtn = ({
   onClick,
 }: {
   children: React.ReactNode;
-  onClick?: () => void;
-}) => (
-  <button
-    className="p-2 transition hover:bg-gray-100 rounded-md text-left flex items-center space-x-2"
-    onClick={onClick}
-  >
-    {children}
-  </button>
-);
+  onClick?: (() => void) | string;
+}) => {
+  if (typeof onClick !== "string")
+    return (
+      <PopoverClose
+        className="p-2 transition hover:bg-gray-100 rounded-md text-left flex items-center space-x-2"
+        onClick={onClick}
+      >
+        {children}
+      </PopoverClose>
+    );
+  else
+    return (
+      <Link href={onClick}>
+        <PopoverClose className="p-2 transition hover:bg-gray-100 rounded-md text-left flex items-center space-x-2 w-full">
+          {children}
+        </PopoverClose>
+      </Link>
+    );
+};
