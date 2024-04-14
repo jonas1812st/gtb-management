@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,10 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getAccessRights } from "@/utils/accessRights";
 import Link from "next/link";
 
 export default async function Page() {
-  const session = await auth();
+  const rights = await getAccessRights();
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -22,13 +22,15 @@ export default async function Page() {
           secondary: { url: "/students/create", label: "Neu erstellen" },
         }}
       />
-      {session?.user?.role === "ADMIN" ? (
+      {rights.manageUsers ? (
         <ManageCard
           title="Benutzer"
           description="Verwalte alle Benutzer"
           links={{
             primary: { url: "/users", label: "Verwalten" },
-            secondary: { url: "/users/create", label: "Neu erstellen" },
+            secondary: rights.createUsers
+              ? { url: "/users/create", label: "Neu erstellen" }
+              : undefined,
           }}
         />
       ) : null}
@@ -48,10 +50,12 @@ const ManageCard = ({
       url: string;
       label: string;
     };
-    secondary: {
+    secondary:
+    | {
       url: string;
       label: string;
-    };
+    }
+    | undefined;
   };
 }) => (
   <Card>
@@ -62,11 +66,13 @@ const ManageCard = ({
       <p className="text-muted-foreground">{description}</p>
     </CardContent>
     <CardFooter className="flex justify-end space-x-2">
-      <Link href={secondary.url}>
-        <Button variant={"secondary"} size={"sm"}>
-          {secondary.label}
-        </Button>
-      </Link>
+      {secondary ? (
+        <Link href={secondary.url}>
+          <Button variant={"secondary"} size={"sm"}>
+            {secondary.label}
+          </Button>
+        </Link>
+      ) : null}
       <Link href={primary.url}>
         <Button size={"sm"}>{primary.label}</Button>
       </Link>

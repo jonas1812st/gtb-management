@@ -13,6 +13,7 @@ import { stringToTime } from "@/utils/time";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import { CreateStudentInputSchema } from "@/utils/zodSchema";
+import { ErrorMessage, FormLabel } from "@/components/form/form";
 
 export default function StudentForm(
   params: (
@@ -92,7 +93,7 @@ export default function StudentForm(
         reset();
         toast.success("Schüler erstellt");
       } else {
-        toast.success("Schüler bearbeitet");
+        toast.success("Schüler aktualisiert");
       }
     } else {
       toast.error("Es ist ein Fehler aufgetreten");
@@ -257,21 +258,3 @@ export default function StudentForm(
     </form>
   );
 }
-
-export const FormLabel = ({
-  children,
-  htmlFor,
-}: {
-  children: React.ReactNode;
-  htmlFor: string;
-}) => (
-  <label htmlFor={htmlFor} className="text-gray-600 font-medium text-sm">
-    {children}
-  </label>
-);
-
-export const ErrorMessage = ({
-  children,
-}: {
-  children: React.ReactNode | undefined;
-}) => <span className="text-xs font-medium text-red-500">{children}</span>;

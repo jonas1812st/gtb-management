@@ -6,7 +6,7 @@ export async function POST() {
     data: {
       username: "admin",
       password: "$2a$12$VflaX/Mvv01R7u5Yqva4Je.s0oitHTHV9Bja5zfDpPivRpsNVdURK",
-      role: "ADMIN",
+      role: "OWNER",
     },
   });
   return NextResponse.json({ data: user });

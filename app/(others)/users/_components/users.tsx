@@ -1,7 +1,7 @@
-import { auth } from "@/auth";
 import { Td, Th, Tr, Table } from "@/components/form/table";
 import NotAllowed from "@/components/navigation/not-allowed";
 import { Button } from "@/components/ui/button";
+import { getAccessRights } from "@/utils/accessRights";
 import { mdiInformationOutline, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Prisma } from "@prisma/client";
@@ -10,23 +10,26 @@ import Link from "next/link";
 type Users = Prisma.UserGetPayload<{}>[];
 
 export async function UsersList({ users }: { users: Users }) {
-  const session = await auth();
+  const rights = await getAccessRights();
 
-  if (session?.user?.role !== "ADMIN") return <NotAllowed />;
+  if (!rights.manageUsers)
+    return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
   return (
     <div className="flex flex-col space-y-2">
-      <div className="flex items-center justify-between">
-        <Link href={"/users/create"}>
-          <Button
-            className="flex items-center space-x-2"
-            size={"sm"}
-            variant={"secondary"}
-          >
-            <Icon size={0.7} path={mdiPlus} />
-            <span>Neuer Benutzer</span>
-          </Button>
-        </Link>
+      <div>
+        {rights.createUsers ? (
+          <Link href={"/users/create"}>
+            <Button
+              className="flex items-center space-x-2"
+              size={"sm"}
+              variant={"secondary"}
+            >
+              <Icon size={0.7} path={mdiPlus} />
+              <span>Neuer Benutzer</span>
+            </Button>
+          </Link>
+        ) : null}
       </div>
       <Table>
         <thead>

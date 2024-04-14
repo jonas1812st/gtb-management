@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ErrorMessage, FormLabel } from "../../students/_components/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -15,6 +14,7 @@ import { deleteVisitation, updateVisitation } from "../methods/visit";
 import { InputSchema } from "./timeSchema";
 import { Prisma } from "@prisma/client";
 import { timeToString } from "@/utils/time";
+import { ErrorMessage, FormLabel } from "@/components/form/form";
 
 export default function EditTimeDialog({
   studentId,
