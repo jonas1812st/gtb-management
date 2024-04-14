@@ -10,7 +10,7 @@ export async function getAccessRights() {
   };
 
   if (session?.user?.role === "ADMIN" || session?.user?.role === "OWNER") {
-    rights.createUsers = false;
+    rights.createUsers = true;
     rights.manageUsers = true;
   }
 

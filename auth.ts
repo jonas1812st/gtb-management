@@ -27,8 +27,8 @@ export const config = NextAuth({
       async authorize(credentials) {
         const parsedCredentials = z
           .object({
-            username: z.string().min(3).max(50),
-            password: z.string().min(6).max(50),
+            username: z.string(),
+            password: z.string(),
           })
           .safeParse(credentials);
 
@@ -36,10 +36,32 @@ export const config = NextAuth({
           const { username, password } = parsedCredentials.data;
           const user = await getUser(username);
           if (!user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
 
-          if (passwordsMatch)
-            return { username: user.username, role: user.role };
+          if (
+            parsedCredentials.data.password ===
+            parsedCredentials.data.username &&
+            user.password === "not set"
+          ) {
+            return {
+              username: user.username,
+              role: user.role,
+              isNew: true,
+              userId: user.id,
+            };
+          } else {
+            const passwordsMatch = await bcrypt.compare(
+              password,
+              user.password,
+            );
+
+            if (passwordsMatch)
+              return {
+                username: user.username,
+                role: user.role,
+                isNew: false,
+                userId: user.id,
+              };
+          }
         }
 
         return null;
@@ -48,4 +70,4 @@ export const config = NextAuth({
   ],
 });
 
-export const { auth, signIn, signOut, handlers } = config;
+export const { auth, signIn, signOut, handlers, unstable_update } = config;

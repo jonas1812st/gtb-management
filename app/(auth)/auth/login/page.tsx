@@ -7,6 +7,7 @@ import { mdiLogin } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { Label } from "../_components/form";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -65,15 +66,3 @@ export default function Page() {
     </form>
   );
 }
-
-const Label = ({
-  children,
-  htmlFor,
-}: {
-  children: React.ReactNode;
-  htmlFor: string;
-}) => (
-  <label className="text-sm font-semibold" htmlFor={htmlFor}>
-    {children}
-  </label>
-);

@@ -1,5 +1,4 @@
 import type { NextAuthConfig } from "next-auth";
-import { JWT } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
 export const authConfig = {
@@ -12,6 +11,22 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       if (isLoggedIn && request.nextUrl.pathname.endsWith("/auth/login")) {
         const url = request.nextUrl.clone();
+        url.pathname = "/list";
+        return NextResponse.redirect(url);
+      } else if (
+        isLoggedIn &&
+        auth.user?.isNew &&
+        !request.nextUrl.pathname.endsWith("/auth/new-user")
+      ) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/auth/new-user";
+        return NextResponse.redirect(url);
+      } else if (
+        isLoggedIn &&
+        !auth.user?.isNew &&
+        request.nextUrl.pathname.endsWith("/auth/new-user")
+      ) {
+        const url = request.nextUrl.clone();
         url.pathname = "/";
         return NextResponse.redirect(url);
       }
@@ -21,6 +36,8 @@ export const authConfig = {
       if (trigger === "signIn") {
         token.username = user.username;
         token.role = user.role;
+        token.isNew = user.isNew;
+        token.userId = user.userId;
       }
       return token;
     },
@@ -29,6 +46,8 @@ export const authConfig = {
       if (session) {
         session.user.username = token.username;
         session.user.role = token.role;
+        session.user.isNew = token.isNew;
+        session.user.userId = token.userId;
       }
 
       return session;
@@ -39,4 +58,5 @@ export const authConfig = {
     maxAge: 60 * 60 * 12, // idle session expires after 12 hours
   },
   trustHost: true,
+  secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig;
