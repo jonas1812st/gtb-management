@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const session = await auth();
   const rights = await getAccessRights();
 
-  if (!rights.manageUsers)
+  if (!rights.manageUsers && params.id !== session?.user?.userId.toString())
     return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
   const userId = parseInt(params.id) || 0;

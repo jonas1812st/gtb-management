@@ -9,7 +9,7 @@ import { InputSchema } from "../_components/timeSchema";
 
 export async function onVisiting(
   studentId: number,
-  visitation: Prisma.VisitationGetPayload<{}> | undefined,
+  visitation: Prisma.VisitationGetPayload<{}> | undefined
 ) {
   const date = dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString();
   const time = stringToTime(dayjs().format("HH:mm"));
@@ -74,7 +74,7 @@ export async function deleteVisitation(studentId: number) {
 
 export async function updateVisitation(
   studentId: number,
-  visitation: { end: string | undefined; start: string | undefined },
+  visitation: { end: string | undefined; start: string | undefined }
 ) {
   const { end, start } = InputSchema.parse(visitation);
   const date = dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString();

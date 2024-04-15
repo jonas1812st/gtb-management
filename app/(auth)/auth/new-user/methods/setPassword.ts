@@ -10,7 +10,7 @@ export async function setPassword(data: z.infer<typeof InputSchema>) {
   const result = InputSchema.parse(data);
   const session = await auth();
 
-  if (!session || !session.user)
+  if (!session || !session.user || !session.user.isNew)
     return {
       success: false,
       message: "Session Error: Please check if you are logged in.",
@@ -24,7 +24,7 @@ export async function setPassword(data: z.infer<typeof InputSchema>) {
       data: {
         password: bcrypt.hashSync(
           result.password,
-          parseInt(process.env.SALT_ROUNDS!),
+          parseInt(process.env.SALT_ROUNDS!)
         ),
       },
     });

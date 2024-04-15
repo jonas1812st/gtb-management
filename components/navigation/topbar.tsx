@@ -34,7 +34,7 @@ export default function TopBar() {
                   "font-medium py-2 px-3 rounded-md transition duration-100 text-white",
                   pathname === element.url
                     ? "bg-[#5d97a8]"
-                    : "hover:bg-[#578a99]",
+                    : "hover:bg-[#578a99]"
                 )}
                 key={index + "_top_bar_element"}
               >
@@ -52,7 +52,7 @@ export default function TopBar() {
             </PopoverTrigger>
             <PopoverContent align="end" className="p-1.5">
               <div className="flex flex-col">
-                <PopoverBtn>
+                <PopoverBtn onClick="/users/me">
                   <Icon size={0.8} path={mdiAccount} />
                   <span>Profil</span>
                 </PopoverBtn>

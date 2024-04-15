@@ -9,7 +9,11 @@ import { getAccessRights } from "@/utils/accessRights";
 
 export async function editUser(data: z.infer<typeof InputSchema>, id: number) {
   const rights = await getAccessRights();
-  if (!rights.updateUser) throw new Error("Not allowed.");
+  if (!rights.updateUser)
+    return {
+      success: false,
+      message: "Access Rights Error: Not allowed.",
+    };
 
   const result = InputSchema.parse(data);
 
