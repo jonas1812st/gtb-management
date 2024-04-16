@@ -8,7 +8,6 @@ export async function authenticate(credentials: {
   password: string;
   callbackUrl: string;
 }) {
-  console.log(credentials);
   try {
     await signIn("credentials", {
       username: credentials.username,

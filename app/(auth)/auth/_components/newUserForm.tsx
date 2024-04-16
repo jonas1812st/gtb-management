@@ -51,8 +51,6 @@ export default function Form(params: { session: Session | null }) {
       }
       router.push("/list");
     }
-
-    console.log(response);
   };
 
   return (
