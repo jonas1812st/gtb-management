@@ -16,16 +16,28 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import EditTimeDialog from "./time";
 import { SearchStudentsInput } from "@/components/form/search";
+import { DataTable } from "@/components/form/dataForm";
+import { ColumnDef } from "@tanstack/react-table";
 
-type Students = Prisma.StudentGetPayload<{
+type Student = Prisma.StudentGetPayload<{
   include: {
     visitations: true;
   };
-}>[];
+}>;
+
+type Students = Student[];
 
 export default function StudentList({ students }: { students: Students }) {
   const [filteredStudents, setFilteredStudents] = useState(students);
   const [edit, setEdit] = useState<number | null>(null);
+
+  const columns: ColumnDef<Student>[] = [
+    {
+      accessorKey: "fullName",
+      header: "Name",
+      accessorFn: (row) => row.firstName + " " + row.lastName,
+    },
+  ];
 
   return (
     <>
@@ -35,13 +47,18 @@ export default function StudentList({ students }: { students: Students }) {
             students={students}
             setFiltered={(ids) =>
               setFilteredStudents(
-                students.filter((student) => ids.includes(student.id)),
+                students.filter((student) => ids.includes(student.id))
               )
             }
           />
         </div>
         <div className="overflow-auto">
-          <StudentTable students={filteredStudents} setEdit={setEdit} />
+          {/* <StudentTable students={filteredStudents} setEdit={setEdit} /> */}
+          <DataTable
+            columns={columns}
+            data={students}
+            filter={{ column: "fullName", placeholder: "Namen filtern..." }}
+          />
         </div>
       </div>
       {edit !== null ? (
@@ -88,7 +105,7 @@ const StudentTable = ({
           const currentVisitation = student.visitations.find(
             (visitation) =>
               visitation.date.toISOString() ===
-              dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString(),
+              dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString()
           );
           const visitationState: "visiting" | "visited" | "default" =
             currentVisitation !== undefined
@@ -104,8 +121,8 @@ const StudentTable = ({
                 visitationState === "visiting"
                   ? "bg-yellow-100"
                   : visitationState === "visited"
-                    ? "bg-green-100"
-                    : ""
+                  ? "bg-green-100"
+                  : ""
               }
             >
               <Td>
