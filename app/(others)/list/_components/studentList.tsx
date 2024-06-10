@@ -1,7 +1,12 @@
 "use client";
 
 import { Table, Td, Th, Tr } from "@/components/form/table";
-import { mdiDotsVertical, mdiTimerEditOutline } from "@mdi/js";
+import {
+  mdiDotsVertical,
+  mdiInformation,
+  mdiInformationOutline,
+  mdiTimerEditOutline,
+} from "@mdi/js";
 import Icon from "@mdi/react";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
@@ -15,7 +20,6 @@ import {
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import EditTimeDialog from "./time";
-import { SearchStudentsInput } from "@/components/form/search";
 import { DataTable } from "@/components/form/dataForm";
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -27,39 +31,127 @@ type Student = Prisma.StudentGetPayload<{
 
 type Students = Student[];
 
+const getPresentState = (student: Student) => {
+  const currentVisitation = student.visitations.find(
+    (visitation) =>
+      visitation.date.toISOString() ===
+      dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString(),
+  );
+
+  return {
+    visitation: currentVisitation,
+    state:
+      currentVisitation !== undefined
+        ? currentVisitation.end !== null
+          ? "visited"
+          : "visiting"
+        : "default",
+  };
+};
+
 export default function StudentList({ students }: { students: Students }) {
-  const [filteredStudents, setFilteredStudents] = useState(students);
   const [edit, setEdit] = useState<number | null>(null);
 
   const columns: ColumnDef<Student>[] = [
     {
+      accessorKey: "isPresent",
+      header: "Anwesend",
+      cell: ({ row: { original: student } }) => {
+        const presentState = getPresentState(student);
+        return (
+          <input
+            type="checkbox"
+            defaultChecked={
+              presentState.visitation !== undefined &&
+              presentState.visitation.end === null
+            }
+            onClick={() => onVisiting(student.id, presentState.visitation)}
+          />
+        );
+      },
+      enableSorting: false,
+      meta: {
+        getCellContext: ({ row: { original: student } }) => {
+          const presentState = getPresentState(student);
+
+          return {
+            row: {
+              style: {
+                backgroundColor:
+                  presentState.state === "visiting"
+                    ? "#FEF9C3"
+                    : presentState.state === "visited"
+                      ? "#DCFCE7"
+                      : null,
+              },
+            },
+          };
+        },
+      },
+    },
+    {
       accessorKey: "fullName",
       header: "Name",
-      accessorFn: (row) => row.firstName + " " + row.lastName,
+      accessorFn: (student) => student.firstName + " " + student.lastName,
+      cell: ({ row: { original: student } }) => (
+        <Link
+          href={"/students/" + student.id}
+          className="flex space-x-2 items-center"
+        >
+          <span>
+            {student.firstName} {student.lastName}
+          </span>
+          {student.notes !== null ? (
+            <Icon
+              path={mdiInformationOutline}
+              size={0.8}
+              className="text-red-500 translate-y-[1px]"
+            />
+          ) : null}
+        </Link>
+      ),
+    },
+    {
+      accessorKey: "class",
+      header: "Klasse",
+      accessorFn: (student) => student.grade + student.className,
+    },
+    {
+      accessorKey: "visitation",
+      header: "",
+      enableSorting: false,
+      cell: ({ row: { original: student } }) => (
+        <div className="flex items-center">
+          <Popover>
+            <PopoverTrigger>
+              <Icon size={0.8} path={mdiDotsVertical} />
+            </PopoverTrigger>
+            <PopoverContent className="p-2 w-fit">
+              <div className="flex flex-col">
+                <PopoverClose
+                  onClick={() => setEdit(student.id)}
+                  className="p-2 hover:bg-gray-100 transition rounded-md text-left flex space-x-2 items-center pe-5"
+                >
+                  <Icon size={0.9} path={mdiTimerEditOutline} />
+                  <span>Anwesenheit bearbeiten</span>
+                </PopoverClose>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+      ),
     },
   ];
 
   return (
     <>
       <div className="flex flex-col space-y-2">
-        <div className="flex items-center justify-end">
-          <SearchStudentsInput
-            students={students}
-            setFiltered={(ids) =>
-              setFilteredStudents(
-                students.filter((student) => ids.includes(student.id))
-              )
-            }
-          />
-        </div>
-        <div className="overflow-auto">
-          {/* <StudentTable students={filteredStudents} setEdit={setEdit} /> */}
-          <DataTable
-            columns={columns}
-            data={students}
-            filter={{ column: "fullName", placeholder: "Namen filtern..." }}
-          />
-        </div>
+        {/* <StudentTable students={filteredStudents} setEdit={setEdit} /> */}
+        <DataTable
+          columns={columns}
+          data={students}
+          filter={{ column: "fullName", placeholder: "Suche" }}
+        />
       </div>
       {edit !== null ? (
         <EditTimeDialog
@@ -102,37 +194,28 @@ const StudentTable = ({
           </Tr>
         )}
         {students.map((student, index) => {
-          const currentVisitation = student.visitations.find(
-            (visitation) =>
-              visitation.date.toISOString() ===
-              dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString()
-          );
-          const visitationState: "visiting" | "visited" | "default" =
-            currentVisitation !== undefined
-              ? currentVisitation.end !== null
-                ? "visited"
-                : "visiting"
-              : "default";
-
+          const presentState = getPresentState(student);
           return (
             <Tr
               key={index + "_student"}
               className={
-                visitationState === "visiting"
+                presentState.state === "visiting"
                   ? "bg-yellow-100"
-                  : visitationState === "visited"
-                  ? "bg-green-100"
-                  : ""
+                  : presentState.state === "visited"
+                    ? "bg-green-100"
+                    : ""
               }
             >
               <Td>
                 <input
                   type="checkbox"
                   defaultChecked={
-                    currentVisitation !== undefined &&
-                    currentVisitation.end === null
+                    presentState.visitation !== undefined &&
+                    presentState.visitation.end === null
                   }
-                  onClick={() => onVisiting(student.id, currentVisitation)}
+                  onClick={() =>
+                    onVisiting(student.id, presentState.visitation)
+                  }
                 />
               </Td>
               <Td>

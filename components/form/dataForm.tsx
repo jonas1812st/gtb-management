@@ -14,6 +14,7 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import React from "react";
+import { Input } from "../ui/input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,8 +48,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
-        <input
+      <div className="flex items-center justify-end py-4">
+        <Input
           type="text"
           placeholder={filter.placeholder}
           value={
@@ -57,7 +58,7 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn(filter.column)?.setFilterValue(event.target.value)
           }
-          className="max-w-sm flex h-10 w-full text-sm rounded-md border border-input bg-background px-3 py-2 items-center focus:outline-none outline-1 focus:outline-gray-400 transition"
+          className="w-[340px]"
         />
       </div>
       <Table>
@@ -70,19 +71,34 @@ export function DataTable<TData, TValue>({
                     {header.isPlaceholder ? null : (
                       <div
                         {...{
-                          className: header.column.getCanSort()
-                            ? "cursor-pointer select-none flex items-center"
-                            : "",
+                          className: cn(
+                            "flex items-center",
+                            header.column.getCanSort()
+                              ? "cursor-pointer select-none"
+                              : "",
+                          ),
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext(),
-                        )}
+                        )}{" "}
                         {{
-                          asc: <Icon path={mdiChevronDown} size={1} />,
-                          desc: <Icon path={mdiChevronUp} size={1} />,
+                          asc: (
+                            <Icon
+                              path={mdiChevronDown}
+                              size={0.8}
+                              className="text-gray-700"
+                            />
+                          ),
+                          desc: (
+                            <Icon
+                              path={mdiChevronUp}
+                              size={0.8}
+                              className="text-gray-700"
+                            />
+                          ),
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}
@@ -94,22 +110,45 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            table.getRowModel().rows.map((row) => {
+              const hasRowMeta = row.getAllCells()[0].getContext().cell.column
+                .columnDef.meta;
+
+              return (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  {...(hasRowMeta && {
+                    ...hasRowMeta.getCellContext(
+                      row.getAllCells()[0].getContext(),
+                    ).row,
+                  })}
+                >
+                  {row.getVisibleCells().map((cell) => {
+                    const hasCellMeta =
+                      cell.getContext().cell.column.columnDef.meta;
+
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        {...(hasCellMeta && {
+                          ...hasCellMeta.getCellContext(cell.getContext()).cell,
+                        })}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                <i>Keine Einträge.</i>
+              <TableCell colSpan={columns.length} className="text-center">
+                <i className="text-gray-500 font-medium">Keine Einträge</i>
               </TableCell>
             </TableRow>
           )}
@@ -120,7 +159,7 @@ export function DataTable<TData, TValue>({
 }
 
 const Table = ({ children }: { children: React.ReactNode }) => (
-  <div className="rounded-md border overflow-auto">
+  <div className="rounded-md border overflow-hidden">
     <table className="w-full border-collapse">{children}</table>
   </div>
 );
@@ -133,8 +172,10 @@ const TableBody = ({ children }: { children?: React.ReactNode }) => (
   <tbody className="[&_tr:last-child]:border-0">{children}</tbody>
 );
 
-const TableRow = ({ children }: { children: React.ReactNode }) => (
-  <tr className="border-b">{children}</tr>
+const TableRow = ({ children, ...props }: { children: React.ReactNode }) => (
+  <tr className="border-b" {...props}>
+    {children}
+  </tr>
 );
 
 const TableHead = ({
@@ -146,7 +187,7 @@ const TableHead = ({
   colSpan?: number;
   className?: string;
 }) => (
-  <th className={cn("px-2 py-5", className)} colSpan={colSpan}>
+  <th className={cn("p-3", className)} colSpan={colSpan}>
     {children}
   </th>
 );
@@ -155,12 +196,13 @@ const TableCell = ({
   children,
   colSpan,
   className,
+  ...props
 }: {
   children?: React.ReactNode;
   colSpan?: number;
   className?: string;
 }) => (
-  <td className={cn("px-2 py-5", className)} colSpan={colSpan}>
+  <td className={cn("p-3", className)} colSpan={colSpan} {...props}>
     {children}
   </td>
 );
