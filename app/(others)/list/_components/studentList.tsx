@@ -35,7 +35,7 @@ const getPresentState = (student: Student) => {
   const currentVisitation = student.visitations.find(
     (visitation) =>
       visitation.date.toISOString() ===
-      dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString(),
+      dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString()
   );
 
   return {
@@ -81,8 +81,8 @@ export default function StudentList({ students }: { students: Students }) {
                   presentState.state === "visiting"
                     ? "#FEF9C3"
                     : presentState.state === "visited"
-                      ? "#DCFCE7"
-                      : null,
+                    ? "#DCFCE7"
+                    : null,
               },
             },
           };
@@ -145,14 +145,12 @@ export default function StudentList({ students }: { students: Students }) {
 
   return (
     <>
-      <div className="flex flex-col space-y-2">
-        {/* <StudentTable students={filteredStudents} setEdit={setEdit} /> */}
-        <DataTable
-          columns={columns}
-          data={students}
-          filter={{ column: "fullName", placeholder: "Suche" }}
-        />
-      </div>
+      {/* <StudentTable students={filteredStudents} setEdit={setEdit} /> */}
+      <DataTable
+        columns={columns}
+        data={students}
+        filter={{ column: "fullName", placeholder: "Suche" }}
+      />
       {edit !== null ? (
         <EditTimeDialog
           open={edit !== null}
@@ -202,8 +200,8 @@ const StudentTable = ({
                 presentState.state === "visiting"
                   ? "bg-yellow-100"
                   : presentState.state === "visited"
-                    ? "bg-green-100"
-                    : ""
+                  ? "bg-green-100"
+                  : ""
               }
             >
               <Td>

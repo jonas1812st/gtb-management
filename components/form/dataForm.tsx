@@ -29,7 +29,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
+    []
   );
 
   const table = useReactTable({
@@ -48,7 +48,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center justify-end py-4">
+      <div className="flex items-center justify-end pb-4">
         <Input
           type="text"
           placeholder={filter.placeholder}
@@ -75,15 +75,15 @@ export function DataTable<TData, TValue>({
                             "flex items-center",
                             header.column.getCanSort()
                               ? "cursor-pointer select-none"
-                              : "",
+                              : ""
                           ),
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
-                        )}{" "}
+                          header.getContext()
+                        )}
                         {{
                           asc: (
                             <Icon
@@ -120,7 +120,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                   {...(hasRowMeta && {
                     ...hasRowMeta.getCellContext(
-                      row.getAllCells()[0].getContext(),
+                      row.getAllCells()[0].getContext()
                     ).row,
                   })}
                 >
@@ -137,7 +137,7 @@ export function DataTable<TData, TValue>({
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext(),
+                          cell.getContext()
                         )}
                       </TableCell>
                     );
