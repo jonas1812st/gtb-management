@@ -1,7 +1,14 @@
 import dayjs from "dayjs";
 
-export function stringToTime<T extends string | undefined>(value: T): T extends string ? number : undefined {
-  if (!value && typeof value !== "string") return undefined;
+export function stringToTime<T extends string | undefined>(value: T) {
+  if (!value) return undefined;
+  const hours = parseInt(value.split(":")[0], 10);
+  const minutes = parseInt(value.split(":")[1], 10);
+
+  return hours * 60 + minutes;
+}
+
+export function stringToTimeNonNullable(value: string) {
   const hours = parseInt(value.split(":")[0], 10);
   const minutes = parseInt(value.split(":")[1], 10);
 

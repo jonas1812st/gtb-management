@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { stringToTime } from "@/utils/time";
+import { stringToTime, stringToTimeNonNullable } from "@/utils/time";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
@@ -88,7 +88,7 @@ export async function updateVisitation(studentId: number, visitation: { end: str
       create: {
         date,
         studentId,
-        start: stringToTime(start),
+        start: stringToTimeNonNullable(start),
         end: stringToTime(end) || null,
       },
     });
