@@ -5,11 +5,7 @@ import { mdiAccount, mdiCog, mdiLogout } from "@mdi/js";
 import Icon from "@mdi/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { signOut } from "next-auth/react";
 import { PopoverClose } from "@radix-ui/react-popover";
 
@@ -32,9 +28,7 @@ export default function TopBar() {
                 href={element.url}
                 className={cn(
                   "font-medium py-2 px-3 rounded-md transition duration-100 text-white",
-                  pathname === element.url
-                    ? "bg-[#5d97a8]"
-                    : "hover:bg-[#578a99]"
+                  pathname === element.url ? "bg-[#5d97a8]" : "hover:bg-[#578a99]"
                 )}
                 key={index + "_top_bar_element"}
               >
@@ -77,28 +71,17 @@ export default function TopBar() {
   );
 }
 
-const PopoverBtn = ({
-  children,
-  onClick,
-}: {
-  children: React.ReactNode;
-  onClick?: (() => void) | string;
-}) => {
+const PopoverBtn = ({ children, onClick }: { children: React.ReactNode; onClick?: (() => void) | string }) => {
   if (typeof onClick !== "string")
     return (
-      <PopoverClose
-        className="p-2 transition hover:bg-gray-100 rounded-md text-left flex items-center space-x-2"
-        onClick={onClick}
-      >
+      <PopoverClose className="p-2 transition hover:bg-gray-100 rounded-md text-left flex items-center space-x-2" onClick={onClick}>
         {children}
       </PopoverClose>
     );
   else
     return (
       <Link href={onClick}>
-        <PopoverClose className="p-2 transition hover:bg-gray-100 rounded-md text-left flex items-center space-x-2 w-full">
-          {children}
-        </PopoverClose>
+        <PopoverClose className="p-2 transition hover:bg-gray-100 rounded-md text-left flex items-center space-x-2 w-full">{children}</PopoverClose>
       </Link>
     );
 };

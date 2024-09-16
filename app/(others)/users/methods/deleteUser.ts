@@ -24,11 +24,7 @@ export async function deleteUser(userId: number) {
     };
 
   // check if user has access rights to delete / if he doesn't delete himself / the user to delete is not the owner
-  if (
-    !rights.deleteUser ||
-    session?.user?.userId === userId ||
-    deletedUser.role === "OWNER"
-  )
+  if (!rights.deleteUser || session?.user?.userId === userId || deletedUser.role === "OWNER")
     return {
       success: false,
       message: "Access Rights Error: Not allowed.",

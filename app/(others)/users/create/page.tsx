@@ -6,8 +6,7 @@ import { createUser } from "../methods/createUser";
 export default async function Page() {
   const rights = await getAccessRights();
 
-  if (!rights.createUsers)
-    return <NotAllowed label="Zur Verwaltung" url="/manage" />;
+  if (!rights.createUsers) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
   return <UserForm action="create" actionMethod={createUser} />;
 }

@@ -13,19 +13,11 @@ export const authConfig = {
         const url = request.nextUrl.clone();
         url.pathname = "/list";
         return NextResponse.redirect(url);
-      } else if (
-        isLoggedIn &&
-        auth.user?.isNew &&
-        !request.nextUrl.pathname.endsWith("/auth/new-user")
-      ) {
+      } else if (isLoggedIn && auth.user?.isNew && !request.nextUrl.pathname.endsWith("/auth/new-user")) {
         const url = request.nextUrl.clone();
         url.pathname = "/auth/new-user";
         return NextResponse.redirect(url);
-      } else if (
-        isLoggedIn &&
-        !auth.user?.isNew &&
-        request.nextUrl.pathname.endsWith("/auth/new-user")
-      ) {
+      } else if (isLoggedIn && !auth.user?.isNew && request.nextUrl.pathname.endsWith("/auth/new-user")) {
         const url = request.nextUrl.clone();
         url.pathname = "/";
         return NextResponse.redirect(url);

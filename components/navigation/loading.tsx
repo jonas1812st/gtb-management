@@ -2,21 +2,8 @@ import { cn } from "@/lib/utils";
 import "@/styles/loading.scss";
 
 type Size = "base" | "sm";
-const Loader = ({
-  size,
-  screen = false,
-}: {
-  className?: string;
-  size?: Size;
-  screen?: boolean;
-}) => (
-  <div
-    role="status"
-    className={cn(
-      "w-full flex justify-center items-center",
-      screen ? "h-screen" : "h-full",
-    )}
-  >
+const Loader = ({ size, screen = false }: { className?: string; size?: Size; screen?: boolean }) => (
+  <div role="status" className={cn("w-full flex justify-center items-center", screen ? "h-screen" : "h-full")}>
     <svg
       className={`inline ${size === "sm" ? "w-8 h-8" : "w-24 h-24"} animate-spin`}
       width="24"

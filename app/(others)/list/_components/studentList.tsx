@@ -8,11 +8,7 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useState } from "react";
 import { onVisiting } from "../methods/visit";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import EditTimeDialog from "./time";
 import { SearchStudentsInput } from "@/components/form/search";
@@ -33,11 +29,7 @@ export default function StudentList({ students }: { students: Students }) {
         <div className="flex items-center justify-end">
           <SearchStudentsInput
             students={students}
-            setFiltered={(ids) =>
-              setFilteredStudents(
-                students.filter((student) => ids.includes(student.id)),
-              )
-            }
+            setFiltered={(ids) => setFilteredStudents(students.filter((student) => ids.includes(student.id)))}
           />
         </div>
         <div className="overflow-auto">
@@ -49,21 +41,13 @@ export default function StudentList({ students }: { students: Students }) {
           open={edit !== null}
           closeDialog={() => setEdit(null)}
           studentId={edit}
-          visitation={
-            students.find((student) => student.id === edit)?.visitations[0]
-          }
+          visitation={students.find((student) => student.id === edit)?.visitations[0]}
         />
       ) : null}
     </>
   );
 }
-const StudentTable = ({
-  students,
-  setEdit,
-}: {
-  students: Students;
-  setEdit: (studentId: number) => void;
-}) => {
+const StudentTable = ({ students, setEdit }: { students: Students; setEdit: (studentId: number) => void }) => {
   return (
     <Table>
       <thead>
@@ -86,35 +70,20 @@ const StudentTable = ({
         )}
         {students.map((student, index) => {
           const currentVisitation = student.visitations.find(
-            (visitation) =>
-              visitation.date.toISOString() ===
-              dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString(),
+            (visitation) => visitation.date.toISOString() === dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString()
           );
           const visitationState: "visiting" | "visited" | "default" =
-            currentVisitation !== undefined
-              ? currentVisitation.end !== null
-                ? "visited"
-                : "visiting"
-              : "default";
+            currentVisitation !== undefined ? (currentVisitation.end !== null ? "visited" : "visiting") : "default";
 
           return (
             <Tr
               key={index + "_student"}
-              className={
-                visitationState === "visiting"
-                  ? "bg-yellow-100"
-                  : visitationState === "visited"
-                    ? "bg-green-100"
-                    : ""
-              }
+              className={visitationState === "visiting" ? "bg-yellow-100" : visitationState === "visited" ? "bg-green-100" : ""}
             >
               <Td>
                 <input
                   type="checkbox"
-                  defaultChecked={
-                    currentVisitation !== undefined &&
-                    currentVisitation.end === null
-                  }
+                  defaultChecked={currentVisitation !== undefined && currentVisitation.end === null}
                   onClick={() => onVisiting(student.id, currentVisitation)}
                 />
               </Td>

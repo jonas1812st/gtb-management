@@ -26,19 +26,11 @@ export default async function Page({ params }: { params: { id: string } }) {
   const session = await auth();
   const rights = await getAccessRights();
 
-  if (!rights.manageUsers && params.id !== session?.user?.userId.toString())
-    return <NotAllowed label="Zur Verwaltung" url="/manage" />;
+  if (!rights.manageUsers && params.id !== session?.user?.userId.toString()) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
   const userId = parseInt(params.id) || 0;
 
-  if (params.id === "" || userId === 0)
-    return (
-      <Error
-        error="Id not valid."
-        btnLabel="Zur Benutzerübersicht"
-        url="/users"
-      />
-    );
+  if (params.id === "" || userId === 0) return <Error error="Id not valid." btnLabel="Zur Benutzerübersicht" url="/users" />;
 
   const user = await prisma.user.findUnique({
     where: {
@@ -46,14 +38,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     },
   });
 
-  if (!user)
-    return (
-      <Error
-        error="User not found."
-        btnLabel="Zur Benutzerübersicht"
-        url="/users"
-      />
-    );
+  if (!user) return <Error error="User not found." btnLabel="Zur Benutzerübersicht" url="/users" />;
 
   return (
     <div className="flex flex-col space-y-4">
@@ -70,9 +55,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 { label: "Rolle", value: user.role },
               ].map((information, index) => (
                 <Tr key={index + "_information_row"}>
-                  <td className="font-semibold text-gray-600 p-3">
-                    {information.label}
-                  </td>
+                  <td className="font-semibold text-gray-600 p-3">{information.label}</td>
                   <Td>{information.value}</Td>
                 </Tr>
               ))}
@@ -101,9 +84,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               <DialogHeader>
                 <DialogTitle>Möchtest du diesen Benutzer löschen?</DialogTitle>
                 <DialogDescription>
-                  Diese Aktion kann nicht rückgängig gemacht werden. Dieser
-                  Benutzer und seine Daten werden permanent von diesem System
-                  gelöscht.
+                  Diese Aktion kann nicht rückgängig gemacht werden. Dieser Benutzer und seine Daten werden permanent von diesem System gelöscht.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
@@ -112,11 +93,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     Abbrechen
                   </Button>
                 </DialogClose>
-                <DeleteButton
-                  url="/users"
-                  action={deleteUser}
-                  userId={userId}
-                />
+                <DeleteButton url="/users" action={deleteUser} userId={userId} />
               </DialogFooter>
             </DialogContent>
           </Dialog>

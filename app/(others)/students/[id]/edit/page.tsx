@@ -10,8 +10,7 @@ import Error from "@/components/navigation/error";
 export default async function Page({ params }: { params: { id: string } }) {
   const studentId = parseInt(params.id) || 0;
 
-  if (params.id === "" || studentId === 0)
-    return <Error error="Id not valid." />;
+  if (params.id === "" || studentId === 0) return <Error error="Id not valid." />;
 
   const student = await prisma.student.findUnique({
     where: {

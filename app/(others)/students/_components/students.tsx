@@ -17,23 +17,12 @@ export function StudentList({ students }: { students: Students }) {
     <div className="flex flex-col space-y-2">
       <div className="flex items-center justify-between">
         <Link href={"/students/create"}>
-          <Button
-            className="flex items-center space-x-2"
-            size={"sm"}
-            variant={"secondary"}
-          >
+          <Button className="flex items-center space-x-2" size={"sm"} variant={"secondary"}>
             <Icon size={0.7} path={mdiPlus} />
             <span>Neuer Schüler</span>
           </Button>
         </Link>
-        <SearchStudentsInput
-          students={students}
-          setFiltered={(ids) =>
-            setFilteredStudents(
-              students.filter((student) => ids.includes(student.id)),
-            )
-          }
-        />
+        <SearchStudentsInput students={students} setFiltered={(ids) => setFilteredStudents(students.filter((student) => ids.includes(student.id)))} />
       </div>
       <Table>
         <thead>
@@ -65,10 +54,7 @@ export function StudentList({ students }: { students: Students }) {
                 {student.className}
               </Td>
               <Td>
-                <Link
-                  href={"/students/" + student.id}
-                  className="text-gray-600 h-full w-full"
-                >
+                <Link href={"/students/" + student.id} className="text-gray-600 h-full w-full">
                   <Icon size={0.8} path={mdiInformationOutline} />
                 </Link>
               </Td>

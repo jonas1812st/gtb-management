@@ -8,8 +8,7 @@ import NotAllowed from "@/components/navigation/not-allowed";
 export default async function Page({ params }: { params: { id: string } }) {
   const rights = await getAccessRights();
 
-  if (!rights.updateUser)
-    return <NotAllowed url="/manage" label="Zur Verwaltung" />;
+  if (!rights.updateUser) return <NotAllowed url="/manage" label="Zur Verwaltung" />;
 
   const userId = parseInt(params.id) || 0;
 
@@ -23,12 +22,5 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   if (!user) return <Error error="User not found." />;
 
-  return (
-    <UserForm
-      action="edit"
-      actionMethod={editUser}
-      id={userId}
-      values={{ role: user.role, username: user.username }}
-    />
-  );
+  return <UserForm action="edit" actionMethod={editUser} id={userId} values={{ role: user.role, username: user.username }} />;
 }

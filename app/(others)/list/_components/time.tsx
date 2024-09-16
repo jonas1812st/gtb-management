@@ -1,10 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -47,21 +41,13 @@ export default function EditTimeDialog({
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(open) => (open === false ? closeDialog() : {})}
-    >
+    <Dialog open={open} onOpenChange={(open) => (open === false ? closeDialog() : {})}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Anwesenheit bearbeiten</DialogTitle>
-          <DialogDescription>
-            Passe die Start- und Endzeit an oder lösche den Eintrag vollständig.
-          </DialogDescription>
+          <DialogDescription>Passe die Start- und Endzeit an oder lösche den Eintrag vollständig.</DialogDescription>
         </DialogHeader>
-        <form
-          className="grid grid-cols-2 gap-2"
-          onSubmit={handleSubmit(onSubmit, (data) => console.error(data))}
-        >
+        <form className="grid grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit, (data) => console.error(data))}>
           <div>
             <FormLabel htmlFor="start-time-input">Startzeit</FormLabel>
             <Input
@@ -85,11 +71,7 @@ export default function EditTimeDialog({
             <ErrorMessage>{errors.end?.message}</ErrorMessage>
           </div>
           <div className="mt-4 col-span-full flex justify-end space-x-2 items-center">
-            <Button
-              variant={"destructive"}
-              type="button"
-              onClick={() => deleteVisitation(studentId).then(closeDialog)}
-            >
+            <Button variant={"destructive"} type="button" onClick={() => deleteVisitation(studentId).then(closeDialog)}>
               Löschen
             </Button>
             <Button type="submit">Speichern</Button>
