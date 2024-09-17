@@ -117,6 +117,7 @@ export default function StudentForm(
       <div>
         <FormLabel htmlFor="notes">Anmerkungen (optional)</FormLabel>
         <Textarea
+          spellCheck={false}
           id="notes"
           {...register("notes", {
             setValueAs: (value) => value || null,
