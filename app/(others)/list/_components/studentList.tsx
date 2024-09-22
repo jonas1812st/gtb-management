@@ -1,7 +1,7 @@
 "use client";
 
 import { Table, Td, Th, Tr } from "@/components/form/table";
-import { mdiDotsVertical, mdiInformation, mdiInformationOutline, mdiTimerEditOutline } from "@mdi/js";
+import { mdiDotsVertical, mdiInformationOutline, mdiTimerEditOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
@@ -23,9 +23,7 @@ type Student = Prisma.StudentGetPayload<{
 type Students = Student[];
 
 const getPresentState = (student: Student) => {
-  const currentVisitation = student.visitations.find(
-    (visitation) => visitation.date.toISOString() === dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString()
-  );
+  const currentVisitation = student.visitations.find((visitation) => visitation.date.toISOString() === dayjs().startOf("day").toISOString());
 
   return {
     visitation: currentVisitation,
@@ -112,17 +110,7 @@ export default function StudentList({ students }: { students: Students }) {
 
   return (
     <>
-      <div className="flex flex-col space-y-2">
-        <div className="flex items-center justify-end">
-          <SearchStudentsInput
-            students={students}
-            setFiltered={(ids) => setFilteredStudents(students.filter((student) => ids.includes(student.id)))}
-          />
-        </div>
-        <div className="overflow-auto">
-          <DataTable columns={columns} data={students} filter={{ column: "fullName", placeholder: "Suche" }} />
-        </div>
-      </div>
+      <DataTable columns={columns} data={students} filter={{ column: "fullName", placeholder: "Suche" }} />
       {edit !== null ? (
         <EditTimeDialog
           open={edit !== null}

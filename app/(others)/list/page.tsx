@@ -17,7 +17,7 @@ export default async function Page() {
       visitations: {
         where: {
           date: {
-            equals: dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString(),
+            equals: dayjs().startOf("day").toISOString(),
           },
         },
       },

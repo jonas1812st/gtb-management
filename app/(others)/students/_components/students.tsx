@@ -14,10 +14,7 @@ export function StudentList({ students }: { students: Students }) {
       header: "Name",
       accessorFn: (student) => student.firstName + " " + student.lastName,
       cell: ({ row: { original: student } }) => (
-        <Link
-          href={"/students/" + student.id}
-          className="flex space-x-2 items-center"
-        >
+        <Link href={"/students/" + student.id} className="flex space-x-2 items-center">
           <span>
             {student.firstName} {student.lastName}
           </span>
@@ -36,6 +33,7 @@ export function StudentList({ students }: { students: Students }) {
       columns={columns}
       data={students}
       filter={{ column: "fullName", placeholder: "Suche" }}
+      addItemBtn={{ type: "url", label: "Neuer Schüler", url: "/students/create" }}
     />
   );
 }

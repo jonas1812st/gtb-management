@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { mdiChevronDown, mdiChevronUp } from "@mdi/js";
+import { mdiChevronDown, mdiChevronUp, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
 import {
   ColumnDef,
@@ -15,6 +15,8 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 import { Input } from "../ui/input";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -22,15 +24,13 @@ interface DataTableProps<TData, TValue> {
   filter: { column: string; placeholder: string };
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  filter,
-}: DataTableProps<TData, TValue>) {
+interface AdditionalElements {
+  addItemBtn?: { label: string } & ({ type: "url"; url: string } | { type: "click"; onClick: () => void });
+}
+
+export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn }: DataTableProps<TData, TValue> & AdditionalElements) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data,
@@ -48,16 +48,26 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center justify-end pb-4">
+      <div className="flex items-center justify-between pb-4">
+        {addItemBtn && addItemBtn.type === "url" ? (
+          <Link href={addItemBtn.url}>
+            <Button className="flex items-center space-x-2" size={"sm"} variant={"secondary"}>
+              <Icon size={0.7} path={mdiPlus} />
+              <span>{addItemBtn.label}</span>
+            </Button>
+          </Link>
+        ) : addItemBtn && addItemBtn.type === "click" ? (
+          <Button className="flex items-center space-x-2" size={"sm"} variant={"secondary"} onClick={addItemBtn.onClick}>
+            <Icon size={0.7} path={mdiPlus} />
+            <span>{addItemBtn.label}</span>
+          </Button>
+        ) : null}
+
         <Input
           type="text"
           placeholder={filter.placeholder}
-          value={
-            (table.getColumn(filter.column)?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn(filter.column)?.setFilterValue(event.target.value)
-          }
+          value={(table.getColumn(filter.column)?.getFilterValue() as string) ?? ""}
+          onChange={(event) => table.getColumn(filter.column)?.setFilterValue(event.target.value)}
           className="w-[340px]"
         />
       </div>
@@ -71,34 +81,14 @@ export function DataTable<TData, TValue>({
                     {header.isPlaceholder ? null : (
                       <div
                         {...{
-                          className: cn(
-                            "flex items-center",
-                            header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : ""
-                          ),
+                          className: cn("flex items-center", header.column.getCanSort() ? "cursor-pointer select-none" : ""),
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        {flexRender(header.column.columnDef.header, header.getContext())}
                         {{
-                          asc: (
-                            <Icon
-                              path={mdiChevronDown}
-                              size={0.8}
-                              className="text-gray-700"
-                            />
-                          ),
-                          desc: (
-                            <Icon
-                              path={mdiChevronUp}
-                              size={0.8}
-                              className="text-gray-700"
-                            />
-                          ),
+                          asc: <Icon path={mdiChevronDown} size={0.8} className="text-gray-700" />,
+                          desc: <Icon path={mdiChevronUp} size={0.8} className="text-gray-700" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}
@@ -111,22 +101,18 @@ export function DataTable<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => {
-              const hasRowMeta = row.getAllCells()[0].getContext().cell.column
-                .columnDef.meta;
+              const hasRowMeta = row.getAllCells()[0].getContext().cell.column.columnDef.meta;
 
               return (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   {...(hasRowMeta && {
-                    ...hasRowMeta.getCellContext(
-                      row.getAllCells()[0].getContext()
-                    ).row,
+                    ...hasRowMeta.getCellContext(row.getAllCells()[0].getContext()).row,
                   })}
                 >
                   {row.getVisibleCells().map((cell) => {
-                    const hasCellMeta =
-                      cell.getContext().cell.column.columnDef.meta;
+                    const hasCellMeta = cell.getContext().cell.column.columnDef.meta;
 
                     return (
                       <TableCell
@@ -135,10 +121,7 @@ export function DataTable<TData, TValue>({
                           ...hasCellMeta.getCellContext(cell.getContext()).cell,
                         })}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     );
                   })}
@@ -164,13 +147,9 @@ const Table = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-const TableHeader = ({ children }: { children?: React.ReactNode }) => (
-  <thead>{children}</thead>
-);
+const TableHeader = ({ children }: { children?: React.ReactNode }) => <thead>{children}</thead>;
 
-const TableBody = ({ children }: { children?: React.ReactNode }) => (
-  <tbody className="[&_tr:last-child]:border-0">{children}</tbody>
-);
+const TableBody = ({ children }: { children?: React.ReactNode }) => <tbody className="[&_tr:last-child]:border-0">{children}</tbody>;
 
 const TableRow = ({ children, ...props }: { children: React.ReactNode }) => (
   <tr className="border-b" {...props}>
@@ -178,31 +157,14 @@ const TableRow = ({ children, ...props }: { children: React.ReactNode }) => (
   </tr>
 );
 
-const TableHead = ({
-  children,
-  colSpan,
-  className,
-}: {
-  children?: React.ReactNode;
-  colSpan?: number;
-  className?: string;
-}) => (
-  <th className={cn("p-3", className)} colSpan={colSpan}>
+const TableHead = ({ children, colSpan, className }: { children?: React.ReactNode; colSpan?: number; className?: string }) => (
+  <th className={cn("p-4", className)} colSpan={colSpan}>
     {children}
   </th>
 );
 
-const TableCell = ({
-  children,
-  colSpan,
-  className,
-  ...props
-}: {
-  children?: React.ReactNode;
-  colSpan?: number;
-  className?: string;
-}) => (
-  <td className={cn("p-3", className)} colSpan={colSpan} {...props}>
+const TableCell = ({ children, colSpan, className, ...props }: { children?: React.ReactNode; colSpan?: number; className?: string }) => (
+  <td className={cn("p-4", className)} colSpan={colSpan} {...props}>
     {children}
   </td>
 );

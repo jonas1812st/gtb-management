@@ -159,54 +159,35 @@ export default function StudentForm(
                 <input
                   id={"checkbox-day-" + index}
                   type="checkbox"
-                  // @ts-expect-error
-                  checked={watch("attendances." + index) !== undefined}
-                  onChange={(e) =>
-                    setValue(
-                      // @ts-expect-error
-                      "attendances." + index,
-                      e.target.checked ? { day: index, end: 0 } : undefined
-                    )
-                  }
+                  checked={watch(`attendances.${index}`) !== undefined}
+                  onChange={(e) => setValue(`attendances.${index}`, e.target.checked ? { day: index, end: 0 } : undefined)}
                 />
                 <FormLabel htmlFor={"checkbox-day-" + index}>{day}</FormLabel>
               </div>
-              {
-                // @ts-expect-error
-                watch("attendances." + index) !== undefined ? (
-                  <Controller
-                    control={control}
-                    // @ts-expect-error
-                    name={"attendances." + index}
-                    render={({ field: { onChange, value } }) => (
-                      <Input
-                        type="time"
-                        id={"day-" + index}
-                        min={"06:00"}
-                        value={
-                          value
-                            ? dayjs()
-                                .hour(0)
-                                // @ts-expect-error
-                                .minute(value.end)
-                                .format("HH:mm")
-                            : ""
-                        }
-                        onChange={(e) =>
-                          onChange(
-                            e.target.value !== ""
-                              ? {
-                                  day: index,
-                                  end: stringToTime(e.target.value!),
-                                }
-                              : undefined
-                          )
-                        }
-                      />
-                    )}
-                  />
-                ) : null
-              }
+              {watch(`attendances.${index}`) !== undefined ? (
+                <Controller
+                  control={control}
+                  name={`attendances.${index}`}
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      type="time"
+                      id={"day-" + index}
+                      min={"06:00"}
+                      value={value ? dayjs().hour(0).minute(value.end).format("HH:mm") : ""}
+                      onChange={(e) =>
+                        onChange(
+                          e.target.value !== ""
+                            ? {
+                                day: index,
+                                end: stringToTime(e.target.value!),
+                              }
+                            : undefined
+                        )
+                      }
+                    />
+                  )}
+                />
+              ) : null}
               <ErrorMessage>{errors.attendances !== undefined ? errors.attendances[index]?.end?.message : ""}</ErrorMessage>
             </div>
           ))}
