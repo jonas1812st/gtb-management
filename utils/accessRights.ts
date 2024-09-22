@@ -18,3 +18,5 @@ export async function getAccessRights() {
 
   return rights;
 }
+
+export type AccessRights = Awaited<ReturnType<typeof getAccessRights>>;

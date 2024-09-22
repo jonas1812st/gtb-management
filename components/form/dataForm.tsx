@@ -61,7 +61,9 @@ export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn }: 
             <Icon size={0.7} path={mdiPlus} />
             <span>{addItemBtn.label}</span>
           </Button>
-        ) : null}
+        ) : (
+          <div />
+        )}
 
         <Input
           type="text"
