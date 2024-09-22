@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAccessRights } from "@/utils/accessRights";
 import Link from "next/link";
 
@@ -19,7 +13,10 @@ export default async function Page() {
         description="Verwalte alle Schüler"
         links={{
           primary: { url: "/students", label: "Verwalten" },
-          secondary: { url: "/students/create", label: "Neu erstellen" },
+          secondary: {
+            url: "/students/create",
+            label: "Neu erstellen",
+          },
         }}
       />
       {rights.manageUsers ? (
@@ -28,9 +25,7 @@ export default async function Page() {
           description="Verwalte alle Benutzer"
           links={{
             primary: { url: "/users", label: "Verwalten" },
-            secondary: rights.createUsers
-              ? { url: "/users/create", label: "Neu erstellen" }
-              : undefined,
+            secondary: rights.createUsers ? { url: "/users/create", label: "Neu erstellen" } : undefined,
           }}
         />
       ) : null}
@@ -51,11 +46,11 @@ const ManageCard = ({
       label: string;
     };
     secondary:
-    | {
-      url: string;
-      label: string;
-    }
-    | undefined;
+      | {
+          url: string;
+          label: string;
+        }
+      | undefined;
   };
 }) => (
   <Card>

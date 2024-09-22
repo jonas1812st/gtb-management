@@ -22,8 +22,7 @@ dayjs.locale("de");
 export default async function Page({ params }: { params: { id: string } }) {
   const studentId = parseInt(params.id) || 0;
 
-  if (params.id === "" || studentId === 0)
-    return <Error error="Id not valid." />;
+  if (params.id === "" || studentId === 0) return <Error error="Id not valid." />;
 
   const student = await prisma.student.findUnique({
     where: {
@@ -53,7 +52,10 @@ export default async function Page({ params }: { params: { id: string } }) {
                   label: "Name",
                   value: student.firstName + " " + student.lastName,
                 },
-                { label: "Klasse", value: student.grade + student.className },
+                {
+                  label: "Klasse",
+                  value: student.grade + student.className,
+                },
                 {
                   label: "Anmerkungen",
                   value: student.notes || "Keine Anmerkung",
@@ -64,17 +66,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                     student.attendances.length !== 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {student.attendances.map((attendance, index) => (
-                          <span
-                            key={index + "_attendance_element"}
-                            className="text-sm p-1.5 border rounded-md"
-                          >
+                          <span key={index + "_attendance_element"} className="text-sm p-1.5 border rounded-md">
                             {dayjs()
                               .day(attendance.day + 1)
                               .format("ddd")}{" "}
-                            {dayjs()
-                              .hour(0)
-                              .minute(attendance.end)
-                              .format("HH:mm")}
+                            {dayjs().hour(0).minute(attendance.end).format("HH:mm")}
                           </span>
                         ))}
                       </div>
@@ -84,9 +80,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 },
               ].map((information, index) => (
                 <Tr key={index + "_information_row"}>
-                  <td className="font-semibold text-gray-600 p-3">
-                    {information.label}
-                  </td>
+                  <td className="font-semibold text-gray-600 p-3">{information.label}</td>
                   <Td>{information.value}</Td>
                 </Tr>
               ))}
@@ -119,15 +113,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <Tr key={index + "_" + visitation.id + "_" + "_visitation"}>
                   <Td>{dayjs(visitation.date).format("ddd DD.MM.YYYY")}</Td>
                   <Td>
-                    {dayjs(visitation.date)
-                      .minute(visitation.start)
-                      .format("HH:mm") +
+                    {dayjs(visitation.date).minute(visitation.start).format("HH:mm") +
                       " - " +
-                      (visitation.end
-                        ? dayjs(visitation.date)
-                          .minute(visitation.end)
-                          .format("HH:mm")
-                        : "--:--")}
+                      (visitation.end ? dayjs(visitation.date).minute(visitation.end).format("HH:mm") : "--:--")}
                   </Td>
                 </Tr>
               ))}
@@ -151,9 +139,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <DialogHeader>
               <DialogTitle>Möchtest du diesen Schüler löschen?</DialogTitle>
               <DialogDescription>
-                Diese Aktion kann nicht rückgängig gemacht werden. Dieser
-                Schüler und seine Daten werden permanent von diesem System
-                gelöscht.
+                Diese Aktion kann nicht rückgängig gemacht werden. Dieser Schüler und seine Daten werden permanent von diesem System gelöscht.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>

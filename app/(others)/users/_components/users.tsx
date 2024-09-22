@@ -12,19 +12,14 @@ type Users = Prisma.UserGetPayload<{}>[];
 export async function UsersList({ users }: { users: Users }) {
   const rights = await getAccessRights();
 
-  if (!rights.manageUsers)
-    return <NotAllowed label="Zur Verwaltung" url="/manage" />;
+  if (!rights.manageUsers) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
   return (
     <div className="flex flex-col space-y-2">
       <div>
         {rights.createUsers ? (
           <Link href={"/users/create"}>
-            <Button
-              className="flex items-center space-x-2"
-              size={"sm"}
-              variant={"secondary"}
-            >
+            <Button className="flex items-center space-x-2" size={"sm"} variant={"secondary"}>
               <Icon size={0.7} path={mdiPlus} />
               <span>Neuer Benutzer</span>
             </Button>
@@ -46,10 +41,7 @@ export async function UsersList({ users }: { users: Users }) {
               </Td>
               <Td>{user.role}</Td>
               <Td>
-                <Link
-                  href={"/users/" + user.id}
-                  className="text-gray-600 h-full w-full"
-                >
+                <Link href={"/users/" + user.id} className="text-gray-600 h-full w-full">
                   <Icon size={0.8} path={mdiInformationOutline} />
                 </Link>
               </Td>

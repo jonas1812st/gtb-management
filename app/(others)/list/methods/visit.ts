@@ -1,17 +1,14 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { stringToTime } from "@/utils/time";
+import { stringToTime, stringToTimeNonNullable } from "@/utils/time";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
 import { InputSchema } from "../_components/timeSchema";
 
-export async function onVisiting(
-  studentId: number,
-  visitation: Prisma.VisitationGetPayload<{}> | undefined
-) {
-  const date = dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString();
+export async function onVisiting(studentId: number, visitation: Prisma.VisitationGetPayload<{}> | undefined) {
+  const date = dayjs().startOf("day").toISOString();
   const time = stringToTime(dayjs().format("HH:mm"));
 
   try {
@@ -55,7 +52,7 @@ export async function onVisiting(
 }
 
 export async function deleteVisitation(studentId: number) {
-  const date = dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString();
+  const date = dayjs().startOf("day").toISOString();
 
   try {
     await prisma.visitation.deleteMany({
@@ -72,16 +69,13 @@ export async function deleteVisitation(studentId: number) {
   revalidatePath("/list");
 }
 
-export async function updateVisitation(
-  studentId: number,
-  visitation: { end: string | undefined; start: string | undefined }
-) {
+export async function updateVisitation(studentId: number, visitation: { end: string | undefined; start: string | undefined }) {
   const { end, start } = InputSchema.parse(visitation);
-  const date = dayjs().hour(0).minute(0).second(0).millisecond(0).toISOString();
+  const date = dayjs().startOf("day").toISOString();
 
   try {
-    await prisma.visitation.update({
-      data: {
+    await prisma.visitation.upsert({
+      update: {
         start: stringToTime(start),
         end: stringToTime(end) || null,
       },
@@ -90,6 +84,12 @@ export async function updateVisitation(
           date,
           studentId,
         },
+      },
+      create: {
+        date,
+        studentId,
+        start: stringToTimeNonNullable(start),
+        end: stringToTime(end) || null,
       },
     });
   } catch (error) {

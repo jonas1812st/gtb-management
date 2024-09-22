@@ -22,10 +22,7 @@ export async function setPassword(data: z.infer<typeof InputSchema>) {
         id: session.user.userId,
       },
       data: {
-        password: bcrypt.hashSync(
-          result.password,
-          parseInt(process.env.SALT_ROUNDS!)
-        ),
+        password: bcrypt.hashSync(result.password, parseInt(process.env.SALT_ROUNDS!)),
       },
     });
   } catch (error) {

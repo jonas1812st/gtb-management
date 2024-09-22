@@ -37,11 +37,7 @@ export const config = NextAuth({
           const user = await getUser(username);
           if (!user) return null;
 
-          if (
-            parsedCredentials.data.password ===
-            parsedCredentials.data.username &&
-            user.password === "not set"
-          ) {
+          if (parsedCredentials.data.password === parsedCredentials.data.username && user.password === "not set") {
             return {
               username: user.username,
               role: user.role,
@@ -49,10 +45,7 @@ export const config = NextAuth({
               userId: user.id,
             };
           } else {
-            const passwordsMatch = await bcrypt.compare(
-              password,
-              user.password,
-            );
+            const passwordsMatch = await bcrypt.compare(password, user.password);
 
             if (passwordsMatch)
               return {

@@ -19,19 +19,19 @@ export default function StudentForm(
   params: (
     | { action: "create" }
     | {
-      action: "edit";
-      values: z.infer<typeof CreateStudentInputSchema>;
-      id: number;
-    }
+        action: "edit";
+        values: z.infer<typeof CreateStudentInputSchema>;
+        id: number;
+      }
   ) & {
     actionMethod: (
       data: z.infer<typeof CreateStudentInputSchema>,
-      id: number,
+      id: number
     ) => Promise<{
       message: string;
       success: boolean;
     }>;
-  },
+  }
 ) {
   const {
     register,
@@ -47,30 +47,23 @@ export default function StudentForm(
     defaultValues:
       params.action === "edit"
         ? {
-          ...params.values,
-          attendances: Array.from(
-            { length: 5 },
-            (_, index) =>
-              params.values.attendances.find((el) => el?.day === index) ||
-              undefined,
-          ),
-        }
+            ...params.values,
+            attendances: Array.from({ length: 5 }, (_, index) => params.values.attendances.find((el) => el?.day === index) || undefined),
+          }
         : {
-          lastName: "",
-          firstName: "",
-          grade: undefined,
-          notes: "",
-          className: "",
-          attendances: Array.from({ length: 5 }).map((_, index) => ({
-            day: index,
-            end: 960,
-          })),
-        },
+            lastName: "",
+            firstName: "",
+            grade: undefined,
+            notes: "",
+            className: "",
+            attendances: Array.from({ length: 5 }).map((_, index) => ({
+              day: index,
+              end: 960,
+            })),
+          },
   });
 
-  const onSubmit: SubmitHandler<
-    z.infer<typeof CreateStudentInputSchema>
-  > = async (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof CreateStudentInputSchema>> = async (data) => {
     const response = await params.actionMethod(
       {
         firstName: data.firstName,
@@ -78,14 +71,9 @@ export default function StudentForm(
         grade: data.grade,
         notes: data.notes || null,
         className: data.className,
-        attendances: data.attendances.filter(
-          (
-            attendance,
-          ): attendance is Prisma.AttendanceCreateWithoutStudentInput =>
-            !!attendance,
-        ),
+        attendances: data.attendances.filter((attendance): attendance is Prisma.AttendanceCreateWithoutStudentInput => !!attendance),
       },
-      params.action === "edit" ? params.id : 0,
+      params.action === "edit" ? params.id : 0
     );
 
     if (response.success) {
@@ -101,12 +89,7 @@ export default function StudentForm(
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit, (data) =>
-        console.log("error", data, getValues()),
-      )}
-      className="flex flex-col space-y-3"
-    >
+    <form onSubmit={handleSubmit(onSubmit, (data) => console.log("error", data, getValues()))} className="flex flex-col space-y-3">
       <div className="grid grid-cols-2 gap-2">
         <div>
           <FormLabel htmlFor="firstName">Vorname</FormLabel>
@@ -134,6 +117,7 @@ export default function StudentForm(
       <div>
         <FormLabel htmlFor="notes">Anmerkungen (optional)</FormLabel>
         <Textarea
+          spellCheck={false}
           id="notes"
           {...register("notes", {
             setValueAs: (value) => value || null,
@@ -169,77 +153,66 @@ export default function StudentForm(
 
       <div>
         <div className="grid grid-cols-5 gap-2">
-          {["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"].map(
-            (day, index) => (
-              <div
-                key={index + "_day_input_wrapper"}
-                className="flex flex-col space-y-1"
-              >
-                <div className="flex space-x-2 items-center">
-                  <input
-                    id={"checkbox-day-" + index}
-                    type="checkbox"
-                    // @ts-expect-error
-                    checked={watch("attendances." + index) !== undefined}
-                    onChange={(e) =>
-                      setValue(
-                        // @ts-expect-error
-                        "attendances." + index,
-                        e.target.checked ? { day: index, end: 0 } : undefined,
-                      )
-                    }
-                  />
-                  <FormLabel htmlFor={"checkbox-day-" + index}>{day}</FormLabel>
-                </div>
-                {
+          {["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"].map((day, index) => (
+            <div key={index + "_day_input_wrapper"} className="flex flex-col space-y-1">
+              <div className="flex space-x-2 items-center">
+                <input
+                  id={"checkbox-day-" + index}
+                  type="checkbox"
                   // @ts-expect-error
-                  watch("attendances." + index) !== undefined ? (
-                    <Controller
-                      control={control}
+                  checked={watch("attendances." + index) !== undefined}
+                  onChange={(e) =>
+                    setValue(
                       // @ts-expect-error
-                      name={"attendances." + index}
-                      render={({ field: { onChange, value } }) => (
-                        <Input
-                          type="time"
-                          id={"day-" + index}
-                          min={"06:00"}
-                          value={
-                            value
-                              ? dayjs()
+                      "attendances." + index,
+                      e.target.checked ? { day: index, end: 0 } : undefined
+                    )
+                  }
+                />
+                <FormLabel htmlFor={"checkbox-day-" + index}>{day}</FormLabel>
+              </div>
+              {
+                // @ts-expect-error
+                watch("attendances." + index) !== undefined ? (
+                  <Controller
+                    control={control}
+                    // @ts-expect-error
+                    name={"attendances." + index}
+                    render={({ field: { onChange, value } }) => (
+                      <Input
+                        type="time"
+                        id={"day-" + index}
+                        min={"06:00"}
+                        value={
+                          value
+                            ? dayjs()
                                 .hour(0)
                                 // @ts-expect-error
                                 .minute(value.end)
                                 .format("HH:mm")
-                              : ""
-                          }
-                          onChange={(e) =>
-                            onChange(
-                              e.target.value !== ""
-                                ? {
+                            : ""
+                        }
+                        onChange={(e) =>
+                          onChange(
+                            e.target.value !== ""
+                              ? {
                                   day: index,
                                   end: stringToTime(e.target.value!),
                                 }
-                                : undefined,
-                            )
-                          }
-                        />
-                      )}
-                    />
-                  ) : null
-                }
-                <ErrorMessage>
-                  {errors.attendances !== undefined
-                    ? errors.attendances[index]?.end?.message
-                    : ""}
-                </ErrorMessage>
-              </div>
-            ),
-          )}
+                              : undefined
+                          )
+                        }
+                      />
+                    )}
+                  />
+                ) : null
+              }
+              <ErrorMessage>{errors.attendances !== undefined ? errors.attendances[index]?.end?.message : ""}</ErrorMessage>
+            </div>
+          ))}
         </div>
 
-        <ErrorMessage>
-          {errors.attendances !== undefined ? errors.attendances.message : ""}
-        </ErrorMessage>
+        <ErrorMessage>{errors.attendances !== undefined ? errors.attendances.message : ""}</ErrorMessage>
       </div>
 
       <div className="flex justify-end">
@@ -247,10 +220,7 @@ export default function StudentForm(
           {isSubmitting ? (
             <Icon size={0.8} path={mdiLoading} className="animate-spin" />
           ) : (
-            <Icon
-              size={0.8}
-              path={params.action === "create" ? mdiPlus : mdiContentSave}
-            />
+            <Icon size={0.8} path={params.action === "create" ? mdiPlus : mdiContentSave} />
           )}
           <span>{params.action === "create" ? "Erstellen" : "Speichern"}</span>
         </Button>

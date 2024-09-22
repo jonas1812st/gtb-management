@@ -15,12 +15,7 @@ export async function createStudent(data: z.infer<typeof InputSchema>) {
         ...result,
         attendances: {
           createMany: {
-            data: result.attendances.filter(
-              (
-                attendance,
-              ): attendance is Prisma.AttendanceCreateWithoutStudentInput =>
-                !!attendance,
-            ),
+            data: result.attendances.filter((attendance): attendance is Prisma.AttendanceCreateWithoutStudentInput => !!attendance),
           },
         },
       },

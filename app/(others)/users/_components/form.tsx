@@ -5,13 +5,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { mdiContentSave, mdiLoading, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -22,19 +16,19 @@ export default function UserForm(
   params: (
     | { action: "create" }
     | {
-      action: "edit";
-      values: z.infer<typeof InputSchema>;
-      id: number;
-    }
+        action: "edit";
+        values: z.infer<typeof InputSchema>;
+        id: number;
+      }
   ) & {
     actionMethod: (
       data: z.infer<typeof InputSchema>,
-      id: number,
+      id: number
     ) => Promise<{
       message: string;
       success: boolean;
     }>;
-  },
+  }
 ) {
   const {
     register,
@@ -48,16 +42,13 @@ export default function UserForm(
       params.action === "edit"
         ? params.values
         : {
-          username: "",
-          role: "DEFAULT",
-        },
+            username: "",
+            role: "DEFAULT",
+          },
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof InputSchema>> = async (data) => {
-    const response = await params.actionMethod(
-      data,
-      params.action === "edit" ? params.id : 0,
-    );
+    const response = await params.actionMethod(data, params.action === "edit" ? params.id : 0);
 
     if (response.success) {
       if (params.action === "create") {
@@ -110,10 +101,7 @@ export default function UserForm(
           {isSubmitting ? (
             <Icon size={0.8} path={mdiLoading} className="animate-spin" />
           ) : (
-            <Icon
-              size={0.8}
-              path={params.action === "create" ? mdiPlus : mdiContentSave}
-            />
+            <Icon size={0.8} path={params.action === "create" ? mdiPlus : mdiContentSave} />
           )}
           <span>{params.action === "create" ? "Erstellen" : "Speichern"}</span>
         </Button>
