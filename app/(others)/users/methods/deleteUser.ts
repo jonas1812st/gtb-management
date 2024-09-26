@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { getAccessRights } from "@/utils/accessRights";
 import prisma from "@/utils/prisma";
+import { canManage } from "@/utils/roles";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -23,8 +24,10 @@ export async function deleteUser(userId: number) {
       message: "NotFoundError: User not found.",
     };
 
+  const canDelete = await canManage(deletedUser.role);
+
   // check if user has access rights to delete / if he doesn't delete himself / the user to delete is not the owner
-  if (!rights.deleteUser || session?.user?.userId === userId || deletedUser.role === "OWNER")
+  if (!rights.deleteUser || session?.user?.userId === userId || deletedUser.role === "OWNER" || !canDelete)
     return {
       success: false,
       message: "Access Rights Error: Not allowed.",

@@ -4,12 +4,25 @@ import { z } from "zod";
 import { InputSchema } from "../methods/schema";
 import { revalidatePath } from "next/cache";
 import prisma from "@/utils/prisma";
-import { Role } from "@prisma/client";
 import { getAccessRights } from "@/utils/accessRights";
+import { canManage, isHighestRole } from "@/utils/roles";
 
 export async function editUser(data: z.infer<typeof InputSchema>, id: number) {
   const rights = await getAccessRights();
-  if (!rights.updateUser)
+  const isHighest = await isHighestRole();
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!user)
+    return {
+      success: false,
+      message: "NotFoundError: User not found.",
+    };
+
+  if (!rights.updateUser || !(await canManage(user.role)))
     return {
       success: false,
       message: "Access Rights Error: Not allowed.",
@@ -24,7 +37,8 @@ export async function editUser(data: z.infer<typeof InputSchema>, id: number) {
       },
       data: {
         ...result,
-        role: result.role as Role,
+        // prevent owner from removing his own owner rule
+        role: isHighest ? user.role : result.role,
       },
     });
   } catch (error) {

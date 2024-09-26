@@ -14,6 +14,7 @@ export async function getAccessRights() {
     rights.createUsers = true;
     rights.deleteUser = true;
     rights.manageUsers = true;
+    rights.updateUser = true;
   }
 
   return rights;

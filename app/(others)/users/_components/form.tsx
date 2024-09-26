@@ -11,6 +11,7 @@ import { mdiContentSave, mdiLoading, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
 import { InputSchema } from "../methods/schema";
 import toast from "react-hot-toast";
+import { AccessRights } from "@/utils/accessRights";
 
 export default function UserForm(
   params: (
@@ -19,6 +20,10 @@ export default function UserForm(
         action: "edit";
         values: z.infer<typeof InputSchema>;
         id: number;
+        rights: {
+          updateUsername: boolean;
+          updateUserRole: boolean;
+        };
       }
   ) & {
     actionMethod: (
@@ -72,6 +77,7 @@ export default function UserForm(
               setValueAs: (value) => value || undefined,
             })}
             id="username"
+            disabled={params.action === "edit" ? !params.rights.updateUsername : false}
           />
           <ErrorMessage>{errors.username?.message}</ErrorMessage>
         </div>
@@ -81,11 +87,14 @@ export default function UserForm(
             control={control}
             name="role"
             render={({ field: { onChange, value } }) => (
-              <Select onValueChange={onChange} value={value}>
+              <Select onValueChange={onChange} value={value} disabled={params.action === "edit" ? !params.rights.updateUserRole : false}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem disabled value="OWNER">
+                    Besitzer
+                  </SelectItem>
                   <SelectItem value="ADMIN">Admin</SelectItem>
                   <SelectItem value="DEFAULT">Standard</SelectItem>
                 </SelectContent>

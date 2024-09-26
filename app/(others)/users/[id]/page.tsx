@@ -20,6 +20,7 @@ import { deleteUser } from "../methods/deleteUser";
 import { getAccessRights } from "@/utils/accessRights";
 import NotAllowed from "@/components/navigation/not-allowed";
 import { auth } from "@/auth";
+import { canManage } from "@/utils/roles";
 dayjs.locale("de");
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -65,7 +66,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       </div>
       <div className="flex items-center justify-between">
         <div>
-          {rights.updateUser ? (
+          {rights.updateUser && (await canManage(user.role)) ? (
             <Link href={"/users/" + user.id + "/edit"}>
               <Button variant={"outline"} size={"sm"}>
                 Bearbeiten
@@ -73,7 +74,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </Link>
           ) : null}
         </div>
-        {user.role !== "OWNER" && user.username !== session?.user?.username ? (
+        {(await canManage(user.role)) ? (
           <Dialog>
             <DialogTrigger asChild>
               <Button variant={"destructive"} size={"sm"}>

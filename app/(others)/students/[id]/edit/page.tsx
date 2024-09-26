@@ -36,7 +36,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       <StudentForm
         action="edit"
         actionMethod={editStudent}
-        id={parseInt(params.id, 10)}
+        id={studentId}
         values={{
           grade: student.grade,
           notes: student.notes,
