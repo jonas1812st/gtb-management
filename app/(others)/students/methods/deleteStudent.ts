@@ -13,6 +13,15 @@ export async function deleteStudent(studentId: number) {
         id: result,
       },
     });
+
+    // delete related attendances
+    await prisma.attendance.deleteMany({
+      where: {
+        Student: {
+          id: result,
+        },
+      },
+    });
   } catch (error) {
     console.error(error);
     return {
