@@ -20,7 +20,7 @@ import { deleteUser } from "../methods/deleteUser";
 import { getAccessRights } from "@/utils/accessRights";
 import NotAllowed from "@/components/navigation/not-allowed";
 import { auth } from "@/auth";
-import { canManage } from "@/utils/roles";
+import { canManage, isHighestRole } from "@/utils/roles";
 dayjs.locale("de");
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -54,6 +54,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                   value: user.username,
                 },
                 { label: "Rolle", value: user.role },
+                // only show that the user has not set his password to the owner -- Security risk
+                ...(user.password === "not set" && (await isHighestRole()) ? [{ label: "Passwort gesetzt", value: "Nein" }] : []),
               ].map((information, index) => (
                 <Tr key={index + "_information_row"}>
                   <td className="font-semibold text-gray-600 p-3">{information.label}</td>
