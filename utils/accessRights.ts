@@ -8,6 +8,8 @@ export async function getAccessRights() {
     createUsers: false,
     updateUser: false,
     deleteUser: false,
+    manageLists: false,
+    createList: false,
   };
 
   if (session?.user?.role === "ADMIN" || session?.user?.role === "OWNER") {
@@ -15,6 +17,8 @@ export async function getAccessRights() {
     rights.deleteUser = true;
     rights.manageUsers = true;
     rights.updateUser = true;
+    rights.manageLists = true;
+    rights.createList = true;
   }
 
   return rights;

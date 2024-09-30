@@ -29,6 +29,17 @@ export default async function Page() {
           }}
         />
       ) : null}
+
+      {rights.manageLists ? (
+        <ManageCard
+          title="Listen"
+          description="Verwalte alle Listen"
+          links={{
+            primary: { url: "/lists", label: "Verwalten" },
+            secondary: rights.createList ? { url: "/lists/create", label: "Neu erstellen" } : undefined,
+          }}
+        />
+      ) : null}
     </div>
   );
 }

@@ -14,16 +14,17 @@ datasource db {
 }
 
 model Student {
-  id          Int          @id @default(autoincrement())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  firstName   String
-  lastName    String
-  notes       String?      @db.Text
-  grade       Int
-  className   String
-  attendances Attendance[]
-  visitations Visitation[]
+  id               Int                @id @default(autoincrement())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  firstName        String
+  lastName         String
+  notes            String?            @db.Text
+  grade            Int
+  className        String
+  attendances      Attendance[]
+  visitations      Visitation[]
+  GroupsOnStudents GroupsOnStudents[]
 }
 
 model Attendance {
@@ -58,4 +59,24 @@ enum Role {
   OWNER
   ADMIN
   DEFAULT
+}
+
+model Group {
+  id               Int                @id @default(autoincrement())
+  name             String
+  color            String?
+  GroupsOnStudents GroupsOnStudents[]
+}
+
+model GroupsOnStudents {
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId Int
+  group     Group   @relation(fields: [groupId], references: [id])
+  groupId   Int
+
+  @@id([studentId, groupId])
+}
+
+model List {
+  id Int @id @default(autoincrement())
 }
