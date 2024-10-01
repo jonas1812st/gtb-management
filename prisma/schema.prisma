@@ -66,6 +66,8 @@ model Group {
   name             String
   color            String?
   GroupsOnStudents GroupsOnStudents[]
+  list             List               @relation(fields: [listId], references: [id])
+  listId           Int
 }
 
 model GroupsOnStudents {
@@ -78,5 +80,57 @@ model GroupsOnStudents {
 }
 
 model List {
-  id Int @id @default(autoincrement())
+  id      Int          @id @default(autoincrement())
+  options ListOptions?
+  Group   Group[]
+}
+
+model ListOptions {
+  id                   Int                   @id @default(autoincrement())
+  startTime            Boolean
+  endTime              Boolean
+  List                 List                  @relation(fields: [listId], references: [id])
+  listId               Int                   @unique
+  ListTableInformation ListTableInformation?
+  cycle                ListCycleType         @default(DAILY)
+  activation           ListActivation[]
+  manageTime           TimeManagement        @default(STUDENT) // decides if the list or the student manages their start and end time 
+}
+
+enum TimeManagement {
+  LIST
+  STUDENT
+}
+
+enum ListCycleType {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+model ListTableInformation {
+  id            Int              @id @default(autoincrement())
+  studentName   Boolean
+  className     Boolean
+  notes         ListStudentNotes
+  ListOptions   ListOptions      @relation(fields: [listOptionsId], references: [id])
+  listOptionsId Int              @unique
+}
+
+enum ListStudentNotes {
+  NONE
+  MARKED
+  SHORTENED
+  FULL
+}
+
+model ListActivation {
+  id            Int          @id @default(autoincrement())
+  day           Int // 0 (monday) to 6 (sunday)
+  startTime     DateTime
+  startBuffer   Int?         @default(10) // buffer in minutes
+  endTime       DateTime
+  endBuffer     Int?         @default(10) // buffer in minutes
+  ListOptions   ListOptions? @relation(fields: [listOptionsId], references: [id])
+  listOptionsId Int?
 }
