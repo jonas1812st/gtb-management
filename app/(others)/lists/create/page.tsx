@@ -1,3 +1,6 @@
+import ListForm from "../_components/form";
+import { createList } from "../_methods/createList";
+
 export default async function Page() {
-  return <div>Listen werden hier erstellt +</div>;
+  return <ListForm action="create" actionMethod={createList} />;
 }
