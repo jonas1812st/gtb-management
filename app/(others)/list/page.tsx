@@ -1,8 +1,11 @@
 import prisma from "@/utils/prisma";
 import StudentList from "./_components/studentList";
 import dayjs from "dayjs";
+import { unstable_noStore as noStore } from "next/cache";
 
 export default async function Page() {
+  noStore();
+
   const dayOfWeek = dayjs().day();
 
   const dayOfWeekToAttendanceDay: {
@@ -36,5 +39,5 @@ export default async function Page() {
     },
   });
 
-  return <StudentList students={students} key={crypto.randomUUID()} />;
+  return <StudentList students={students} />;
 }

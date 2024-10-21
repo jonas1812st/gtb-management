@@ -52,11 +52,11 @@ export default function StudentList({ students }: { students: Students }) {
       header: "Name",
       accessorFn: (student) => student.firstName + " " + student.lastName,
       cell: ({ row: { original: student } }) => (
-        <Link href={"/students/" + student.id} className="flex space-x-2 items-center">
+        <Link href={"/students/" + student.id} className="flex space-x-1 items-center">
           <span>
             {student.firstName} {student.lastName}
           </span>
-          {student.notes !== null ? <Icon path={mdiInformationOutline} size={0.8} className="text-red-500 translate-y-[1px]" /> : null}
+          {student.notes !== null ? <Icon path={mdiInformationOutline} size={0.7} /> : null}
         </Link>
       ),
     },
