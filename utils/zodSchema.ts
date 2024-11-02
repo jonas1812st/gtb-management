@@ -1,4 +1,4 @@
-import { ListCycleType, ListStudentNotes, TimeManagement } from "@prisma/client";
+import { ListCycleType, ListStudentNotes, RecordTime, TimeManagement } from "@prisma/client";
 import { z } from "zod";
 
 export const TimeSchema = z.number().gte(0).lte(1439).default(960); // 00:00 - 23:59 <=> 0 - 1439
@@ -28,11 +28,11 @@ export const CreateListActivationSchema = z.object({
 
 export const CreateListInputSchema = z.object({
   name: z.string().trim().min(1).max(50),
-  startTime: z.boolean(),
-  endTime: z.boolean(),
+  recordTime: z.nativeEnum(RecordTime),
   table: z.object({
     studentName: z.boolean(),
     className: z.boolean(),
+    time: z.boolean(),
     notes: z.nativeEnum(ListStudentNotes),
   }),
   cycle: z.nativeEnum(ListCycleType),
