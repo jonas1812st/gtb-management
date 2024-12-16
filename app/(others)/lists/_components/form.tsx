@@ -4,13 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import Icon from "@mdi/react";
 import { mdiChevronRight, mdiContentSave, mdiLoading, mdiMinus, mdiPencil, mdiPlus } from "@mdi/js";
 import toast from "react-hot-toast";
 import { stringToTime } from "@/utils/time";
-import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import { CreateListInputSchema } from "@/utils/zodSchema";
 import { ErrorMessage, FormLabel, InputDescription } from "@/components/form/form";
@@ -29,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { DEFAULT_BUFFER } from "@/utils/constants";
 dayjs.locale("de");
 
 export default function ListForm(
@@ -79,9 +78,9 @@ export default function ListForm(
             activations: Array.from({ length: 7 }).map((_, index) => ({
               day: index,
               startTime: 480,
-              startBuffer: 10,
+              startBuffer: DEFAULT_BUFFER,
               endTime: 1020,
-              endBuffer: 10,
+              endBuffer: DEFAULT_BUFFER,
             })),
           },
   });
@@ -374,91 +373,18 @@ export default function ListForm(
                   <DialogDescription>Ändere die Aktivierungszeiten dieser Liste je nach Tag</DialogDescription>
                 </DialogHeader>
 
-                {Array.from({ length: 7 }).map((_, index) => {
-                  const weekDayIndex = index + 1;
-                  const weekDay = dayjs().day(weekDayIndex).format("dddd");
+                <div className="grid grid-cols-2 gap-3">
+                  {Array.from({ length: 7 }).map((_, index) => {
+                    const weekDayIndex = index + 1;
+                    const weekDay = dayjs().day(weekDayIndex).format("dddd");
 
-                  const activationItemIndex = watch(`activations`).findIndex((activation) => activation.day === index);
-                  const activationItem = watch(`activations.${activationItemIndex}`);
-                  const activationItemExists = !!activationItem;
-
-                  const [open, setOpen] = useState(false);
-
-                  return (
-                    <div key={weekDay + "_day"}>
-                      <div className="flex justify-between">
-                        <p className="font-semibold">{weekDay}</p>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (activationItemExists) {
-                              setOpen(!open);
-                            } else {
-                              setValue(`activations`, [
-                                ...getValues("activations"),
-                                {
-                                  day: index,
-                                  startTime: 480,
-                                  startBuffer: 10,
-                                  endTime: 1020,
-                                  endBuffer: 10,
-                                },
-                              ]);
-                            }
-                          }}
-                        >
-                          <Icon
-                            size={0.7}
-                            className={cn("transition", activationItemExists && open ? "rotate-90" : "")}
-                            path={activationItemExists ? mdiChevronRight : mdiPlus}
-                          />
-                        </button>
-                      </div>
-                      {activationItemExists && open && (
-                        <div className="flex items-center space-x-2 justify-between">
-                          <Controller
-                            control={control}
-                            name={`activations.${activationItemIndex}`}
-                            render={({ field: { value, onChange } }) => (
-                              <>
-                                <Input
-                                  type="time"
-                                  id={"day-" + index + "-start"}
-                                  min={"06:00"}
-                                  value={value ? dayjs().hour(0).minute(value.startTime).format("HH:mm") : ""}
-                                  onChange={(e) =>
-                                    onChange(
-                                      e.target.value !== ""
-                                        ? {
-                                            ...value,
-                                            startTime: stringToTime(e.target.value),
-                                          }
-                                        : undefined
-                                    )
-                                  }
-                                />
-
-                                <span>-</span>
-
-                                <Input
-                                  type="time"
-                                  id={"day-" + index + "-end"}
-                                  min={"06:00"}
-                                  value={value ? dayjs().hour(0).minute(value.endTime).format("HH:mm") : ""}
-                                  onChange={(e) =>
-                                    onChange(
-                                      e.target.value !== ""
-                                        ? {
-                                            ...value,
-                                            endTime: stringToTime(e.target.value),
-                                          }
-                                        : undefined
-                                    )
-                                  }
-                                />
-                              </>
-                            )}
-                          />
+                    const activationItemIndex = watch(`activations`).findIndex((activation) => activation.day === index);
+                    const activationItem = watch(`activations.${activationItemIndex}`);
+                    const activationItemExists = !!activationItem;
+                    return (
+                      <div key={weekDay + "_day"}>
+                        <div className="flex justify-between">
+                          <p className="font-semibold">{weekDay}</p>
                           <button
                             type="button"
                             onClick={() => {
@@ -467,16 +393,74 @@ export default function ListForm(
                                   `activations`,
                                   getValues("activations").filter((activation) => activation.day !== index)
                                 );
+                              } else {
+                                setValue(`activations`, [
+                                  ...getValues("activations"),
+                                  {
+                                    day: index,
+                                    startTime: 480,
+                                    startBuffer: DEFAULT_BUFFER,
+                                    endTime: 1020,
+                                    endBuffer: DEFAULT_BUFFER,
+                                  },
+                                ]);
                               }
                             }}
                           >
-                            <Icon path={mdiMinus} size={0.8} />
+                            <Icon size={0.7} path={activationItemExists ? mdiMinus : mdiPlus} />
                           </button>
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
+                        {activationItemExists && (
+                          <div className="flex items-center space-x-2 justify-between">
+                            <Controller
+                              control={control}
+                              name={`activations.${activationItemIndex}`}
+                              render={({ field: { value, onChange } }) => (
+                                <>
+                                  <Input
+                                    type="time"
+                                    id={"day-" + index + "-start"}
+                                    min={"06:00"}
+                                    value={value ? dayjs().hour(0).minute(value.startTime).format("HH:mm") : ""}
+                                    onChange={(e) =>
+                                      onChange(
+                                        e.target.value !== ""
+                                          ? {
+                                              ...value,
+                                              startTime: stringToTime(e.target.value),
+                                            }
+                                          : undefined
+                                      )
+                                    }
+                                  />
+
+                                  <span>-</span>
+
+                                  <Input
+                                    type="time"
+                                    id={"day-" + index + "-end"}
+                                    min={"06:00"}
+                                    value={value ? dayjs().hour(0).minute(value.endTime).format("HH:mm") : ""}
+                                    onChange={(e) =>
+                                      onChange(
+                                        e.target.value !== ""
+                                          ? {
+                                              ...value,
+                                              endTime: stringToTime(e.target.value),
+                                            }
+                                          : undefined
+                                      )
+                                    }
+                                  />
+                                </>
+                              )}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
 
                 <DialogFooter>
                   <DialogClose asChild>
@@ -511,13 +495,6 @@ export default function ListForm(
                         <td>Zeit</td>
                         <td className="text-right">
                           {formatToTime(activationItem.startTime)} - {formatToTime(activationItem.endTime)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Mit Puffer</td>
-                        <td className="text-right">
-                          {formatToTime(activationItem.startTime, { startBuffer: activationItem.startBuffer })} -
-                          {formatToTime(activationItem.endTime, { endBuffer: activationItem.endBuffer })}
                         </td>
                       </tr>
                     </tbody>

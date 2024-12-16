@@ -1,3 +1,7 @@
+import prisma from "@/utils/prisma";
+
 export default async function Page() {
-  return <div>Listen werden hier verwaltet :)</div>;
+  const lists = prisma.list.findMany();
+
+  return <div>{JSON.stringify(lists)}</div>;
 }
