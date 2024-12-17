@@ -14,8 +14,6 @@ export async function createList(data: z.infer<typeof InputSchema>) {
         name: result.name,
         options: {
           create: {
-            startTime: result.startTime,
-            endTime: result.endTime,
             activations: {
               createMany: {
                 data: result.activations,
@@ -26,6 +24,7 @@ export async function createList(data: z.infer<typeof InputSchema>) {
             ListTableInformation: {
               create: result.table,
             },
+            recordTime: data.recordTime,
           },
         },
       },

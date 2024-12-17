@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 export function stringToTime<T extends string | undefined>(value: T) {
-  if (!value) return undefined;
+  if (!(value || undefined)) return undefined;
   const hours = parseInt(value.split(":")[0], 10);
   const minutes = parseInt(value.split(":")[1], 10);
 
