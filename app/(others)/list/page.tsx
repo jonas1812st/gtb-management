@@ -1,10 +1,8 @@
 import prisma from "@/utils/prisma";
 import StudentList from "./_components/studentList";
 import dayjs from "dayjs";
-import { connection } from "next/server";
 
 export default async function Page() {
-  await connection();
   const dayOfWeek = dayjs().day();
 
   const dayOfWeekToAttendanceDay: {
