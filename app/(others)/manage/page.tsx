@@ -25,7 +25,7 @@ export default async function Page() {
           description="Verwalte alle Benutzer"
           links={{
             primary: { url: "/users", label: "Verwalten" },
-            secondary: rights.createUsers ? { url: "/users/create", label: "Neu erstellen" } : undefined,
+            secondary: rights.createUser ? { url: "/users/create", label: "Neu erstellen" } : undefined,
           }}
         />
       ) : null}
@@ -57,11 +57,11 @@ const ManageCard = ({
       label: string;
     };
     secondary:
-      | {
-          url: string;
-          label: string;
-        }
-      | undefined;
+    | {
+      url: string;
+      label: string;
+    }
+    | undefined;
   };
 }) => (
   <Card>

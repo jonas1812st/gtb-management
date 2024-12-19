@@ -37,10 +37,10 @@ export default function ListForm(
   params: (
     | { action: "create" }
     | {
-        action: "edit";
-        values: z.infer<typeof CreateListInputSchema>;
-        id: number;
-      }
+      action: "edit";
+      values: z.infer<typeof CreateListInputSchema>;
+      id: number;
+    }
   ) & {
     actionMethod: (
       data: z.infer<typeof CreateListInputSchema>,
@@ -56,27 +56,28 @@ export default function ListForm(
     defaultValues:
       params.action === "edit"
         ? {
-            ...params.values,
-          }
+          ...params.values,
+        }
         : {
-            name: "",
-            cycle: "DAILY",
-            manageTime: "STUDENT",
-            recordTime: "START_END",
-            table: {
-              notes: "MARKED",
-              className: true,
-              time: true,
-              studentName: true,
-            },
-            activations: Array.from({ length: 7 }).map((_, index) => ({
-              day: index,
-              startTime: DEFAULT_START_TIME,
-              startBuffer: DEFAULT_BUFFER,
-              endTime: DEFAULT_END_TIME,
-              endBuffer: DEFAULT_BUFFER,
-            })),
+          name: "",
+          cycle: "DAILY",
+          manageTime: "STUDENT",
+          recordTime: "START_END",
+          table: {
+            notes: "MARKED",
+            className: true,
+            time: true,
+            studentName: true,
+            groupColor: false,
           },
+          activations: Array.from({ length: 7 }).map((_, index) => ({
+            day: index,
+            startTime: DEFAULT_START_TIME,
+            startBuffer: DEFAULT_BUFFER,
+            endTime: DEFAULT_END_TIME,
+            endBuffer: DEFAULT_BUFFER,
+          })),
+        },
   });
 
   const {
@@ -146,7 +147,7 @@ const NameInput = () => {
       <FormLabel className="text-xl font-semibold text-black" htmlFor="name">
         Name
       </FormLabel>
-      <InputDescription className="mb-1">Dient der Sortierung der Liste.</InputDescription>
+      <InputDescription className="mb-1">Dient der Sortierung der Listen.</InputDescription>
       <Input
         id="name"
         {...register("name", {
@@ -357,9 +358,9 @@ const UpdateTimeItem = ({ index }: { index: number }) => {
                         onChange(
                           e.target.value !== ""
                             ? {
-                                ...value,
-                                startTime: stringToTime(e.target.value),
-                              }
+                              ...value,
+                              startTime: stringToTime(e.target.value),
+                            }
                             : undefined
                         )
                       }
@@ -376,9 +377,9 @@ const UpdateTimeItem = ({ index }: { index: number }) => {
                         onChange(
                           e.target.value !== ""
                             ? {
-                                ...value,
-                                endTime: stringToTime(e.target.value),
-                              }
+                              ...value,
+                              endTime: stringToTime(e.target.value),
+                            }
                             : undefined
                         )
                       }
@@ -558,6 +559,21 @@ const MoreOptionsInput = () => {
               control={control}
               name="table.studentName"
               render={({ field: { value, onChange } }) => <Switch id="table-student-name" checked={value} onCheckedChange={onChange} />}
+            />
+          ),
+        },
+        {
+          value: (
+            <>
+              <FormLabel htmlFor="table-student-name">Gruppenfarbe</FormLabel>
+              <ErrorMessage>{errors.table?.groupColor?.message}</ErrorMessage>
+            </>
+          ),
+          item: (
+            <Controller
+              control={control}
+              name="table.groupColor"
+              render={({ field: { value, onChange } }) => <Switch id="table-group-color" checked={value} onCheckedChange={onChange} />}
             />
           ),
         },

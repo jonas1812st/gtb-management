@@ -9,7 +9,7 @@ import { getAccessRights } from "@/utils/accessRights";
 
 export async function createUser(data: z.infer<typeof InputSchema>) {
   const rights = await getAccessRights();
-  if (!rights.createUsers)
+  if (!rights.createUser)
     return {
       success: false,
       message: "Access Rights Error: Not allowed.",

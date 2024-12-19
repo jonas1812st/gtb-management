@@ -5,20 +5,34 @@ export async function getAccessRights() {
 
   let rights = {
     manageUsers: false,
-    createUsers: false,
+    createUser: false,
     updateUser: false,
     deleteUser: false,
     manageLists: false,
+    updateList: false,
+    deleteList: false,
     createList: false,
+    manageGroups: false,
+    updateGroup: false,
+    deleteGroup: false,
+    createGroup: false,
   };
 
   if (session?.user?.role === "ADMIN" || session?.user?.role === "OWNER") {
-    rights.createUsers = true;
-    rights.deleteUser = true;
     rights.manageUsers = true;
+    rights.createUser = true;
+    rights.deleteUser = true;
     rights.updateUser = true;
+
     rights.manageLists = true;
+    rights.updateList = true;
+    rights.deleteList = true;
     rights.createList = true;
+
+    rights.manageGroups = true;
+    rights.updateGroup = true;
+    rights.deleteGroup = true;
+    rights.createGroup = true;
   }
 
   return rights;

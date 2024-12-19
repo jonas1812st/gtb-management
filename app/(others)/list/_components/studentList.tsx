@@ -12,7 +12,6 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import EditTimeDialog from "./time";
 import { DataTable } from "@/components/form/dataForm";
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 
 type Student = Prisma.StudentGetPayload<{
   include: {

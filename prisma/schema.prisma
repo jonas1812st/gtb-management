@@ -119,6 +119,7 @@ model ListTableInformation {
   className     Boolean
   time          Boolean
   notes         ListStudentNotes
+  groupColor    Boolean
   ListOptions   ListOptions      @relation(fields: [listOptionsId], references: [id])
   listOptionsId Int              @unique
 }
@@ -134,9 +135,9 @@ model ListActivation {
   id            Int          @id @default(autoincrement())
   day           Int // 0 (monday) to 6 (sunday)
   startTime     Int
-  startBuffer   Int?         @default(10) // buffer in minutes
+  startBuffer   Int // buffer in minutes
   endTime       Int
-  endBuffer     Int?         @default(10) // buffer in minutes
+  endBuffer     Int // buffer in minutes
   ListOptions   ListOptions? @relation(fields: [listOptionsId], references: [id])
   listOptionsId Int?
 }
