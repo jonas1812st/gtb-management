@@ -5,7 +5,7 @@ import { createList } from "../_methods/createList";
 export default async function Page() {
   return (
     <ConnectionWrapper>
-      <ListForm action="create" actionMethod={createList} />{" "}
+      <ListForm action="create" actionMethod={createList} />
     </ConnectionWrapper>
   );
 }
