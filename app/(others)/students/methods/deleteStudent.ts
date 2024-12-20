@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export async function deleteStudent(studentId: number) {
@@ -30,8 +30,8 @@ export async function deleteStudent(studentId: number) {
     };
   }
 
-  revalidatePath("/students");
-  revalidatePath("/list");
+  revalidateTag("students");
+  revalidateTag("lists");
 
   return {
     success: true,

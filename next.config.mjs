@@ -6,6 +6,9 @@ const nextConfig = {
       value: process.env.NEXT_PUBLIC_APP_URL,
     },
   ],
+  experimental: {
+    dynamicIO: true,
+  },
 };
 
 export default nextConfig;

@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import prisma from "@/utils/prisma";
 import { Prisma } from "@prisma/client";
 
@@ -31,9 +31,8 @@ export async function editStudent(data: z.infer<typeof InputSchema>, id: number)
     };
   }
 
-  revalidatePath("/students/" + id);
-  revalidatePath("/students");
-  revalidatePath("/list");
+  revalidateTag("students");
+  revalidateTag("lists");
 
   return {
     success: true,

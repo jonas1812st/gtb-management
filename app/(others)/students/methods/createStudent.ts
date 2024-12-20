@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
 import { Prisma } from "@prisma/client";
@@ -27,8 +27,8 @@ export async function createStudent(data: z.infer<typeof InputSchema>) {
     };
   }
 
-  revalidatePath("/list");
-  revalidatePath("/students");
+  revalidateTag("lists");
+  revalidateTag("students");
 
   return {
     success: true,

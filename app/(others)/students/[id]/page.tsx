@@ -10,33 +10,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import prisma from "@/utils/prisma";
 import dayjs from "dayjs";
 import "dayjs/locale/de";
 import Link from "next/link";
 import { deleteStudent } from "../methods/deleteStudent";
 import { DeleteButton } from "../_components/deleteStudent";
 import Error from "@/components/navigation/error";
+import { getStudentById } from "@/utils/db";
 dayjs.locale("de");
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const studentId = parseInt(params.id) || 0;
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
-  if (params.id === "" || studentId === 0) return <Error error="Id not valid." />;
+  const studentId = parseInt(id) || 0;
 
-  const student = await prisma.student.findUnique({
-    where: {
-      id: studentId,
-    },
-    include: {
-      attendances: true,
-      visitations: {
-        orderBy: {
-          date: "desc",
-        },
-      },
-    },
-  });
+  if (id === "" || studentId === 0) return <Error error="Id not valid." />;
+
+  const student = await getStudentById(studentId);
 
   if (!student) return <Error error="Student not found." />;
 

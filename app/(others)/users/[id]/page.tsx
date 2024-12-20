@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import prisma from "@/utils/prisma";
 import dayjs from "dayjs";
 import "dayjs/locale/de";
 import Link from "next/link";
@@ -21,23 +20,21 @@ import { getAccessRights } from "@/utils/accessRights";
 import NotAllowed from "@/components/navigation/not-allowed";
 import { auth } from "@/auth";
 import { canManage, isHighestRole } from "@/utils/roles";
+import { getUserById } from "@/utils/db";
 dayjs.locale("de");
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   const rights = await getAccessRights();
 
-  if (!rights.manageUsers && params.id !== session?.user?.userId.toString()) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
+  if (!rights.manageUsers && id !== session?.user?.userId.toString()) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
-  const userId = parseInt(params.id) || 0;
+  const userId = parseInt(id) || 0;
 
-  if (params.id === "" || userId === 0) return <Error error="Id not valid." btnLabel="Zur Benutzerübersicht" url="/users" />;
+  if (id === "" || userId === 0) return <Error error="Id not valid." btnLabel="Zur Benutzerübersicht" url="/users" />;
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+  const user = await getUserById(userId);
 
   if (!user) return <Error error="User not found." btnLabel="Zur Benutzerübersicht" url="/users" />;
 

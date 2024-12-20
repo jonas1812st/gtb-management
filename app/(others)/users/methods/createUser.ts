@@ -2,10 +2,10 @@
 
 import prisma from "@/utils/prisma";
 import { InputSchema } from "./schema";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { Role } from "@prisma/client";
 import { getAccessRights } from "@/utils/accessRights";
+import { revalidateTag } from "next/cache";
 
 export async function createUser(data: z.infer<typeof InputSchema>) {
   const rights = await getAccessRights();
@@ -28,7 +28,7 @@ export async function createUser(data: z.infer<typeof InputSchema>) {
     };
   }
 
-  revalidatePath("/users");
+  revalidateTag("users");
 
   return {
     success: true,

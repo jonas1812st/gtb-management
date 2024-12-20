@@ -2,19 +2,16 @@
 
 import { z } from "zod";
 import { InputSchema } from "../methods/schema";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import prisma from "@/utils/prisma";
 import { getAccessRights } from "@/utils/accessRights";
 import { canManage, isHighestRole } from "@/utils/roles";
+import { getUserById } from "@/utils/db";
 
 export async function editUser(data: z.infer<typeof InputSchema>, id: number) {
   const rights = await getAccessRights();
   const isHighest = await isHighestRole();
-  const user = await prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
+  const user = await getUserById(id);
 
   if (!user)
     return {
@@ -48,8 +45,7 @@ export async function editUser(data: z.infer<typeof InputSchema>, id: number) {
     };
   }
 
-  revalidatePath("/users/" + id);
-  revalidatePath("/users");
+  revalidateTag("lists");
 
   return {
     success: true,

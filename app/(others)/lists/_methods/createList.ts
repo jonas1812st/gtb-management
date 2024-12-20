@@ -2,7 +2,7 @@
 
 import prisma from "@/utils/prisma";
 import { CreateListInputSchema as InputSchema } from "@/utils/zodSchema";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export async function createList(data: z.infer<typeof InputSchema>) {
@@ -37,7 +37,7 @@ export async function createList(data: z.infer<typeof InputSchema>) {
     };
   }
 
-  revalidatePath("/lists");
+  revalidateTag("lists");
 
   return {
     success: true,

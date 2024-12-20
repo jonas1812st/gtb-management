@@ -1,11 +1,6 @@
-import prisma from "@/utils/prisma";
+import { getGroups } from "@/utils/db";
 
 export default async function Page() {
-  const groups = await prisma.group.findMany({
-    include: {
-      list: true,
-      GroupsOnStudents: true,
-    },
-  });
+  const groups = await getGroups();
   return <div>{JSON.stringify(groups)}</div>;
 }

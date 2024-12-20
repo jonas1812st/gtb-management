@@ -1,8 +1,11 @@
-import prisma from "@/utils/prisma";
 import StudentList from "./_components/studentList";
 import dayjs from "dayjs";
+import { connection } from "next/server";
+import { getStudentsByWeekDay } from "@/utils/db";
 
 export default async function Page() {
+  await connection();
+
   const dayOfWeek = dayjs().day();
 
   const dayOfWeekToAttendanceDay: {
@@ -17,24 +20,7 @@ export default async function Page() {
     6: -1,
   };
 
-  const students = await prisma.student.findMany({
-    where: {
-      attendances: {
-        some: {
-          day: dayOfWeekToAttendanceDay[dayOfWeek],
-        },
-      },
-    },
-    include: {
-      visitations: {
-        where: {
-          date: {
-            equals: dayjs().startOf("day").toISOString(),
-          },
-        },
-      },
-    },
-  });
+  const students = await getStudentsByWeekDay(dayOfWeekToAttendanceDay[dayOfWeek]);
 
   return <StudentList students={students} />;
 }

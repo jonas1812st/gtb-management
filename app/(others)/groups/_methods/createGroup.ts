@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { CreateGroupInputSchema as InputSchema } from "@/utils/zodSchema";
 
@@ -19,7 +19,7 @@ export async function createGroup(data: z.infer<typeof InputSchema>) {
     };
   }
 
-  revalidatePath("/groups");
+  revalidateTag("groups");
 
   return {
     success: true,

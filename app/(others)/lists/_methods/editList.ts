@@ -2,7 +2,7 @@
 
 import prisma from "@/utils/prisma";
 import { CreateListInputSchema as InputSchema } from "@/utils/zodSchema";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export async function editList(data: z.infer<typeof InputSchema>, id: number) {
@@ -41,8 +41,7 @@ export async function editList(data: z.infer<typeof InputSchema>, id: number) {
     };
   }
 
-  revalidatePath("/lists");
-  revalidatePath("/lists/" + id);
+  revalidateTag("lists");
 
   return {
     success: true,
