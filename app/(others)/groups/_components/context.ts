@@ -1,7 +1,20 @@
 import { Prisma } from "@prisma/client";
 import { createContext, useContext } from "react";
 
-export const ListsContext = createContext<Prisma.ListGetPayload<{}> | null>(null);
+export const ListsContext = createContext<
+  | Prisma.ListGetPayload<{
+      include: {
+        options: {
+          include: {
+            activations: true;
+            ListTableInformation: true;
+          };
+        };
+        Group: true;
+      };
+    }>[]
+  | null
+>(null);
 
 export const useListsContext = () => {
   const listsContext = useContext(ListsContext);
@@ -11,7 +24,7 @@ export const useListsContext = () => {
   return listsContext;
 };
 
-export const StudentsContext = createContext<Prisma.ListGetPayload<{}> | null>(null);
+export const StudentsContext = createContext<Prisma.StudentGetPayload<{}>[] | null>(null);
 
 export const useStudentsContext = () => {
   const studentsContext = useContext(StudentsContext);

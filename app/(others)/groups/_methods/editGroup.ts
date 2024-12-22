@@ -5,17 +5,23 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { CreateGroupInputSchema as InputSchema } from "@/utils/zodSchema";
 
-export async function createGroup(data: z.infer<typeof InputSchema>) {
+export async function editGroup(data: z.infer<typeof InputSchema>, groupId: number) {
   const result = InputSchema.parse(data);
 
   try {
-    await prisma.group.create({
+    await prisma.group.update({
+      where: {
+        id: groupId,
+      },
       data: {
         name: result.name,
         listId: result.listId,
         color: result.color,
         GroupsOnStudents: {
-          create: result.studentIds.map((studentId) => ({ studentId })),
+          deleteMany: {},
+          create: result.studentIds.map((studentId) => ({
+            studentId: studentId,
+          })),
         },
       },
     });
@@ -30,6 +36,6 @@ export async function createGroup(data: z.infer<typeof InputSchema>) {
 
   return {
     success: true,
-    message: "The student was successfully created.",
+    message: "The group was successfully updated.",
   };
 }

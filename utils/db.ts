@@ -134,3 +134,20 @@ export const getGroups = async () => {
 
   return data;
 };
+
+export const getGroupById = async (id: number) => {
+  "use cache";
+  cacheTag("groups", id.toString());
+
+  const data = await prisma.group.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      GroupsOnStudents: true,
+      list: true,
+    },
+  });
+
+  return data;
+};

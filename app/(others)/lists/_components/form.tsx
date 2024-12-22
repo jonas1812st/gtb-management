@@ -37,10 +37,10 @@ export default function ListForm(
   params: (
     | { action: "create" }
     | {
-      action: "edit";
-      values: z.infer<typeof CreateListInputSchema>;
-      id: number;
-    }
+        action: "edit";
+        values: z.infer<typeof CreateListInputSchema>;
+        id: number;
+      }
   ) & {
     actionMethod: (
       data: z.infer<typeof CreateListInputSchema>,
@@ -56,28 +56,28 @@ export default function ListForm(
     defaultValues:
       params.action === "edit"
         ? {
-          ...params.values,
-        }
+            ...params.values,
+          }
         : {
-          name: "",
-          cycle: "DAILY",
-          manageTime: "STUDENT",
-          recordTime: "START_END",
-          table: {
-            notes: "MARKED",
-            className: true,
-            time: true,
-            studentName: true,
-            groupColor: false,
+            name: "",
+            cycle: "DAILY",
+            manageTime: "STUDENT",
+            recordTime: "START_END",
+            table: {
+              notes: "MARKED",
+              className: true,
+              time: true,
+              studentName: true,
+              groupColor: false,
+            },
+            activations: Array.from({ length: 5 }).map((_, index) => ({
+              day: index,
+              startTime: DEFAULT_START_TIME,
+              startBuffer: DEFAULT_BUFFER,
+              endTime: DEFAULT_END_TIME,
+              endBuffer: DEFAULT_BUFFER,
+            })),
           },
-          activations: Array.from({ length: 7 }).map((_, index) => ({
-            day: index,
-            startTime: DEFAULT_START_TIME,
-            startBuffer: DEFAULT_BUFFER,
-            endTime: DEFAULT_END_TIME,
-            endBuffer: DEFAULT_BUFFER,
-          })),
-        },
   });
 
   const {
@@ -358,9 +358,9 @@ const UpdateTimeItem = ({ index }: { index: number }) => {
                         onChange(
                           e.target.value !== ""
                             ? {
-                              ...value,
-                              startTime: stringToTime(e.target.value),
-                            }
+                                ...value,
+                                startTime: stringToTime(e.target.value),
+                              }
                             : undefined
                         )
                       }
@@ -377,9 +377,9 @@ const UpdateTimeItem = ({ index }: { index: number }) => {
                         onChange(
                           e.target.value !== ""
                             ? {
-                              ...value,
-                              endTime: stringToTime(e.target.value),
-                            }
+                                ...value,
+                                endTime: stringToTime(e.target.value),
+                              }
                             : undefined
                         )
                       }

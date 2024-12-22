@@ -40,6 +40,17 @@ export default async function Page() {
           }}
         />
       ) : null}
+
+      {rights.manageGroups ? (
+        <ManageCard
+          title="Gruppen"
+          description="Verwalte alle Gruppen"
+          links={{
+            primary: { url: "/groups", label: "Verwalten" },
+            secondary: rights.createGroup ? { url: "/groups/create", label: "Neu erstellen" } : undefined,
+          }}
+        />
+      ) : null}
     </div>
   );
 }
@@ -57,11 +68,11 @@ const ManageCard = ({
       label: string;
     };
     secondary:
-    | {
-      url: string;
-      label: string;
-    }
-    | undefined;
+      | {
+          url: string;
+          label: string;
+        }
+      | undefined;
   };
 }) => (
   <Card>
