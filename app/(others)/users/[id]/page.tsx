@@ -32,11 +32,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   const userId = parseInt(id) || 0;
 
-  if (id === "" || userId === 0) return <Error error="Id not valid." btnLabel="Zur Benutzerübersicht" url="/users" />;
+  if (id === "" || userId === 0) return <Error error="Id not valid." btnLabel="Zur Übersicht" url="/users" />;
 
   const user = await getUserById(userId);
 
-  if (!user) return <Error error="User not found." btnLabel="Zur Benutzerübersicht" url="/users" />;
+  if (!user) return <Error error="User not found." btnLabel="Zur Übersicht" url="/users" />;
 
   return (
     <div className="flex flex-col space-y-4">

@@ -89,12 +89,7 @@ export const getListById = async (id: number) => {
       id,
     },
     include: {
-      options: {
-        include: {
-          activations: true,
-          ListTableInformation: true,
-        },
-      },
+      activations: true,
       Group: true,
     },
   });
@@ -108,12 +103,7 @@ export const getLists = async () => {
 
   const data = await prisma.list.findMany({
     include: {
-      options: {
-        include: {
-          activations: true,
-          ListTableInformation: true,
-        },
-      },
+      activations: true,
       Group: true,
     },
   });
@@ -151,3 +141,61 @@ export const getGroupById = async (id: number) => {
 
   return data;
 };
+
+export async function getGroupsByListId(listId: number) {
+  "use cache";
+  cacheTag("groups");
+
+  const groups = await prisma.group.findMany({
+    where: {
+      listId,
+    },
+    include: {
+      GroupsOnStudents: true,
+    },
+  });
+
+  return groups;
+}
+
+export async function getStudentsByGroup(groupId: number) {
+  "use cache";
+  cacheTag("students");
+
+  const students = await prisma.student.findMany({
+    where: {
+      GroupsOnStudents: {
+        some: {
+          groupId,
+        },
+      },
+    },
+  });
+
+  return students;
+}
+
+export async function getListsByWeekDay(weekDay: number) {
+  "use cache";
+  cacheTag("lists");
+
+  const lists = await prisma.list.findMany({
+    where: {
+      activations: {
+        some: {
+          day: weekDay,
+        },
+      },
+    },
+    include: {
+      activations: {
+        where: {
+          day: weekDay,
+        },
+      },
+      Group: true,
+    },
+  });
+
+  return lists;
+}

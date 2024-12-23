@@ -15,13 +15,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const userId = parseInt(id) || 0;
 
   // check if user id is valid
-  if (id === "" || userId === 0) return <Error error="Id not valid." btnLabel="Zur Benutzerübersicht" url="/users" />;
+  if (id === "" || userId === 0) return <Error error="Id not valid." btnLabel="Zur Übersicht" url="/users" />;
 
   // fetch user by id
   const user = await getUserById(userId);
 
   // show error if not found
-  if (!user) return <Error error="User not found." />;
+  if (!user) return <Error error="User not found." btnLabel="Zur Übersicht" url="/users" />;
 
   const rights = await getAccessRights();
   if (!(await canManage(user.role)) || !rights.updateUser) return <NotAllowed url="/users" label="Zur Übersicht" />;

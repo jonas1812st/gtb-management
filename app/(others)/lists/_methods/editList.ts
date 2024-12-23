@@ -15,22 +15,24 @@ export async function editList(data: z.infer<typeof InputSchema>, id: number) {
       },
       data: {
         name: result.name,
-        options: {
-          update: {
-            activations: {
-              deleteMany: {},
-              createMany: {
-                data: result.activations,
-              },
-            },
-            cycle: result.cycle,
-            manageTime: result.manageTime,
-            ListTableInformation: {
-              update: result.table,
-            },
-            recordTime: data.recordTime,
+
+        // --- list options ---
+        recordTime: result.recordTime,
+        cycle: result.cycle,
+        manageTime: result.manageTime,
+        activations: {
+          deleteMany: {},
+          createMany: {
+            data: result.activations,
           },
         },
+
+        // --- table options ---
+        studentName: result.table.studentName,
+        className: result.table.className,
+        time: result.table.time,
+        notes: result.table.notes,
+        groupColor: result.table.groupColor,
       },
     });
   } catch (error) {
@@ -42,6 +44,7 @@ export async function editList(data: z.infer<typeof InputSchema>, id: number) {
   }
 
   revalidateTag("lists");
+  revalidateTag("groups");
 
   return {
     success: true,

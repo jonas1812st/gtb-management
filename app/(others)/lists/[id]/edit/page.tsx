@@ -11,13 +11,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const listId = parseInt(id) || 0;
 
   // check if user id is valid
-  if (id === "" || listId === 0) return <Error error="Id not valid." />;
+  if (id === "" || listId === 0) return <Error error="Id not valid." url="/lists" btnLabel="Zur Übersicht" />;
 
   // fetch list by id
   const list = await getListById(listId);
 
   // show error if not found
-  if (!list || !list.options || !list.options.ListTableInformation) return <Error error="List not found." />;
+  if (!list) return <Error error="List not found." url="/lists" btnLabel="Zur Übersicht" />;
 
   const rights = await getAccessRights();
   if (!rights.updateList) return <NotAllowed url="/lists" label="Zur Übersicht" />;
@@ -27,11 +27,17 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       <ListForm
         values={{
           name: list.name,
-          recordTime: list.options.recordTime,
-          cycle: list.options.cycle,
-          manageTime: list.options.manageTime,
-          activations: list.options.activations,
-          table: list.options.ListTableInformation,
+          recordTime: list.recordTime,
+          cycle: list.cycle,
+          manageTime: list.manageTime,
+          activations: list.activations,
+          table: {
+            groupColor: list.groupColor,
+            notes: list.notes,
+            time: list.time,
+            className: list.className,
+            studentName: list.studentName,
+          },
         }}
         id={listId}
         action="edit"

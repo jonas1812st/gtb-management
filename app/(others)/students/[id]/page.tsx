@@ -24,11 +24,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   const studentId = parseInt(id) || 0;
 
-  if (id === "" || studentId === 0) return <Error error="Id not valid." />;
+  if (id === "" || studentId === 0) return <Error error="Id not valid." btnLabel="Zur Übersicht" url="/students" />;
 
   const student = await getStudentById(studentId);
 
-  if (!student) return <Error error="Student not found." />;
+  if (!student) return <Error error="Student not found." btnLabel="Zur Übersicht" url="/students" />;
 
   return (
     <div className="flex flex-col space-y-4">

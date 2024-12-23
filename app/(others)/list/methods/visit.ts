@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { InputSchema } from "../_components/timeSchema";
 
-export async function onVisiting(studentId: number, visitation: Prisma.VisitationGetPayload<{}> | undefined) {
+export async function onVisiting(studentId: number, visitation: Prisma.VisitationGetPayload<{}> | undefined, listId: number) {
   const date = dayjs().startOf("day").toISOString();
   const time = stringToTime(dayjs().format("HH:mm"));
 
@@ -15,9 +15,10 @@ export async function onVisiting(studentId: number, visitation: Prisma.Visitatio
     if (visitation?.end === null) {
       await prisma.visitation.update({
         where: {
-          date_studentId: {
+          date_studentId_listId: {
             date,
             studentId,
+            listId,
           },
         },
         data: {
@@ -31,15 +32,17 @@ export async function onVisiting(studentId: number, visitation: Prisma.Visitatio
           end: null,
         },
         where: {
-          date_studentId: {
+          date_studentId_listId: {
             date,
             studentId,
+            listId,
           },
         },
         create: {
           date,
           studentId,
           start: time!,
+          listId,
         },
       });
     }
@@ -73,7 +76,7 @@ export async function deleteVisitation(studentId: number) {
   revalidatePath("/list");
 }
 
-export async function updateVisitation(studentId: number, visitation: { end: string | undefined; start: string | undefined }) {
+export async function updateVisitation(studentId: number, visitation: { end: string | undefined; start: string | undefined }, listId: number) {
   const { end, start } = InputSchema.parse(visitation);
   const date = dayjs().startOf("day").toISOString();
 
@@ -84,9 +87,10 @@ export async function updateVisitation(studentId: number, visitation: { end: str
         end: stringToTime(end) || null,
       },
       where: {
-        date_studentId: {
+        date_studentId_listId: {
           date,
           studentId,
+          listId,
         },
       },
       create: {
@@ -94,6 +98,7 @@ export async function updateVisitation(studentId: number, visitation: { end: str
         studentId,
         start: stringToTimeNonNullable(start),
         end: stringToTime(end) || null,
+        listId,
       },
     });
   } catch (error) {

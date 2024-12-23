@@ -11,13 +11,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const groupId = parseInt(id) || 0;
 
   // check if user id is valid
-  if (id === "" || groupId === 0) return <Error error="Id not valid." />;
+  if (id === "" || groupId === 0) return <Error error="Id not valid." url="/groups" btnLabel="Zur Übersicht" />;
 
   // fetch group by id
   const group = await getGroupById(groupId);
 
   // show error if not found
-  if (!group) return <Error error="Group not found." />;
+  if (!group) return <Error error="Group not found." url="/groups" btnLabel="Zur Übersicht" />;
 
   const rights = await getAccessRights();
   if (!rights.updateList) return <NotAllowed url="/groups" label="Zur Übersicht" />;

@@ -3,16 +3,11 @@ import { createContext, useContext } from "react";
 
 export const ListsContext = createContext<
   | Prisma.ListGetPayload<{
-      include: {
-        options: {
-          include: {
-            activations: true;
-            ListTableInformation: true;
-          };
-        };
-        Group: true;
-      };
-    }>[]
+    include: {
+      activations: true;
+      Group: true;
+    };
+  }>[]
   | null
 >(null);
 

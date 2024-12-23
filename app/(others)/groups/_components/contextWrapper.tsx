@@ -10,12 +10,7 @@ export const ListsContextWrapper = ({
   children: React.ReactNode;
   value: Prisma.ListGetPayload<{
     include: {
-      options: {
-        include: {
-          activations: true;
-          ListTableInformation: true;
-        };
-      };
+      activations: true;
       Group: true;
     };
   }>[];

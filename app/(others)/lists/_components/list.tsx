@@ -7,12 +7,7 @@ import Link from "next/link";
 
 type List = Prisma.ListGetPayload<{
   include: {
-    options: {
-      include: {
-        activations: true;
-        ListTableInformation: true;
-      };
-    };
+    activations: true;
     Group: true;
   };
 }>;

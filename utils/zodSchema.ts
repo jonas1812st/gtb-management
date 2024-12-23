@@ -48,3 +48,5 @@ export const CreateGroupInputSchema = z.object({
   studentIds: z.number().array().min(1),
   listId: z.number(),
 });
+
+export const DateInputSchema = z.string().date().or(z.literal("now"));

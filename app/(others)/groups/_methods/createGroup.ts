@@ -20,6 +20,8 @@ export async function createGroup(data: z.infer<typeof InputSchema>) {
       },
     });
   } catch (error) {
+    console.error(error);
+
     return {
       success: false,
       message: "Database Error: Please check your inputs.",

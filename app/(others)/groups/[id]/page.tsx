@@ -12,11 +12,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   const groupId = parseInt(id);
 
-  if (isNaN(groupId)) return <Error error="Id not valid" btnLabel="Zur Gruppenübersicht" url="/groups" />;
+  if (isNaN(groupId)) return <Error error="Id not valid" btnLabel="Zur Übersicht" url="/groups" />;
 
   const group = await getGroupById(groupId);
 
-  if (!group) return <Error error="Group not found." btnLabel="Zur Gruppenübersicht" url="/groups" />;
+  if (!group) return <Error error="Group not found." btnLabel="Zur Übersicht" url="/groups" />;
 
   return <div>{JSON.stringify(group)}</div>;
 }

@@ -12,21 +12,23 @@ export async function createList(data: z.infer<typeof InputSchema>) {
     await prisma.list.create({
       data: {
         name: result.name,
-        options: {
-          create: {
-            activations: {
-              createMany: {
-                data: result.activations,
-              },
-            },
-            cycle: result.cycle,
-            manageTime: result.manageTime,
-            ListTableInformation: {
-              create: result.table,
-            },
-            recordTime: data.recordTime,
+
+        // --- list options ---
+        activations: {
+          createMany: {
+            data: result.activations,
           },
         },
+        cycle: result.cycle,
+        manageTime: result.manageTime,
+        recordTime: data.recordTime,
+
+        // --- table options ---
+        studentName: result.table.studentName,
+        className: result.table.className,
+        time: result.table.time,
+        notes: result.table.notes,
+        groupColor: result.table.groupColor,
       },
     });
   } catch (error) {

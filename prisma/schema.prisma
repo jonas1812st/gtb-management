@@ -33,8 +33,8 @@ model Attendance {
   updatedAt DateTime @updatedAt
   day       Int
   end       Int
-  Student   Student? @relation(fields: [studentId], references: [id])
-  studentId Int?
+  Student   Student  @relation(fields: [studentId], references: [id])
+  studentId Int
 }
 
 model Visitation {
@@ -42,10 +42,12 @@ model Visitation {
   date      DateTime
   start     Int
   end       Int?
-  Student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  Student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int
+  List      List     @relation(fields: [listId], references: [id])
+  listId    Int
 
-  @@unique([date, studentId])
+  @@unique([date, studentId, listId])
 }
 
 model User {
@@ -80,21 +82,25 @@ model GroupsOnStudents {
 }
 
 model List {
-  id      Int          @id @default(autoincrement())
-  name    String
-  options ListOptions?
-  Group   Group[]
-}
+  id   Int    @id @default(autoincrement())
+  name String
 
-model ListOptions {
-  id                   Int                   @id @default(autoincrement())
-  recordTime           RecordTime // record time
-  List                 List                  @relation(fields: [listId], references: [id])
-  listId               Int                   @unique
-  ListTableInformation ListTableInformation?
-  cycle                ListCycleType         @default(DAILY)
-  activations          ListActivation[]
-  manageTime           TimeManagement        @default(STUDENT) // decides if the list or the student manages their start and end time 
+  // --- list options ---
+  recordTime  RecordTime
+  cycle       ListCycleType    @default(DAILY)
+  manageTime  TimeManagement   @default(STUDENT) // decides if the list or the student manages their start and end time 
+  Group       Group[]
+  activations ListActivation[]
+
+  // --- table options ---
+  studentName Boolean
+  className   Boolean
+  time        Boolean
+  notes       ListStudentNotes
+  groupColor  Boolean
+
+  // --- visitations ---
+  Visitation Visitation[]
 }
 
 enum TimeManagement {
@@ -113,17 +119,6 @@ enum ListCycleType {
   MONTHLY
 }
 
-model ListTableInformation {
-  id            Int              @id @default(autoincrement())
-  studentName   Boolean
-  className     Boolean
-  time          Boolean
-  notes         ListStudentNotes
-  groupColor    Boolean
-  ListOptions   ListOptions      @relation(fields: [listOptionsId], references: [id])
-  listOptionsId Int              @unique
-}
-
 enum ListStudentNotes {
   NONE
   MARKED
@@ -132,12 +127,12 @@ enum ListStudentNotes {
 }
 
 model ListActivation {
-  id            Int          @id @default(autoincrement())
-  day           Int // 0 (monday) to 6 (sunday)
-  startTime     Int
-  startBuffer   Int // buffer in minutes
-  endTime       Int
-  endBuffer     Int // buffer in minutes
-  ListOptions   ListOptions? @relation(fields: [listOptionsId], references: [id])
-  listOptionsId Int?
+  id          Int   @id @default(autoincrement())
+  day         Int // 0 (monday) to 6 (sunday)
+  startTime   Int
+  startBuffer Int // buffer in minutes
+  endTime     Int
+  endBuffer   Int // buffer in minutes
+  List        List? @relation(fields: [listId], references: [id])
+  listId      Int?
 }
