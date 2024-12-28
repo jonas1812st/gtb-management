@@ -51,6 +51,12 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        navigation: {
+          DEFAULT: "hsl(var(--navigation))",
+          hover: "hsl(var(--navigation-hover))",
+          active: "hsl(var(--navigation-active))",
+          foreground: "hsl(var(--navigation-foreground))",
+        },
         chart: {
           "1": "hsl(var(--chart-1))",
           "2": "hsl(var(--chart-2))",
