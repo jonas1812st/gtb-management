@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const load = async () => {
   try {
-    const userExists = prisma.user.findUnique({
+    const userExists = await prisma.user.findUnique({
       where: {
         username: "admin",
       },
