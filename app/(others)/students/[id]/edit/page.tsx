@@ -5,7 +5,7 @@ import { mdiArrowLeft } from "@mdi/js";
 import Link from "next/link";
 import { editStudent } from "../../methods/editStudent";
 import Error from "@/components/navigation/error";
-import { getStudentById } from "@/utils/db";
+import { getStudentById, getStudentListsById } from "@/utils/db";
 import ConnectionWrapper from "@/components/cache/connectionWrapper";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -18,6 +18,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const student = await getStudentById(studentId);
 
   if (!student) return <Error error="Student not found." url="/students" btnLabel="Zur Übersicht" />;
+
+  const studentLists = await getStudentListsById(studentId);
+  const mutableAttendanceLists = studentLists.filter((list) => list.manageTime === "STUDENT");
 
   return (
     <div className="flex flex-col space-y-4">
@@ -40,11 +43,25 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             lastName: student.lastName,
             className: student.className,
             firstName: student.firstName,
-            attendances: student.attendances.map((attendance) => ({
-              day: attendance.day,
-              end: attendance.end,
-            })),
+            attendances: mutableAttendanceLists.flatMap((list) =>
+              list.activations.flatMap((activation) => {
+                const studentAttendanceItem = student.attendances.find(
+                  (attendance) => attendance.listId === activation.listId && attendance.day === activation.day
+                );
+
+                return {
+                  day: activation.day,
+                  status: studentAttendanceItem?.status ?? "DEFAULT",
+                  end: studentAttendanceItem?.end ?? activation.endTime,
+                  listId: list.id,
+                };
+              })
+            ),
           }}
+          lists={mutableAttendanceLists.map((list) => ({
+            id: list.id,
+            name: list.name,
+          }))}
         />
       </ConnectionWrapper>
     </div>

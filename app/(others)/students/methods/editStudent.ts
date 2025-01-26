@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
 import { revalidateTag } from "next/cache";
 import prisma from "@/utils/prisma";
-import { Prisma } from "@prisma/client";
+import { AttendanceZodSchemaType } from "./types";
 
 export async function editStudent(data: z.infer<typeof InputSchema>, id: number) {
   const result = InputSchema.parse(data);
@@ -20,7 +20,7 @@ export async function editStudent(data: z.infer<typeof InputSchema>, id: number)
           deleteMany: {
             studentId: id,
           },
-          create: result.attendances.filter((attendance): attendance is Prisma.AttendanceCreateWithoutStudentInput => !!attendance),
+          create: result.attendances.filter((attendance): attendance is AttendanceZodSchemaType => attendance.status !== "DEFAULT"),
         },
       },
     });

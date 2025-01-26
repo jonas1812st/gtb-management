@@ -16,7 +16,7 @@ export function stringToTimeNonNullable(value: string) {
   return hours * 60 + minutes;
 }
 
-export const timeToString = (value: number | undefined) => {
+export const timeToString = (value: number | undefined | null) => {
   if (!value) return undefined;
 
   return dayjs().hour(0).minute(value).format("HH:mm");

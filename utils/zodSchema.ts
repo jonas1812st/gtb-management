@@ -1,13 +1,15 @@
-import { ListCycleType, ListStudentNotes, RecordTime, TimeManagement } from "@prisma/client";
+import { AttendanceStatus, ListStudentNotes, RecordTime, TimeManagement } from "@prisma/client";
 import { z } from "zod";
-import { DEFAULT_BUFFER } from "./constants";
+import { DEFAULT_BUFFER, DEFAULT_STUDENT_END_TIME } from "./constants";
 
-export const TimeSchema = z.number().gte(0).lte(1439).default(960); // 00:00 - 23:59 <=> 0 - 1439
+export const TimeSchema = z.number().gte(0).lte(1439).default(DEFAULT_STUDENT_END_TIME); // 00:00 - 23:59 <=> 0 - 1439
 export const WeekDaySchema = z.number().gte(0).lte(6); // 0 (monday) to 6 (sunday)
 
 export const CreateAttendanceInputSchema = z.object({
-  day: z.number().gte(0).lte(4),
+  day: WeekDaySchema,
   end: TimeSchema,
+  status: z.nativeEnum(AttendanceStatus).or(z.literal("DEFAULT")),
+  listId: z.number(),
 });
 
 export const CreateStudentInputSchema = z.object({
@@ -16,7 +18,7 @@ export const CreateStudentInputSchema = z.object({
   notes: z.string().trim().min(1).max(500).nullish(),
   grade: z.number(),
   className: z.string().length(1).toUpperCase(),
-  attendances: z.array(CreateAttendanceInputSchema.optional()),
+  attendances: z.array(CreateAttendanceInputSchema),
 });
 
 export const CreateListActivationSchema = z.object({
@@ -37,7 +39,6 @@ export const CreateListInputSchema = z.object({
     notes: z.nativeEnum(ListStudentNotes),
     groupColor: z.boolean(),
   }),
-  cycle: z.nativeEnum(ListCycleType),
   activations: z.array(CreateListActivationSchema),
   manageTime: z.nativeEnum(TimeManagement),
 });
@@ -49,4 +50,4 @@ export const CreateGroupInputSchema = z.object({
   listId: z.number(),
 });
 
-export const DateInputSchema = z.string().date().or(z.literal("now"));
+export const DateInputSchema = z.string().date().or(z.literal("today"));

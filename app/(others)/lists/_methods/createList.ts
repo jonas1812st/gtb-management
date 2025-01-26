@@ -19,7 +19,6 @@ export async function createList(data: z.infer<typeof InputSchema>) {
             data: result.activations,
           },
         },
-        cycle: result.cycle,
         manageTime: result.manageTime,
         recordTime: data.recordTime,
 

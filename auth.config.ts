@@ -11,7 +11,7 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       if (isLoggedIn && request.nextUrl.pathname.endsWith("/auth/login")) {
         const url = request.nextUrl.clone();
-        url.pathname = "/list";
+        url.pathname = "/active";
         return NextResponse.redirect(url);
       } else if (isLoggedIn && auth.user?.isNew && !request.nextUrl.pathname.endsWith("/auth/new-user")) {
         const url = request.nextUrl.clone();

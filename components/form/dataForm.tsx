@@ -25,13 +25,21 @@ interface DataTableProps<TData, TValue> {
   className?: {
     tableContainer?: string;
   };
+  hiddenCols?: string[];
 }
 
 interface AdditionalElements {
   addItemBtn?: { label: string } & ({ type: "url"; url: string } | { type: "click"; onClick: () => void });
 }
 
-export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn, className }: DataTableProps<TData, TValue> & AdditionalElements) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  filter,
+  addItemBtn,
+  className,
+  hiddenCols = [],
+}: DataTableProps<TData, TValue> & AdditionalElements) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
@@ -41,6 +49,9 @@ export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn, cl
     state: {
       sorting,
       columnFilters,
+    },
+    initialState: {
+      columnVisibility: hiddenCols.reduce((acc, curr) => ((acc[curr] = false), acc), {} as Record<string, boolean>),
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -82,7 +93,7 @@ export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn, cl
       )}
       <Table className={className?.tableContainer}>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {table?.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
@@ -108,8 +119,8 @@ export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn, cl
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => {
+          {table?.getRowModel().rows?.length ? (
+            table?.getRowModel().rows.map((row) => {
               const hasRowMeta = row.getAllCells()[0].getContext().cell.column.columnDef.meta;
 
               return (

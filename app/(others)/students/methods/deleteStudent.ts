@@ -8,18 +8,26 @@ export async function deleteStudent(studentId: number) {
   const result = z.number().parse(studentId);
 
   try {
-    await prisma.student.delete({
-      where: {
-        id: result,
-      },
-    });
-
     // delete related attendances
     await prisma.attendance.deleteMany({
       where: {
-        Student: {
-          id: result,
-        },
+        studentId: result,
+      },
+    });
+    await prisma.groupsOnStudents.deleteMany({
+      where: {
+        studentId: result,
+      },
+    });
+    await prisma.visitation.deleteMany({
+      where: {
+        studentId: result,
+      },
+    });
+
+    await prisma.student.delete({
+      where: {
+        id: result,
       },
     });
   } catch (error) {

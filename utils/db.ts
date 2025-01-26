@@ -13,7 +13,7 @@ export const getUsers = async () => {
 
 export const getUserById = async (id: number) => {
   "use cache";
-  cacheTag("users", id.toString());
+  cacheTag("users");
 
   const data = await prisma.user.findUnique({
     where: {
@@ -26,7 +26,7 @@ export const getUserById = async (id: number) => {
 
 export const getStudents = async () => {
   "use cache";
-  cacheTag("students", "all");
+  cacheTag("students");
 
   const data = await prisma.student.findMany();
 
@@ -35,7 +35,7 @@ export const getStudents = async () => {
 
 export const getStudentsByWeekDay = async (weekDay: number) => {
   "use cache";
-  cacheTag("students", "all");
+  cacheTag("students");
 
   const data = await prisma.student.findMany({
     where: {
@@ -61,7 +61,7 @@ export const getStudentsByWeekDay = async (weekDay: number) => {
 
 export const getStudentById = async (id: number) => {
   "use cache";
-  cacheTag("students", id.toString());
+  cacheTag("students", "groups");
 
   const data = await prisma.student.findUnique({
     where: {
@@ -69,6 +69,11 @@ export const getStudentById = async (id: number) => {
     },
     include: {
       attendances: true,
+      GroupsOnStudents: {
+        include: {
+          group: true,
+        },
+      },
       visitations: {
         orderBy: {
           date: "desc",
@@ -80,9 +85,35 @@ export const getStudentById = async (id: number) => {
   return data;
 };
 
+export const getStudentListsById = async (id: number) => {
+  "use cache";
+  cacheTag("students", "groups", "lists");
+
+  const data = await prisma.list.findMany({
+    where: {
+      Group: {
+        some: {
+          GroupsOnStudents: {
+            some: {
+              student: {
+                id,
+              },
+            },
+          },
+        },
+      },
+    },
+    include: {
+      activations: true,
+    },
+  });
+
+  return data;
+};
+
 export const getListById = async (id: number) => {
   "use cache";
-  cacheTag("lists", id.toString());
+  cacheTag("lists");
 
   const data = await prisma.list.findUnique({
     where: {
@@ -99,7 +130,7 @@ export const getListById = async (id: number) => {
 
 export const getLists = async () => {
   "use cache";
-  cacheTag("lists");
+  cacheTag("lists", "groups");
 
   const data = await prisma.list.findMany({
     include: {
@@ -111,9 +142,26 @@ export const getLists = async () => {
   return data;
 };
 
+export const getMainList = async () => {
+  "use cache";
+  cacheTag("lists", "groups");
+
+  const data = await prisma.list.findFirst({
+    where: {
+      isMainList: true,
+    },
+    include: {
+      activations: true,
+      Group: true,
+    },
+  });
+
+  return data;
+};
+
 export const getGroups = async () => {
   "use cache";
-  cacheTag("groups");
+  cacheTag("groups", "lists");
 
   const data = await prisma.group.findMany({
     include: {
@@ -127,7 +175,7 @@ export const getGroups = async () => {
 
 export const getGroupById = async (id: number) => {
   "use cache";
-  cacheTag("groups", id.toString());
+  cacheTag("groups", "lists");
 
   const data = await prisma.group.findUnique({
     where: {
@@ -160,7 +208,7 @@ export async function getGroupsByListId(listId: number) {
 
 export async function getStudentsByGroup(groupId: number) {
   "use cache";
-  cacheTag("students");
+  cacheTag("students", "groups");
 
   const students = await prisma.student.findMany({
     where: {
@@ -177,7 +225,7 @@ export async function getStudentsByGroup(groupId: number) {
 
 export async function getListsByWeekDay(weekDay: number) {
   "use cache";
-  cacheTag("lists");
+  cacheTag("lists", "groups");
 
   const lists = await prisma.list.findMany({
     where: {
@@ -188,14 +236,76 @@ export async function getListsByWeekDay(weekDay: number) {
       },
     },
     include: {
-      activations: {
-        where: {
-          day: weekDay,
-        },
-      },
+      activations: true,
       Group: true,
     },
   });
 
   return lists;
 }
+
+export const getStudentsByWeekDayAndListId = async (date: string, weekDay: number, listId: number) => {
+  "use cache";
+  cacheTag("students", "lists", "groups");
+
+  const data = await prisma.student.findMany({
+    where: {
+      OR: [
+        {
+          AND: [
+            // check if student is in a group which is connected to the listId
+            {
+              GroupsOnStudents: {
+                some: {
+                  group: {
+                    listId,
+                  },
+                },
+              },
+            },
+            // check if student has no db record in attendances for the given weekday and listId
+            {
+              attendances: {
+                none: {
+                  day: weekDay,
+                  listId,
+                },
+              },
+            },
+          ],
+        },
+        // check if student has a db record in attendances for the given weekday and listId and is marked as present
+        {
+          attendances: {
+            some: {
+              day: weekDay,
+              listId,
+              status: "PRESENT",
+            },
+          },
+        },
+      ],
+    },
+    include: {
+      visitations: {
+        where: {
+          date: {
+            equals: dayjs(date).toISOString(),
+          },
+        },
+      },
+      GroupsOnStudents: {
+        where: {
+          group: {
+            listId,
+          },
+        },
+        include: {
+          group: true,
+        },
+      },
+    },
+  });
+
+  return data;
+};

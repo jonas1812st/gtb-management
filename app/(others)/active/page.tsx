@@ -9,22 +9,29 @@ import Icon from "@mdi/react";
 import { mdiAccountMultiple, mdiClockOutline } from "@mdi/js";
 import Link from "next/link";
 import prisma from "@/utils/prisma";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
+import { cn } from "@/lib/utils";
 dayjs.locale("de");
 dayjs.extend(weekday);
+
+// weekday is locale aware => for the german language this will be 0 for monday
+const getWeekDay = () => dayjs().weekday();
 
 export default async function Page() {
   await connection();
 
-  // weekday is locale aware => for the german language this will be 0 for monday
-  const weekDay = dayjs().weekday();
-
-  const lists = await getListsByWeekDay(weekDay);
+  const lists = await getListsByWeekDay(getWeekDay());
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Aktivierte Listen</h1>
-      <div className="flex flex-col space-y-3 mt-4">
-        {lists.length !== 0 ? lists.map((list) => <ListItem key={list.id + "_list"} list={list} />) : <i>Aktuell sind keine Listen aktiv</i>}
+      <div className="grid gap-4">
+        {lists && lists.length !== 0 ? (
+          lists?.map((list) => <ListItem key={list.id + "_list"} list={list} />)
+        ) : (
+          <i>Aktuell sind keine Listen aktiv</i>
+        )}
       </div>
     </div>
   );
@@ -41,42 +48,70 @@ async function ListItem({
   }>;
 }) {
   const date = dayjs().startOf("day").toISOString();
+  const weekDay = getWeekDay();
+
+  const activationToday = list.activations.find((activation) => activation.day === weekDay)!;
 
   return (
-    <Link href={`/lists/${list.id}/now`} className="px-4 py-2.5 rounded-lg border flex flex-col space-y-2">
-      <div>
-        <h2 className="text-xl font-bold mb-2">{list.name}</h2>
-        <div className="h-[1px] bg-border" />
-      </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{list.name}</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col space-y-2">
+        <div className="grid md:grid-cols-2 gap-3">
+          <div className="flex flex-wrap gap-1.5">
+            {list.Group.map((group) => (
+              <GroupItem key={group.id + "_group"} group={group} />
+            ))}
+          </div>
 
-      <div className="flex justify-between gap-2 flex-wrap">
-        <div className="flex flex-wrap gap-3">
-          {list.Group.map((group) => (
-            <GroupItem key={group.id + "_group"} group={group} />
-          ))}
+          <div className="flex items-start justify-end">
+            <div className="flex gap-0.5 items-center">
+              {["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].map((weekDay, index) => (
+                <div
+                  className={cn(
+                    "text-sm rounded-full border w-8 h-8 flex items-center justify-center",
+                    list.activations.some((activation) => activation.day === index) ? "border-primary/40 bg-primary/20 border-2" : ""
+                  )}
+                  key={weekDay + "_weekDay_item"}
+                >
+                  <span>{weekDay}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-
-        <div className="flex items-center space-x-1">
-          <Icon path={mdiClockOutline} size={0.7} />
-          <span className="text-sm font-medium">
-            {timeToString(list.activations[0].startTime)} - {timeToString(list.activations[0].endTime)}
-          </span>
+        <div className="flex justify-between gap-2 flex-wrap">
+          <div className="flex items-center space-x-1">
+            <Icon path={mdiAccountMultiple} size={0.8} />
+            <span>
+              <ListStudentsAmount groupIds={list.Group.map((group) => group.id)} date={date} /> Schüler anwesend
+            </span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Icon path={mdiClockOutline} size={0.8} />
+            <span>
+              {timeToString(activationToday.startTime)} - {timeToString(activationToday.endTime)}
+            </span>
+          </div>
         </div>
-      </div>
+      </CardContent>
 
-      <div className="flex items-center space-x-1">
-        <Icon path={mdiAccountMultiple} size={0.7} />
-        <span className="text-sm font-medium">
-          <ListStudentsAmount groupIds={list.Group.map((group) => group.id)} date={date} />
-        </span>
-      </div>
-    </Link>
+      <CardFooter className="flex justify-end items-center space-x-2">
+        <Link href={`/lists/${list.id}`}>
+          <Button variant={"secondary"}>Zur Liste</Button>
+        </Link>
+        <Link href={`/lists/${list.id}/today`}>
+          <Button>Zur aktiven Liste</Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 }
 
 async function ListStudentsAmount({ groupIds, date }: { groupIds: number[]; date: string }) {
-  // "use cache";
-  // cacheTag("groups", "students", "lists");
+  "use cache";
+  cacheTag("groups", "students", "lists");
 
   const groupStudents = await prisma.student.count({
     where: {
@@ -105,16 +140,8 @@ async function ListStudentsAmount({ groupIds, date }: { groupIds: number[]; date
         {
           visitations: {
             some: {
-              AND: [
-                {
-                  date,
-                },
-                {
-                  NOT: {
-                    end: null,
-                  },
-                },
-              ],
+              date,
+              end: null,
             },
           },
         },
@@ -122,14 +149,14 @@ async function ListStudentsAmount({ groupIds, date }: { groupIds: number[]; date
     },
   });
 
-  return activeStudents + "/" + groupStudents;
+  return <span className="px-2 py-0.5 rounded-xl bg-primary/20 text-sm">{activeStudents + " / " + groupStudents}</span>;
 }
 
 function GroupItem({ group }: { group: Prisma.GroupGetPayload<{}> }) {
   return (
-    <div className="flex items-center space-x-1">
+    <div className="flex items-center space-x-1 rounded-full bg-primary/20 px-2.5 py-0.5">
       <div className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: group.color ?? "grey" }} />
-      <span className="text-sm font-medium">{group.name}</span>
+      <span>{group.name}</span>
     </div>
   );
 }

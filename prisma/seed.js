@@ -1,24 +1,62 @@
 const { PrismaClient } = require("@prisma/client");
 const { faker, simpleFaker } = require("@faker-js/faker");
+
 const prisma = new PrismaClient();
 
 const load = async () => {
   try {
     const userExists = await prisma.user.findUnique({
       where: {
-        username: "admin",
+        username: process.env.ADMIN_USER,
       },
     });
 
     if (!userExists) {
       await prisma.user.create({
         data: {
-          username: "admin",
-          password: "$2a$12$3p1JNy2E1F5X2wGvMkSBr.Nwbce0uJHzaEPhhOBO1pcEpwbiEgpJi",
+          username: process.env.ADMIN_USER,
+          password: process.env.ADMIN_PASS,
           role: "OWNER",
         },
       });
     }
+
+    const mainList = await prisma.list.findFirst({
+      where: {
+        isMainList: true,
+      },
+    });
+
+    if (!mainList) {
+      await prisma.list.create({
+        data: {
+          Group: {
+            create: {
+              isMainGroup: true,
+              name: process.env.MAIN_GROUP_NAME,
+              color: process.env.MAIN_GROUP_COLOR,
+            },
+          },
+
+          isMainList: true,
+          name: process.env.MAIN_LIST_NAME,
+
+          // --- table options ---
+          notes: "MARKED",
+          time: true,
+          className: true,
+          studentName: true,
+          groupColor: false,
+
+          // --- list options ---
+          recordTime: "START_END",
+          manageTime: "STUDENT",
+        },
+      });
+    }
+
+    /*
+    Seed fake students
 
     await prisma.student.createMany({
       data: Array.from({ length: 10 }).map((_) => ({
@@ -29,6 +67,7 @@ const load = async () => {
         notes: faker.person.bio(),
       })),
     });
+    */
   } catch (e) {
     console.error(e);
     process.exit(1);

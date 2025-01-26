@@ -28,13 +28,21 @@ model Student {
 }
 
 model Attendance {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int              @id @default(autoincrement())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
   day       Int
   end       Int
-  Student   Student  @relation(fields: [studentId], references: [id])
+  status    AttendanceStatus @default(PRESENT)
+  Student   Student          @relation(fields: [studentId], references: [id])
   studentId Int
+  List      List             @relation(fields: [listId], references: [id])
+  listId    Int
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
 }
 
 model Visitation {
@@ -70,6 +78,9 @@ model Group {
   GroupsOnStudents GroupsOnStudents[]
   list             List               @relation(fields: [listId], references: [id])
   listId           Int
+
+  // -- important for default group --
+  isMainGroup Boolean @default(false)
 }
 
 model GroupsOnStudents {
@@ -85,9 +96,11 @@ model List {
   id   Int    @id @default(autoincrement())
   name String
 
+  // -- important for default list --
+  isMainList Boolean @default(false)
+
   // --- list options ---
   recordTime  RecordTime
-  cycle       ListCycleType    @default(DAILY)
   manageTime  TimeManagement   @default(STUDENT) // decides if the list or the student manages their start and end time 
   Group       Group[]
   activations ListActivation[]
@@ -99,8 +112,9 @@ model List {
   notes       ListStudentNotes
   groupColor  Boolean
 
-  // --- visitations ---
+  // --- visitations & attendances ---
   Visitation Visitation[]
+  Attendance Attendance[]
 }
 
 enum TimeManagement {
@@ -111,12 +125,6 @@ enum TimeManagement {
 enum RecordTime {
   START
   START_END
-}
-
-enum ListCycleType {
-  DAILY
-  WEEKLY
-  MONTHLY
 }
 
 enum ListStudentNotes {

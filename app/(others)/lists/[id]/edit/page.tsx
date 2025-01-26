@@ -28,7 +28,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         values={{
           name: list.name,
           recordTime: list.recordTime,
-          cycle: list.cycle,
           manageTime: list.manageTime,
           activations: list.activations,
           table: {

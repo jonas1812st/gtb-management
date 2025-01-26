@@ -2,29 +2,40 @@
 
 import prisma from "@/utils/prisma";
 import { stringToTime, stringToTimeNonNullable } from "@/utils/time";
-import { Prisma } from "@prisma/client";
+import { Prisma, RecordTime } from "@prisma/client";
 import dayjs from "dayjs";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { InputSchema } from "../_components/timeSchema";
+import { InputSchema } from "./timeSchema";
 
-export async function onVisiting(studentId: number, visitation: Prisma.VisitationGetPayload<{}> | undefined, listId: number) {
-  const date = dayjs().startOf("day").toISOString();
+export async function onVisiting(
+  studentId: number,
+  visitation: Prisma.VisitationGetPayload<{}> | undefined,
+  listId: number,
+  date: Date,
+  recordTime: RecordTime
+) {
+  const dateIso = dayjs(date).startOf("day").toISOString();
   const time = stringToTime(dayjs().format("HH:mm"));
 
   try {
+    // Wenn der aktuelle Eintrag "Visitation" kein Ende hat, dann wird das Ende hinzugefügt oder der Eintrag gelöscht (hängt von recordTime ab)
     if (visitation?.end === null) {
-      await prisma.visitation.update({
-        where: {
-          date_studentId_listId: {
-            date,
-            studentId,
-            listId,
+      if (recordTime === "START_END") {
+        await prisma.visitation.update({
+          where: {
+            date_studentId_listId: {
+              date: dateIso,
+              studentId,
+              listId,
+            },
           },
-        },
-        data: {
-          end: time,
-        },
-      });
+          data: {
+            end: time,
+          },
+        });
+      } else if (recordTime === "START") {
+        await deleteVisitation(studentId, listId, date);
+      }
     } else {
       await prisma.visitation.upsert({
         update: {
@@ -33,13 +44,13 @@ export async function onVisiting(studentId: number, visitation: Prisma.Visitatio
         },
         where: {
           date_studentId_listId: {
-            date,
+            date: dateIso,
             studentId,
             listId,
           },
         },
         create: {
-          date,
+          date: dateIso,
           studentId,
           start: time!,
           listId,
@@ -53,17 +64,17 @@ export async function onVisiting(studentId: number, visitation: Prisma.Visitatio
 
   revalidateTag("lists");
   revalidateTag("students");
-  revalidatePath("/list");
 }
 
-export async function deleteVisitation(studentId: number) {
-  const date = dayjs().startOf("day").toISOString();
+export async function deleteVisitation(studentId: number, listId: number, date: Date) {
+  const dateIso = dayjs(date).startOf("day").toISOString();
 
   try {
     await prisma.visitation.deleteMany({
       where: {
         studentId,
-        date,
+        listId,
+        date: dateIso,
       },
     });
   } catch (error) {
@@ -73,12 +84,11 @@ export async function deleteVisitation(studentId: number) {
 
   revalidateTag("lists");
   revalidateTag("students");
-  revalidatePath("/list");
 }
 
-export async function updateVisitation(studentId: number, visitation: { end: string | undefined; start: string | undefined }, listId: number) {
+export async function updateVisitation(studentId: number, visitation: { start: string; end: string | undefined | null }, listId: number, date: Date) {
   const { end, start } = InputSchema.parse(visitation);
-  const date = dayjs().startOf("day").toISOString();
+  const dateIso = dayjs(date).startOf("day").toISOString();
 
   try {
     await prisma.visitation.upsert({
@@ -88,13 +98,13 @@ export async function updateVisitation(studentId: number, visitation: { end: str
       },
       where: {
         date_studentId_listId: {
-          date,
+          date: dateIso,
           studentId,
           listId,
         },
       },
       create: {
-        date,
+        date: dateIso,
         studentId,
         start: stringToTimeNonNullable(start),
         end: stringToTime(end) || null,

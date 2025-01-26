@@ -1,7 +1,14 @@
+import { studentAddToMainGroupMiddleware } from "@/prisma/middlewares";
 import { PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  const client = new PrismaClient();
+
+  client.$use(async (params, next) => {
+    return await studentAddToMainGroupMiddleware(client, params, next);
+  });
+
+  return client;
 };
 
 declare global {

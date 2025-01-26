@@ -18,7 +18,6 @@ export async function editList(data: z.infer<typeof InputSchema>, id: number) {
 
         // --- list options ---
         recordTime: result.recordTime,
-        cycle: result.cycle,
         manageTime: result.manageTime,
         activations: {
           deleteMany: {},

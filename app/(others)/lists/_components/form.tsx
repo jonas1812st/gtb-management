@@ -60,7 +60,6 @@ export default function ListForm(
           }
         : {
             name: "",
-            cycle: "DAILY",
             manageTime: "STUDENT",
             recordTime: "START_END",
             table: {
@@ -93,7 +92,6 @@ export default function ListForm(
         name: data.name,
         recordTime: data.recordTime,
         manageTime: data.manageTime,
-        cycle: data.cycle,
         table: data.table,
         activations: data.activations.filter((activation) => !!activation),
       },
@@ -114,7 +112,7 @@ export default function ListForm(
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit, (data) => console.log("error", data, getValues()))} className="flex flex-col space-y-10">
+      <form onSubmit={handleSubmit(onSubmit, (data) => console.error("error", data, getValues()))} className="flex flex-col space-y-10">
         <NameInput />
 
         <TimeInput />
@@ -147,7 +145,7 @@ const NameInput = () => {
       <FormLabel className="text-xl font-semibold text-black" htmlFor="name">
         Name
       </FormLabel>
-      <InputDescription className="mb-1">Dient der Sortierung der Listen.</InputDescription>
+      <InputDescription className="mb-2">Dient der Sortierung der Listen.</InputDescription>
       <Input
         id="name"
         {...register("name", {
@@ -174,12 +172,12 @@ const TimeInput = () => {
 
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-2">
         <div>
           <FormLabel className="text-xl font-semibold text-black" htmlFor="activation">
             Aktivierung
           </FormLabel>
-          <InputDescription className="mb-1">Bestimme, wann die Liste aktiviert wird.</InputDescription>
+          <InputDescription>Bestimme, wann die Liste aktiviert wird.</InputDescription>
         </div>
         <div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -301,7 +299,7 @@ const UpdateTimeItem = ({ index }: { index: number }) => {
   const activationItemExists = !!activationItem;
 
   return (
-    <div key={weekDay + "_day"} className="border p-3 rounded-md flex flex-col space-y-2">
+    <div key={weekDay + "_day"} className="border p-3 rounded-md flex flex-col">
       <div className="flex justify-between items-center">
         <p className="font-semibold">{weekDay}</p>
         <Button
@@ -343,7 +341,7 @@ const UpdateTimeItem = ({ index }: { index: number }) => {
             animate="open"
             transition={{ duration: 0.2 }}
           >
-            <div className="flex items-center space-x-2 justify-between">
+            <div className="flex items-center space-x-2 justify-between pt-2">
               <Controller
                 control={control}
                 name={`activations.${activationItemIndex}`}
@@ -408,33 +406,6 @@ const MoreOptionsInput = () => {
         {
           value: (
             <>
-              <FormLabel htmlFor="cycle">Zyklus</FormLabel>
-              <InputDescription className="mb-1">Die Zeit, nach der sich eine Liste zurücksetzt.</InputDescription>
-              <ErrorMessage>{errors.cycle?.message}</ErrorMessage>
-            </>
-          ),
-          item: (
-            <Controller
-              control={control}
-              name="cycle"
-              render={({ field: { value, onChange } }) => (
-                <Select value={value} onValueChange={onChange}>
-                  <SelectTrigger id="cycle">
-                    <SelectValue placeholder="Zyklus" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="DAILY">Täglich</SelectItem>
-                    <SelectItem value="WEEKLY">Wöchentlich</SelectItem>
-                    <SelectItem value="MONTHLY">Monatlich</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          ),
-        },
-        {
-          value: (
-            <>
               <FormLabel htmlFor="manage-time">Zeitverwaltung</FormLabel>
               <InputDescription className="mb-1">Zeiten können zentral oder individuell festgelegt werden.</InputDescription>
 
@@ -489,11 +460,12 @@ const MoreOptionsInput = () => {
     },
     {
       heading: "Tabelle",
+      description: "Bestimme welche Informationen angezeigt werden sollen.",
       options: [
         {
           value: (
             <>
-              <FormLabel htmlFor="table-notes">Weitere Informationen anzeigen</FormLabel>
+              <FormLabel htmlFor="table-notes">Weitere Informationen des Schülers</FormLabel>
               <ErrorMessage>{errors.table?.notes?.message}</ErrorMessage>
             </>
           ),
@@ -508,7 +480,7 @@ const MoreOptionsInput = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="NONE">Nicht anzeigen</SelectItem>
-                    <SelectItem value="MARKED">Markierung</SelectItem>
+                    <SelectItem value="MARKED">Als Markierung</SelectItem>
                     <SelectItem value="SHORTENED">Gekürzt</SelectItem>
                     <SelectItem value="FULL">Volle Länge</SelectItem>
                   </SelectContent>
@@ -565,7 +537,7 @@ const MoreOptionsInput = () => {
         {
           value: (
             <>
-              <FormLabel htmlFor="table-student-name">Gruppenfarbe</FormLabel>
+              <FormLabel htmlFor="table-group-color">Gruppenfarbe</FormLabel>
               <ErrorMessage>{errors.table?.groupColor?.message}</ErrorMessage>
             </>
           ),
@@ -584,6 +556,7 @@ const MoreOptionsInput = () => {
   return listOptions.map((option, index) => (
     <section key={index + "_heading"}>
       <h2 className="text-xl font-semibold">{option.heading}</h2>
+      {option.description && <InputDescription className="mb-1">{option.description}</InputDescription>}
       <table className="w-full">
         <tbody>
           {option.options.map((option, index) => (
