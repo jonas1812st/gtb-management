@@ -1,12 +1,9 @@
 import StudentForm from "../../_components/form";
-import { Button } from "@/components/ui/button";
-import Icon from "@mdi/react";
-import { mdiArrowLeft } from "@mdi/js";
-import Link from "next/link";
 import { editStudent } from "../../methods/editStudent";
 import Error from "@/components/navigation/error";
 import { getStudentById, getStudentListsById } from "@/utils/db";
 import ConnectionWrapper from "@/components/cache/connectionWrapper";
+import { BackNavigation } from "@/components/ui/back-navigation";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -24,14 +21,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex space-x-4 items-center">
-        <Link href={"/students/" + studentId}>
-          <Button size={"icon"} className="rounded-full" variant={"outline"}>
-            <Icon size={0.8} path={mdiArrowLeft} />
-          </Button>
-        </Link>
-        <h2 className="text-2xl font-semibold">Schüler bearbeiten</h2>
-      </div>
+      <BackNavigation title="Schüler bearbeiten" href={"/students/" + studentId} />
       <ConnectionWrapper>
         <StudentForm
           action="edit"

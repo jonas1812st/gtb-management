@@ -38,6 +38,12 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   if (!user) return <Error error="User not found." btnLabel="Zur Übersicht" url="/users" />;
 
+  const deleteUserFunc = async () => {
+    "use server";
+
+    return await deleteUser(user.id);
+  };
+
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex flex-col space-y-2">
@@ -93,7 +99,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     Abbrechen
                   </Button>
                 </DialogClose>
-                <DeleteButton url="/users" action={deleteUser} userId={userId} />
+                <DeleteButton action={deleteUserFunc} redirectUrl="/users" />
               </DialogFooter>
             </DialogContent>
           </Dialog>

@@ -1,6 +1,11 @@
 import { unstable_cacheTag as cacheTag } from "next/cache";
 import prisma from "./prisma";
+import { studentByWeekDayAndListIdPrismaQuery } from "./db-prisma";
 import dayjs from "dayjs";
+import "dayjs/locale/de";
+import weekday from "dayjs/plugin/weekday";
+dayjs.locale("de");
+dayjs.extend(weekday);
 
 export const getUsers = async () => {
   "use cache";
@@ -175,7 +180,7 @@ export const getGroups = async () => {
 
 export const getGroupById = async (id: number) => {
   "use cache";
-  cacheTag("groups", "lists");
+  cacheTag("groups", "lists", "students");
 
   const data = await prisma.group.findUnique({
     where: {
@@ -184,6 +189,25 @@ export const getGroupById = async (id: number) => {
     include: {
       GroupsOnStudents: true,
       list: true,
+    },
+  });
+
+  return data;
+};
+
+export const getGroupStudentsById = async (id: number) => {
+  "use cache";
+  cacheTag("groups", "lists", "students");
+
+  const data = await prisma.student.findMany({
+    where: {
+      GroupsOnStudents: {
+        some: {
+          group: {
+            id,
+          },
+        },
+      },
     },
   });
 
@@ -249,49 +273,20 @@ export const getStudentsByWeekDayAndListId = async (date: string, weekDay: numbe
   cacheTag("students", "lists", "groups");
 
   const data = await prisma.student.findMany({
-    where: {
-      OR: [
-        {
-          AND: [
-            // check if student is in a group which is connected to the listId
-            {
-              GroupsOnStudents: {
-                some: {
-                  group: {
-                    listId,
-                  },
-                },
-              },
-            },
-            // check if student has no db record in attendances for the given weekday and listId
-            {
-              attendances: {
-                none: {
-                  day: weekDay,
-                  listId,
-                },
-              },
-            },
-          ],
-        },
-        // check if student has a db record in attendances for the given weekday and listId and is marked as present
-        {
-          attendances: {
-            some: {
-              day: weekDay,
-              listId,
-              status: "PRESENT",
-            },
-          },
-        },
-      ],
-    },
+    where: studentByWeekDayAndListIdPrismaQuery(listId, weekDay),
     include: {
+      attendances: {
+        where: {
+          day: dayjs(date).weekday(),
+          listId,
+        },
+      },
       visitations: {
         where: {
           date: {
             equals: dayjs(date).toISOString(),
           },
+          listId,
         },
       },
       GroupsOnStudents: {

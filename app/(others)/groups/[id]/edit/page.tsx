@@ -5,6 +5,7 @@ import { getGroupById, getLists, getStudents } from "@/utils/db";
 import { ListsContextWrapper, StudentsContextWrapper } from "../../_components/contextWrapper";
 import Error from "@/components/navigation/error";
 import { editGroup } from "../../_methods/editGroup";
+import { BackNavigation } from "@/components/ui/back-navigation";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -27,20 +28,23 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const students = await getStudents();
 
   return (
-    <ListsContextWrapper value={lists}>
-      <StudentsContextWrapper value={students}>
-        <GroupForm
-          action="edit"
-          values={{
-            name: group.name,
-            listId: group.listId,
-            color: group.color ?? undefined,
-            studentIds: group.GroupsOnStudents.map((group) => group.studentId),
-          }}
-          id={groupId}
-          actionMethod={editGroup}
-        />
-      </StudentsContextWrapper>
-    </ListsContextWrapper>
+    <div className="flex flex-col space-y-4">
+      <BackNavigation href={`/groups/${group.id}`} title="Gruppe bearbeiten" />
+      <ListsContextWrapper value={lists}>
+        <StudentsContextWrapper value={students}>
+          <GroupForm
+            action="edit"
+            values={{
+              name: group.name,
+              listId: group.listId,
+              color: group.color ?? undefined,
+              studentIds: group.GroupsOnStudents.map((group) => group.studentId),
+            }}
+            id={groupId}
+            actionMethod={editGroup}
+          />
+        </StudentsContextWrapper>
+      </ListsContextWrapper>
+    </div>
   );
 }

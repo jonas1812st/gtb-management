@@ -2,12 +2,12 @@ import { AttendanceStatus, ListStudentNotes, RecordTime, TimeManagement } from "
 import { z } from "zod";
 import { DEFAULT_BUFFER, DEFAULT_STUDENT_END_TIME } from "./constants";
 
-export const TimeSchema = z.number().gte(0).lte(1439).default(DEFAULT_STUDENT_END_TIME); // 00:00 - 23:59 <=> 0 - 1439
+export const TimeSchema = z.number().gte(0).lte(1439); // 00:00 - 23:59 <=> 0 - 1439
 export const WeekDaySchema = z.number().gte(0).lte(6); // 0 (monday) to 6 (sunday)
 
 export const CreateAttendanceInputSchema = z.object({
   day: WeekDaySchema,
-  end: TimeSchema,
+  end: TimeSchema.default(DEFAULT_STUDENT_END_TIME),
   status: z.nativeEnum(AttendanceStatus).or(z.literal("DEFAULT")),
   listId: z.number(),
 });
@@ -25,7 +25,7 @@ export const CreateListActivationSchema = z.object({
   day: WeekDaySchema,
   startTime: TimeSchema,
   startBuffer: z.number().gt(0).lte(60).optional().default(DEFAULT_BUFFER), // buffer in minutes
-  endTime: TimeSchema,
+  endTime: TimeSchema.default(DEFAULT_STUDENT_END_TIME),
   endBuffer: z.number().gt(0).lte(60).optional().default(DEFAULT_BUFFER), // buffer in minutes
 });
 
@@ -47,7 +47,7 @@ export const CreateGroupInputSchema = z.object({
   name: z.string().trim().min(1).max(50),
   color: z.string().optional(),
   studentIds: z.number().array().min(1),
-  listId: z.number(),
+  listId: z.number().nullable(),
 });
 
 export const DateInputSchema = z.string().date().or(z.literal("today"));

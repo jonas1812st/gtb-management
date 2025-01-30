@@ -28,6 +28,8 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { DEFAULT_BUFFER, DEFAULT_END_TIME, DEFAULT_START_TIME } from "@/utils/constants";
 import { useRef, useState } from "react";
+import { listStudentNotesTranslation } from "@/utils/enum-translations";
+import { List, ListStudentNotes } from "@prisma/client";
 
 dayjs.locale("de");
 
@@ -479,10 +481,11 @@ const MoreOptionsInput = () => {
                     <SelectValue placeholder="Informationen" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="NONE">Nicht anzeigen</SelectItem>
-                    <SelectItem value="MARKED">Als Markierung</SelectItem>
-                    <SelectItem value="SHORTENED">Gekürzt</SelectItem>
-                    <SelectItem value="FULL">Volle Länge</SelectItem>
+                    {Object.keys(listStudentNotesTranslation).map((key) => (
+                      <SelectItem key={key + "_notes_select_item"} value={key}>
+                        {listStudentNotesTranslation[key as ListStudentNotes]}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}

@@ -1,4 +1,3 @@
-import { Table, Td, Tr } from "@/components/form/table";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,13 +11,15 @@ import {
 } from "@/components/ui/dialog";
 import Link from "next/link";
 import { deleteStudent } from "../methods/deleteStudent";
-import { DeleteButton } from "../_components/deleteStudent";
 import Error from "@/components/navigation/error";
 import { getStudentById, getStudentListsById } from "@/utils/db";
 import { StudentLists } from "./_components/studentDetails";
 import ConnectionWrapper from "@/components/cache/connectionWrapper";
 import dayjs from "dayjs";
 import "dayjs/locale/de";
+import { DetailsContainer, DetailsHeading, DetailsTable, DetailsTableContent } from "@/components/details";
+import { GroupLink, GroupLinkContainer } from "@/components/ui/group-link";
+import { DeleteButton } from "@/components/form/deleteBtn";
 dayjs.locale("de");
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -33,14 +34,20 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   if (!student) return <Error error="Student not found." btnLabel="Zur Übersicht" url="/students" />;
 
+  const deleteStudentFunc = async () => {
+    "use server";
+
+    return await deleteStudent(student.id);
+  };
+
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-xl font-semibold">Informationen</h1>
-        <div className="border rounded-lg">
-          <Table>
-            <tbody>
-              {[
+      <div>
+        <DetailsHeading>Informationen</DetailsHeading>
+        <DetailsContainer>
+          <DetailsTable>
+            <DetailsTableContent
+              items={[
                 {
                   label: "Name",
                   value: student.firstName + " " + student.lastName,
@@ -53,33 +60,19 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   label: "Gruppen",
                   value:
                     (student.GroupsOnStudents?.length !== 0 ? (
-                      <div className="flex gap-2 flex-wrap">
-                        {student.GroupsOnStudents?.map(({ group }) => (
-                          <Link
-                            href={"/groups/" + group.id}
-                            className="px-2.5 py-0.5 bg-primary/20 transition hover:bg-primary/30 rounded-full flex space-x-1 items-center"
-                            key={group.id + "_group_link"}
-                          >
-                            <div className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: group.color ?? "grey" }} />
-                            <span>{group.name}</span>
-                          </Link>
-                        ))}
-                      </div>
+                      <GroupLinkContainer>
+                        {student.GroupsOnStudents?.map(({ group }) => <GroupLink key={group.id + "_group_link"} group={group} />)}
+                      </GroupLinkContainer>
                     ) : undefined) || "Keine Gruppen",
                 },
                 {
                   label: "Anmerkungen",
                   value: student.notes || "Keine Anmerkung",
                 },
-              ].map((information, index) => (
-                <Tr key={index + "_information_row"}>
-                  <td className="font-semibold text-gray-600 p-3">{information.label}</td>
-                  <Td>{information.value}</Td>
-                </Tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
+              ]}
+            />
+          </DetailsTable>
+        </DetailsContainer>
       </div>
 
       <ConnectionWrapper>
@@ -111,7 +104,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   Abbrechen
                 </Button>
               </DialogClose>
-              <DeleteButton action={deleteStudent} studentId={student.id} />
+              <DeleteButton action={deleteStudentFunc} redirectUrl="/students" />
             </DialogFooter>
           </DialogContent>
         </Dialog>

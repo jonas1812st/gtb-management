@@ -7,6 +7,8 @@ import { useState } from "react";
 import { DataTable } from "@/components/form/dataForm";
 import dayjs from "dayjs";
 import "dayjs/locale/de";
+import { DetailsContainer, DetailsHeading } from "@/components/details";
+import Link from "next/link";
 dayjs.locale("de");
 
 export const StudentLists = ({
@@ -28,6 +30,13 @@ export const StudentLists = ({
       accessorKey: "date",
       header: "Datum",
       accessorFn: (row) => dayjs(row.date).format("ddd DD.MM.YYYY"),
+      cell: ({ row: { original: visitation } }) => {
+        return (
+          <Link href={`/lists/${selectedListId}/${dayjs(visitation.date).format("YYYY-MM-DD")}`}>
+            {dayjs(visitation.date).format("ddd DD.MM.YYYY")}
+          </Link>
+        );
+      },
     },
     {
       accessorKey: "time",
@@ -35,13 +44,14 @@ export const StudentLists = ({
       accessorFn: (row) =>
         dayjs(row.date).minute(row.start).format("HH:mm") +
         (selectedList?.recordTime === "START_END" ? " - " + (row.end ? dayjs(row.date).minute(row.end).format("HH:mm") : "--:--") : ""),
+      enableSorting: false,
     },
   ];
 
   return (
     <div className="flex flex-col space-y-2">
       <div className="flex gap-x-2 items-end justify-between">
-        <h1 className="text-xl font-semibold">Listen</h1>
+        <DetailsHeading className="mb-0">Listen</DetailsHeading>
         <Select
           value={selectedListId + "_list"}
           onValueChange={(value) => {
@@ -62,7 +72,7 @@ export const StudentLists = ({
         </Select>
       </div>
 
-      <div className="border rounded-lg">
+      <DetailsContainer>
         {selectedList?.manageTime === "STUDENT" && (
           <div className="p-3 pb-0 flex space-x-3 items-center">
             <h4 className="font-medium">Anwesenheiten:</h4>
@@ -85,7 +95,7 @@ export const StudentLists = ({
         <div className="max-h-[400px] overflow-auto p-3">
           <DataTable columns={columns} data={visitations.filter((visitation) => visitation.listId === selectedListId)} />
         </div>
-      </div>
+      </DetailsContainer>
     </div>
   );
 };

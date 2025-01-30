@@ -22,8 +22,9 @@ export default function TopBar() {
           <div className="flex space-x-2">
             {[
               { label: "Aktive Listen", url: "/active" },
-              { label: "Alle Listen", url: "/lists" },
               { label: "Schüler", url: "/students" },
+              { label: "Listen", url: "/lists" },
+              { label: "Gruppen", url: "/groups" },
             ].map((element, index) => (
               <Link
                 href={element.url}

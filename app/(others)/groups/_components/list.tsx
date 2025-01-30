@@ -32,10 +32,10 @@ export function GroupsList({ groups }: { groups: Group[] }) {
     {
       accessorKey: "listId",
       header: "Liste",
-      accessorFn: (group) => group.list.name,
+      accessorFn: (group) => group.list?.name,
       cell: ({ row: { original: group } }) => (
         <Link href={"/lists/" + group.listId}>
-          <span>{group.list.name}</span>
+          <span>{group.list?.name ?? <i>Keine Liste</i>}</span>
         </Link>
       ),
     },

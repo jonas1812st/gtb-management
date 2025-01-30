@@ -12,12 +12,14 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditTimeDialog from "./time";
 import { AttendanceWarningDialog } from "./warnings";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type Student = Prisma.StudentGetPayload<{
   include: {
+    attendances: true;
     visitations: true;
     GroupsOnStudents: {
       include: {
@@ -63,20 +65,22 @@ export function AttendanceList({
         const presentState = getPresentState(student, date);
 
         return (
-          <input
-            type="checkbox"
-            defaultChecked={presentState.state === "visiting"}
-            onClick={() => {
-              // !!! when changing something here, the code below at AttendanceWarningDialog.confirm has to be changed too
+          <div className="w-[78px] flex gap-2 justify-between items-center">
+            {student.attendances[0] !== undefined ? <EndTimeNote student={student} /> : <div />}
+            <Checkbox
+              defaultChecked={presentState.state === "visiting"}
+              onCheckedChange={() => {
+                // !!! when changing something here, the code below at AttendanceWarningDialog.confirm has to be changed too
 
-              if (list.recordTime === "START" && presentState.visitation?.start) {
-                setAttendanceWarning(student.id);
-                return;
-              }
+                if (list.recordTime === "START" && presentState.visitation?.start) {
+                  setAttendanceWarning(student.id);
+                  return;
+                }
 
-              onVisiting(student.id, presentState.visitation, list.id, date, list.recordTime);
-            }}
-          />
+                onVisiting(student.id, presentState.visitation, list.id, date, list.recordTime);
+              }}
+            />
+          </div>
         );
       },
       enableSorting: false,
@@ -113,7 +117,7 @@ export function AttendanceList({
             </span>
             {notesExist ? (
               list.notes === "MARKED" ? (
-                <Icon path={mdiInformationOutline} size={0.8} className="text-red-500 translate-y-[1px]" />
+                <Icon path={mdiInformationOutline} size={0.8} className="text-gray-500 translate-y-[1px]" />
               ) : list.notes === "SHORTENED" ? (
                 <span className="text-sm text-muted-foreground">
                   {student.notes?.substring(0, 50) + ((student.notes?.length ?? 0) > 50 ? "..." : "")}
@@ -133,8 +137,8 @@ export function AttendanceList({
     },
     {
       accessorKey: "time",
-      header: "Anwesenheit",
-      accessorFn: (student) => {
+      header: "Zeiten",
+      cell: ({ row: { original: student } }) => {
         const startTime = timeToString(student.visitations[0]?.start);
         const endTime = timeToString(student.visitations[0]?.end);
 
@@ -197,3 +201,64 @@ export function AttendanceList({
     </>
   );
 }
+
+type AttendanceTimeStatus = "IN_TIME" | "CLOSE_TO_TIME" | "OVER_TIME" | "DONE";
+
+const EndTimeNote = ({ student }: { student: Student }) => {
+  const currentAttendance = { end: 1300 }; // student.attendances[0];
+
+  const getAttendanceStatus = (attendanceStatus?: AttendanceTimeStatus) => {
+    let status = attendanceStatus || "DONE";
+    const currMinutes = dayjs().hour() * 60 + dayjs().minute();
+
+    if (student.visitations[0] && student.visitations[0].end !== null) {
+      status = "DONE";
+    } else if (currentAttendance.end > currMinutes) {
+      if (currentAttendance.end - currMinutes <= 15) {
+        status = "CLOSE_TO_TIME";
+      } else {
+        status = "IN_TIME";
+      }
+    } else if (currentAttendance.end <= currMinutes) {
+      status = "OVER_TIME";
+    }
+
+    console.log(status);
+
+    return status;
+  };
+
+  // state
+  const [attendanceStatus, setAttendanceStatus] = useState<AttendanceTimeStatus>(getAttendanceStatus());
+
+  useEffect(() => {
+    getAttendanceStatus();
+  }, [student]);
+
+  useEffect(() => {
+    // interval every 3 minutes
+    const interval = setInterval(
+      () => {
+        setAttendanceStatus(getAttendanceStatus());
+      },
+      1000 // * 3 * 60
+    );
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const attendanceTimeClassnames: Record<AttendanceTimeStatus, string> = {
+    DONE: "bg-green-500/10 border-green-500",
+    IN_TIME: "bg-gray-300/10 border-gray-300",
+    CLOSE_TO_TIME: "bg-orange-400/10 border-orange-400",
+    OVER_TIME: "bg-red-500/10 border-red-500",
+  };
+
+  if (!currentAttendance) return null;
+
+  return (
+    <span className={cn("rounded-xl border-2 px-1.5 py-0.5 text-sm font-medium", attendanceTimeClassnames[attendanceStatus])}>
+      {timeToString(currentAttendance?.end)}
+    </span>
+  );
+};

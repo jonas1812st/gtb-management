@@ -34,9 +34,9 @@ model Attendance {
   day       Int
   end       Int
   status    AttendanceStatus @default(PRESENT)
-  Student   Student          @relation(fields: [studentId], references: [id])
+  Student   Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int
-  List      List             @relation(fields: [listId], references: [id])
+  List      List             @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId    Int
 }
 
@@ -52,7 +52,7 @@ model Visitation {
   end       Int?
   Student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int
-  List      List     @relation(fields: [listId], references: [id])
+  List      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId    Int
 
   @@unique([date, studentId, listId])
@@ -76,17 +76,17 @@ model Group {
   name             String
   color            String?
   GroupsOnStudents GroupsOnStudents[]
-  list             List               @relation(fields: [listId], references: [id])
-  listId           Int
+  list             List?              @relation(fields: [listId], references: [id], onDelete: SetNull)
+  listId           Int?
 
   // -- important for default group --
   isMainGroup Boolean @default(false)
 }
 
 model GroupsOnStudents {
-  student   Student @relation(fields: [studentId], references: [id])
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int
-  group     Group   @relation(fields: [groupId], references: [id])
+  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   Int
 
   @@id([studentId, groupId])
@@ -141,6 +141,6 @@ model ListActivation {
   startBuffer Int // buffer in minutes
   endTime     Int
   endBuffer   Int // buffer in minutes
-  List        List? @relation(fields: [listId], references: [id])
+  List        List? @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId      Int?
 }

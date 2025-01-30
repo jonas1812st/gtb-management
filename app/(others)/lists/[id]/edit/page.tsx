@@ -5,6 +5,7 @@ import NotAllowed from "@/components/navigation/not-allowed";
 import { editList } from "../../_methods/editList";
 import { getListById } from "@/utils/db";
 import ConnectionWrapper from "@/components/cache/connectionWrapper";
+import { BackNavigation } from "@/components/ui/back-navigation";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -23,25 +24,28 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   if (!rights.updateList) return <NotAllowed url="/lists" label="Zur Übersicht" />;
 
   return (
-    <ConnectionWrapper>
-      <ListForm
-        values={{
-          name: list.name,
-          recordTime: list.recordTime,
-          manageTime: list.manageTime,
-          activations: list.activations,
-          table: {
-            groupColor: list.groupColor,
-            notes: list.notes,
-            time: list.time,
-            className: list.className,
-            studentName: list.studentName,
-          },
-        }}
-        id={listId}
-        action="edit"
-        actionMethod={editList}
-      />
-    </ConnectionWrapper>
+    <div className="flex flex-col space-y-4">
+      <BackNavigation title="Liste bearbeiten" href={"/lists/" + listId} />
+      <ConnectionWrapper>
+        <ListForm
+          values={{
+            name: list.name,
+            recordTime: list.recordTime,
+            manageTime: list.manageTime,
+            activations: list.activations,
+            table: {
+              groupColor: list.groupColor,
+              notes: list.notes,
+              time: list.time,
+              className: list.className,
+              studentName: list.studentName,
+            },
+          }}
+          id={listId}
+          action="edit"
+          actionMethod={editList}
+        />
+      </ConnectionWrapper>
+    </div>
   );
 }

@@ -51,6 +51,18 @@ const load = async () => {
           // --- list options ---
           recordTime: "START_END",
           manageTime: "STUDENT",
+
+          activations: {
+            createMany: {
+              data: Array.from({ length: 5 }).map((_, index) => ({
+                day: index,
+                startTime: 835,
+                startBuffer: 10,
+                endTime: 960,
+                endBuffer: 10,
+              })),
+            },
+          },
         },
       });
     }
