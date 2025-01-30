@@ -37,7 +37,7 @@ export default function Form(params: { session: Session | null }) {
     } else {
       if (params.session && params.session.user) {
         const response = await authenticate({
-          callbackUrl: "/list",
+          callbackUrl: "/active",
           username: params.session?.user?.username,
           password: data.password,
         });
@@ -49,7 +49,7 @@ export default function Form(params: { session: Session | null }) {
           message: "Session Error: Please check if you are logged in.",
         });
       }
-      router.push("/list");
+      router.push("/active");
     }
   };
 

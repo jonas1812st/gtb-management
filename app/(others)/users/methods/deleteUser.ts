@@ -2,9 +2,10 @@
 
 import { auth } from "@/auth";
 import { getAccessRights } from "@/utils/accessRights";
+import { getUserById } from "@/utils/db";
 import prisma from "@/utils/prisma";
 import { canManage } from "@/utils/roles";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export async function deleteUser(userId: number) {
@@ -13,11 +14,7 @@ export async function deleteUser(userId: number) {
   const result = z.number().parse(userId);
 
   // check if user exists
-  const deletedUser = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+  const deletedUser = await getUserById(userId);
   if (!deletedUser)
     return {
       success: false,
@@ -47,7 +44,7 @@ export async function deleteUser(userId: number) {
     };
   }
 
-  revalidatePath("/user");
+  revalidateTag("users");
 
   return {
     success: true,

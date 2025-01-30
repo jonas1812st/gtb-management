@@ -1,25 +1,33 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export async function deleteStudent(studentId: number) {
   const result = z.number().parse(studentId);
 
   try {
-    await prisma.student.delete({
-      where: {
-        id: result,
-      },
-    });
-
     // delete related attendances
     await prisma.attendance.deleteMany({
       where: {
-        Student: {
-          id: result,
-        },
+        studentId: result,
+      },
+    });
+    await prisma.groupsOnStudents.deleteMany({
+      where: {
+        studentId: result,
+      },
+    });
+    await prisma.visitation.deleteMany({
+      where: {
+        studentId: result,
+      },
+    });
+
+    await prisma.student.delete({
+      where: {
+        id: result,
       },
     });
   } catch (error) {
@@ -30,8 +38,8 @@ export async function deleteStudent(studentId: number) {
     };
   }
 
-  revalidatePath("/students");
-  revalidatePath("/list");
+  revalidateTag("students");
+  revalidateTag("lists");
 
   return {
     success: true,

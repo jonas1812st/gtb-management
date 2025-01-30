@@ -1,4 +1,3 @@
-import { Table, Td, Th, Tr } from "@/components/form/table";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,44 +9,45 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import prisma from "@/utils/prisma";
-import dayjs from "dayjs";
-import "dayjs/locale/de";
 import Link from "next/link";
 import { deleteStudent } from "../methods/deleteStudent";
-import { DeleteButton } from "../_components/deleteStudent";
 import Error from "@/components/navigation/error";
+import { getStudentById, getStudentListsById } from "@/utils/db";
+import { StudentLists } from "./_components/studentDetails";
+import ConnectionWrapper from "@/components/cache/connectionWrapper";
+import dayjs from "dayjs";
+import "dayjs/locale/de";
+import { DetailsContainer, DetailsHeading, DetailsTable, DetailsTableContent } from "@/components/details";
+import { GroupLink, GroupLinkContainer } from "@/components/ui/group-link";
+import { DeleteButton } from "@/components/form/deleteBtn";
 dayjs.locale("de");
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const studentId = parseInt(params.id) || 0;
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
-  if (params.id === "" || studentId === 0) return <Error error="Id not valid." />;
+  const studentId = parseInt(id) || 0;
 
-  const student = await prisma.student.findUnique({
-    where: {
-      id: studentId,
-    },
-    include: {
-      attendances: true,
-      visitations: {
-        orderBy: {
-          date: "desc",
-        },
-      },
-    },
-  });
+  if (id === "" || studentId === 0) return <Error error="Id not valid." btnLabel="Zur Übersicht" url="/students" />;
 
-  if (!student) return <Error error="Student not found." />;
+  const student = await getStudentById(studentId);
+  const studentLists = await getStudentListsById(studentId);
+
+  if (!student) return <Error error="Student not found." btnLabel="Zur Übersicht" url="/students" />;
+
+  const deleteStudentFunc = async () => {
+    "use server";
+
+    return await deleteStudent(student.id);
+  };
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-xl font-semibold">Informationen</h1>
-        <div className="border rounded-lg">
-          <Table>
-            <tbody>
-              {[
+      <div>
+        <DetailsHeading>Informationen</DetailsHeading>
+        <DetailsContainer>
+          <DetailsTable>
+            <DetailsTableContent
+              items={[
                 {
                   label: "Name",
                   value: student.firstName + " " + student.lastName,
@@ -57,72 +57,28 @@ export default async function Page({ params }: { params: { id: string } }) {
                   value: student.grade + student.className,
                 },
                 {
+                  label: "Gruppen",
+                  value:
+                    (student.GroupsOnStudents?.length !== 0 ? (
+                      <GroupLinkContainer>
+                        {student.GroupsOnStudents?.map(({ group }) => <GroupLink key={group.id + "_group_link"} group={group} />)}
+                      </GroupLinkContainer>
+                    ) : undefined) || "Keine Gruppen",
+                },
+                {
                   label: "Anmerkungen",
                   value: student.notes || "Keine Anmerkung",
                 },
-                {
-                  label: "Erscheint am",
-                  value:
-                    student.attendances.length !== 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {student.attendances.map((attendance, index) => (
-                          <span key={index + "_attendance_element"} className="text-sm p-1.5 border rounded-md">
-                            {dayjs()
-                              .day(attendance.day + 1)
-                              .format("ddd")}{" "}
-                            {dayjs().hour(0).minute(attendance.end).format("HH:mm")}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      "Keine Zeiten"
-                    ),
-                },
-              ].map((information, index) => (
-                <Tr key={index + "_information_row"}>
-                  <td className="font-semibold text-gray-600 p-3">{information.label}</td>
-                  <Td>{information.value}</Td>
-                </Tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
+              ]}
+            />
+          </DetailsTable>
+        </DetailsContainer>
       </div>
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-xl font-semibold">Erschien am</h1>
-        <div className="border rounded-lg max-h-[400px] overflow-auto">
-          <Table>
-            <thead>
-              <Tr>
-                <Th>Datum</Th>
-                <Th>Zeitraum</Th>
-              </Tr>
-            </thead>
-            <tbody>
-              {student.visitations.length === 0 && (
-                <Tr>
-                  {/* should span the whole table */}
-                  <Td colSpan={100}>
-                    <div className="flex items-center justify-center text-gray-500">
-                      <span className="font-medium">Keine Einträge</span>
-                    </div>
-                  </Td>
-                </Tr>
-              )}
-              {student.visitations.map((visitation, index) => (
-                <Tr key={index + "_" + visitation.id + "_" + "_visitation"}>
-                  <Td>{dayjs(visitation.date).format("ddd DD.MM.YYYY")}</Td>
-                  <Td>
-                    {dayjs(visitation.date).minute(visitation.start).format("HH:mm") +
-                      " - " +
-                      (visitation.end ? dayjs(visitation.date).minute(visitation.end).format("HH:mm") : "--:--")}
-                  </Td>
-                </Tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
-      </div>
+
+      <ConnectionWrapper>
+        <StudentLists attendances={student.attendances} lists={studentLists} visitations={student.visitations} />
+      </ConnectionWrapper>
+
       <div className="flex items-center justify-between">
         <Link href={"/students/" + student.id + "/edit"}>
           <Button variant={"outline"} size={"sm"}>
@@ -148,7 +104,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                   Abbrechen
                 </Button>
               </DialogClose>
-              <DeleteButton action={deleteStudent} studentId={student.id} />
+              <DeleteButton action={deleteStudentFunc} redirectUrl="/students" />
             </DialogFooter>
           </DialogContent>
         </Dialog>

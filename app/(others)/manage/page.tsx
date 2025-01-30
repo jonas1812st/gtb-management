@@ -25,7 +25,29 @@ export default async function Page() {
           description="Verwalte alle Benutzer"
           links={{
             primary: { url: "/users", label: "Verwalten" },
-            secondary: rights.createUsers ? { url: "/users/create", label: "Neu erstellen" } : undefined,
+            secondary: rights.createUser ? { url: "/users/create", label: "Neu erstellen" } : undefined,
+          }}
+        />
+      ) : null}
+
+      {rights.manageLists ? (
+        <ManageCard
+          title="Listen"
+          description="Verwalte alle Listen"
+          links={{
+            primary: { url: "/lists", label: "Verwalten" },
+            secondary: rights.createList ? { url: "/lists/create", label: "Neu erstellen" } : undefined,
+          }}
+        />
+      ) : null}
+
+      {rights.manageGroups ? (
+        <ManageCard
+          title="Gruppen"
+          description="Verwalte alle Gruppen"
+          links={{
+            primary: { url: "/groups", label: "Verwalten" },
+            secondary: rights.createGroup ? { url: "/groups/create", label: "Neu erstellen" } : undefined,
           }}
         />
       ) : null}

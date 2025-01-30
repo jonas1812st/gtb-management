@@ -21,14 +21,25 @@ import { Button } from "../ui/button";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filter: { column: string; placeholder: string };
+  filter?: { column: string; placeholder: string };
+  className?: {
+    tableContainer?: string;
+  };
+  hiddenCols?: string[];
 }
 
 interface AdditionalElements {
   addItemBtn?: { label: string } & ({ type: "url"; url: string } | { type: "click"; onClick: () => void });
 }
 
-export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn }: DataTableProps<TData, TValue> & AdditionalElements) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  filter,
+  addItemBtn,
+  className,
+  hiddenCols = [],
+}: DataTableProps<TData, TValue> & AdditionalElements) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
@@ -39,6 +50,9 @@ export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn }: 
       sorting,
       columnFilters,
     },
+    initialState: {
+      columnVisibility: hiddenCols.reduce((acc, curr) => ((acc[curr] = false), acc), {} as Record<string, boolean>),
+    },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -48,34 +62,38 @@ export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn }: 
 
   return (
     <div>
-      <div className="flex items-center justify-between pb-4">
-        {addItemBtn && addItemBtn.type === "url" ? (
-          <Link href={addItemBtn.url}>
-            <Button className="flex items-center space-x-2" size={"sm"} variant={"secondary"}>
+      {(addItemBtn || filter) && (
+        <div className="flex items-center justify-between pb-4">
+          {addItemBtn && addItemBtn.type === "url" ? (
+            <Link href={addItemBtn.url}>
+              <Button className="flex items-center space-x-2" size={"sm"} variant={"secondary"}>
+                <Icon size={0.7} path={mdiPlus} />
+                <span>{addItemBtn.label}</span>
+              </Button>
+            </Link>
+          ) : addItemBtn && addItemBtn.type === "click" ? (
+            <Button className="flex items-center space-x-2" size={"sm"} variant={"secondary"} onClick={addItemBtn.onClick}>
               <Icon size={0.7} path={mdiPlus} />
               <span>{addItemBtn.label}</span>
             </Button>
-          </Link>
-        ) : addItemBtn && addItemBtn.type === "click" ? (
-          <Button className="flex items-center space-x-2" size={"sm"} variant={"secondary"} onClick={addItemBtn.onClick}>
-            <Icon size={0.7} path={mdiPlus} />
-            <span>{addItemBtn.label}</span>
-          </Button>
-        ) : (
-          <div />
-        )}
+          ) : (
+            <div />
+          )}
 
-        <Input
-          type="text"
-          placeholder={filter.placeholder}
-          value={(table.getColumn(filter.column)?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn(filter.column)?.setFilterValue(event.target.value)}
-          className="w-[340px]"
-        />
-      </div>
-      <Table>
+          {filter && (
+            <Input
+              type="text"
+              placeholder={filter.placeholder}
+              value={(table.getColumn(filter.column)?.getFilterValue() as string) ?? ""}
+              onChange={(event) => table.getColumn(filter.column)?.setFilterValue(event.target.value)}
+              className="w-[340px]"
+            />
+          )}
+        </div>
+      )}
+      <Table className={className?.tableContainer}>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {table?.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
@@ -101,8 +119,8 @@ export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn }: 
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => {
+          {table?.getRowModel().rows?.length ? (
+            table?.getRowModel().rows.map((row) => {
               const hasRowMeta = row.getAllCells()[0].getContext().cell.column.columnDef.meta;
 
               return (
@@ -143,8 +161,8 @@ export function DataTable<TData, TValue>({ columns, data, filter, addItemBtn }: 
   );
 }
 
-const Table = ({ children }: { children: React.ReactNode }) => (
-  <div className="rounded-md border overflow-hidden">
+const Table = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <div className={cn("rounded-md border", className)}>
     <table className="w-full border-collapse">{children}</table>
   </div>
 );

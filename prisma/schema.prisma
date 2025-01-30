@@ -14,26 +14,35 @@ datasource db {
 }
 
 model Student {
-  id          Int          @id @default(autoincrement())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  firstName   String
-  lastName    String
-  notes       String?      @db.Text
-  grade       Int
-  className   String
-  attendances Attendance[]
-  visitations Visitation[]
+  id               Int                @id @default(autoincrement())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  firstName        String
+  lastName         String
+  notes            String?            @db.Text
+  grade            Int
+  className        String
+  attendances      Attendance[]
+  visitations      Visitation[]
+  GroupsOnStudents GroupsOnStudents[]
 }
 
 model Attendance {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int              @id @default(autoincrement())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
   day       Int
   end       Int
-  Student   Student? @relation(fields: [studentId], references: [id])
-  studentId Int?
+  status    AttendanceStatus @default(PRESENT)
+  Student   Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+  List      List             @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    Int
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
 }
 
 model Visitation {
@@ -41,10 +50,12 @@ model Visitation {
   date      DateTime
   start     Int
   end       Int?
-  Student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  Student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int
+  List      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    Int
 
-  @@unique([date, studentId])
+  @@unique([date, studentId, listId])
 }
 
 model User {
@@ -58,4 +69,78 @@ enum Role {
   OWNER
   ADMIN
   DEFAULT
+}
+
+model Group {
+  id               Int                @id @default(autoincrement())
+  name             String
+  color            String?
+  GroupsOnStudents GroupsOnStudents[]
+  list             List?              @relation(fields: [listId], references: [id], onDelete: SetNull)
+  listId           Int?
+
+  // -- important for default group --
+  isMainGroup Boolean @default(false)
+}
+
+model GroupsOnStudents {
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   Int
+
+  @@id([studentId, groupId])
+}
+
+model List {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // -- important for default list --
+  isMainList Boolean @default(false)
+
+  // --- list options ---
+  recordTime  RecordTime
+  manageTime  TimeManagement   @default(STUDENT) // decides if the list or the student manages their start and end time 
+  Group       Group[]
+  activations ListActivation[]
+
+  // --- table options ---
+  studentName Boolean
+  className   Boolean
+  time        Boolean
+  notes       ListStudentNotes
+  groupColor  Boolean
+
+  // --- visitations & attendances ---
+  Visitation Visitation[]
+  Attendance Attendance[]
+}
+
+enum TimeManagement {
+  LIST
+  STUDENT
+}
+
+enum RecordTime {
+  START
+  START_END
+}
+
+enum ListStudentNotes {
+  NONE
+  MARKED
+  SHORTENED
+  FULL
+}
+
+model ListActivation {
+  id          Int   @id @default(autoincrement())
+  day         Int // 0 (monday) to 6 (sunday)
+  startTime   Int
+  startBuffer Int // buffer in minutes
+  endTime     Int
+  endBuffer   Int // buffer in minutes
+  List        List? @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId      Int?
 }

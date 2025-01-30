@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 
 export function stringToTime<T extends string | undefined>(value: T) {
-  if (!value) return undefined;
+  if (value === undefined || (value || undefined) === undefined) return undefined;
+
   const hours = parseInt(value.split(":")[0], 10);
   const minutes = parseInt(value.split(":")[1], 10);
 
@@ -15,7 +16,7 @@ export function stringToTimeNonNullable(value: string) {
   return hours * 60 + minutes;
 }
 
-export const timeToString = (value: number | undefined) => {
+export const timeToString = (value: number | undefined | null) => {
   if (!value) return undefined;
 
   return dayjs().hour(0).minute(value).format("HH:mm");

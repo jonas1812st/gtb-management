@@ -1,10 +1,10 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
-import { Prisma } from "@prisma/client";
+import { AttendanceZodSchemaType } from "./types";
 
 export async function createStudent(data: z.infer<typeof InputSchema>) {
   const result = InputSchema.parse(data);
@@ -15,7 +15,7 @@ export async function createStudent(data: z.infer<typeof InputSchema>) {
         ...result,
         attendances: {
           createMany: {
-            data: result.attendances.filter((attendance): attendance is Prisma.AttendanceCreateWithoutStudentInput => !!attendance),
+            data: result.attendances.filter((attendance): attendance is AttendanceZodSchemaType => attendance.status !== "DEFAULT"),
           },
         },
       },
@@ -27,8 +27,8 @@ export async function createStudent(data: z.infer<typeof InputSchema>) {
     };
   }
 
-  revalidatePath("/list");
-  revalidatePath("/students");
+  revalidateTag("lists");
+  revalidateTag("students");
 
   return {
     success: true,

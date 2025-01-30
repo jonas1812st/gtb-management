@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
-export const Td = ({ children, colSpan }: { children: React.ReactNode; colSpan?: number }) => (
-  <td className="p-3" colSpan={colSpan}>
+export const Td = ({ children, colSpan, className }: { children: React.ReactNode; colSpan?: number; className?: string }) => (
+  <td className={cn(className, "p-3")} colSpan={colSpan}>
     {children}
   </td>
 );

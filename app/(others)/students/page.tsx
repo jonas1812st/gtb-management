@@ -1,10 +1,15 @@
 "use server";
 
-import prisma from "@/utils/prisma";
+import ConnectionWrapper from "@/components/cache/connectionWrapper";
 import { StudentList } from "./_components/students";
+import { getStudents } from "@/utils/db";
 
 export default async function Page() {
-  const students = await prisma.student.findMany();
+  const students = await getStudents();
 
-  return <StudentList students={students} />;
+  return (
+    <ConnectionWrapper>
+      <StudentList students={students} />
+    </ConnectionWrapper>
+  );
 }
