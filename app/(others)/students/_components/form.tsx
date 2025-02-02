@@ -267,16 +267,12 @@ const ListAttendanceInput = ({ list }: { list: { id: number; name: string } }) =
                       min={"06:00"}
                       value={value ? dayjs().hour(0).minute(value.end).format("HH:mm") : ""}
                       onChange={(e) =>
-                        onChange(
-                          e.target.value !== ""
-                            ? {
-                              day: weekDayIndex,
-                              end: stringToTime(e.target.value),
-                              listId: list.id,
-                              status: "PRESENT",
-                            }
-                            : undefined
-                        )
+                        onChange({
+                          day: weekDayIndex,
+                          end: e.target.value !== "" ? stringToTime(e.target.value) : DEFAULT_STUDENT_END_TIME,
+                          listId: list.id,
+                          status: "PRESENT",
+                        })
                       }
                     />
                   )}

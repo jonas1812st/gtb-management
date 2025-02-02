@@ -17,7 +17,7 @@ export function stringToTimeNonNullable(value: string) {
 }
 
 export const timeToString = (value: number | undefined | null) => {
-  if (!value) return undefined;
+  if (!value && value !== 0) return undefined;
 
   return dayjs().hour(0).minute(value).format("HH:mm");
 };

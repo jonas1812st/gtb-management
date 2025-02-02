@@ -46,7 +46,7 @@ export const CreateListInputSchema = z.object({
 export const CreateGroupInputSchema = z.object({
   name: z.string().trim().min(1).max(50),
   color: z.string().optional(),
-  studentIds: z.number().array().min(1),
+  studentIds: z.number().array(),
   listId: z.number().nullable(),
 });
 

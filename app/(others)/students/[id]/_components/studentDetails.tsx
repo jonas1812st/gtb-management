@@ -17,13 +17,26 @@ export const StudentLists = ({
   visitations,
 }: {
   attendances: Prisma.AttendanceGetPayload<{}>[];
-  lists: Prisma.ListGetPayload<{}>[];
+  lists: Prisma.ListGetPayload<{
+    include: {
+      activations: true;
+    };
+  }>[];
   visitations: Prisma.VisitationGetPayload<{}>[];
 }) => {
   const [selectedListId, setSelectedListId] = useState(lists[0]?.id ?? null);
   const selectedList = lists.find((list) => list.id === selectedListId);
 
-  const activeAttendances = attendances.filter((attendance) => attendance.listId === selectedListId && attendance.status === "PRESENT");
+  const presentEntries = attendances.filter((attendance) => attendance.listId === selectedListId && attendance.status === "PRESENT");
+  const absentEntries = attendances.filter((attendance) => attendance.listId === selectedListId && attendance.status === "ABSENT");
+
+  const attendingDays = selectedList?.activations
+    .filter((activation) => !absentEntries.some((entry) => activation.day === entry.day))
+    .map((activation) => ({
+      id: activation.id,
+      day: activation.day,
+      end: presentEntries.find((entry) => entry.day === activation.day)?.end ?? activation.endTime,
+    }));
 
   const columns: ColumnDef<Prisma.VisitationGetPayload<{}>>[] = [
     {
@@ -77,8 +90,8 @@ export const StudentLists = ({
           <div className="p-3 pb-0 flex space-x-3 items-center">
             <h4 className="font-medium">Anwesenheiten:</h4>
             <div className="flex flex-wrap gap-2">
-              {activeAttendances.length !== 0 ? (
-                activeAttendances.map((attendance) => (
+              {attendingDays?.length !== 0 ? (
+                attendingDays?.map((attendance) => (
                   <span key={attendance.id + "_attendance_element"} className="text-sm p-1.5 border rounded-md">
                     {dayjs()
                       .day(attendance.day + 1)

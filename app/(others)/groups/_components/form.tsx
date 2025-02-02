@@ -21,10 +21,10 @@ export default function GroupForm(
   params: (
     | { action: "create" }
     | {
-        action: "edit";
-        values: z.infer<typeof CreateGroupInputSchema>;
-        id: number;
-      }
+      action: "edit";
+      values: z.infer<typeof CreateGroupInputSchema>;
+      id: number;
+    }
   ) & {
     actionMethod: (
       data: z.infer<typeof CreateGroupInputSchema>,
@@ -40,11 +40,12 @@ export default function GroupForm(
     defaultValues:
       params.action === "edit"
         ? {
-            ...params.values,
-          }
+          ...params.values,
+        }
         : {
-            name: "",
-          },
+          name: "",
+          studentIds: [],
+        },
   });
 
   const {
@@ -144,26 +145,26 @@ const ListInput = () => {
       };
     }>
   >[] = [
-    {
-      accessorKey: "name",
-      header: "Name",
-      cell: ({ row: { original: list } }) => {
-        return <label htmlFor={list.id + "_list_select"}>{list.name}</label>;
+      {
+        accessorKey: "name",
+        header: "Name",
+        cell: ({ row: { original: list } }) => {
+          return <label htmlFor={list.id + "_list_select"}>{list.name}</label>;
+        },
       },
-    },
-    {
-      accessorKey: "isSelected",
-      header: "",
-      enableSorting: false,
-      cell: ({ row: { original: list } }) => {
-        return (
-          <div className="flex justify-center">
-            <input id={list.id + "_list_select"} type="radio" checked={list.id === watch("listId")} onChange={() => setValue("listId", list.id)} />
-          </div>
-        );
+      {
+        accessorKey: "isSelected",
+        header: "",
+        enableSorting: false,
+        cell: ({ row: { original: list } }) => {
+          return (
+            <div className="flex justify-center">
+              <input id={list.id + "_list_select"} type="radio" checked={list.id === watch("listId")} onChange={() => setValue("listId", list.id)} />
+            </div>
+          );
+        },
       },
-    },
-  ];
+    ];
 
   return (
     <div className="grid gap-2">
@@ -171,7 +172,7 @@ const ListInput = () => {
         <h2 className="font-semibold text-xl">Liste</h2>
         <InputDescription>Wähle die Liste aus, dessen Eigenschaften übernommen werden sollen.</InputDescription>
       </div>
-      <DataTable data={lists} columns={columns} />
+      <DataTable className={{ tableContainer: "overflow-auto max-h-[430px]" }} data={lists} columns={columns} />
       <ErrorMessage>{errors.listId?.message}</ErrorMessage>
     </div>
   );
@@ -220,9 +221,9 @@ const StudentsInput = () => {
                 e.target.checked
                   ? setValue("studentIds", [...(getValues("studentIds") ?? []), student.id])
                   : setValue(
-                      "studentIds",
-                      (getValues("studentIds") ?? []).filter((studentId) => studentId !== student.id)
-                    )
+                    "studentIds",
+                    (getValues("studentIds") ?? []).filter((studentId) => studentId !== student.id)
+                  )
               }
             />
           </div>

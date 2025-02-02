@@ -77,18 +77,18 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     <DetailsTableContent
                       items={[
                         {
-                          label: "Zeitaufnahme",
-                          value: {
-                            START: "Nur Start",
-                            START_END: "Start- und Endzeiten",
-                          }[list.recordTime],
-                        },
-                        {
                           label: "Zeitverwaltung",
                           value: {
                             STUDENT: "Individuell (pro Person)",
                             LIST: "Zentral (Liste)",
                           }[list.manageTime],
+                        },
+                        {
+                          label: "Zeitaufnahme",
+                          value: {
+                            START: "Nur Start",
+                            START_END: "Start- und Endzeiten",
+                          }[list.recordTime],
                         },
                       ]}
                     />

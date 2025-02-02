@@ -205,7 +205,7 @@ export function AttendanceList({
 type AttendanceTimeStatus = "IN_TIME" | "CLOSE_TO_TIME" | "OVER_TIME" | "DONE";
 
 const EndTimeNote = ({ student }: { student: Student }) => {
-  const currentAttendance = { end: 1300 }; // student.attendances[0];
+  const currentAttendance = student.attendances[0];
 
   const getAttendanceStatus = (attendanceStatus?: AttendanceTimeStatus) => {
     let status = attendanceStatus || "DONE";
@@ -223,8 +223,6 @@ const EndTimeNote = ({ student }: { student: Student }) => {
       status = "OVER_TIME";
     }
 
-    console.log(status);
-
     return status;
   };
 
@@ -241,7 +239,7 @@ const EndTimeNote = ({ student }: { student: Student }) => {
       () => {
         setAttendanceStatus(getAttendanceStatus());
       },
-      1000 // * 3 * 60
+      1000 * 3 * 60
     );
 
     return () => clearInterval(interval);
