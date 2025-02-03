@@ -231,18 +231,22 @@ const EndTimeNote = ({ student }: { student: Student }) => {
 
   useEffect(() => {
     getAttendanceStatus();
+    // eslint-disable-next-line
   }, [student]);
 
   useEffect(() => {
     // interval every 3 minutes
     const interval = setInterval(
       () => {
-        setAttendanceStatus(getAttendanceStatus());
+        const attendanceStatus = getAttendanceStatus();
+
+        setAttendanceStatus(attendanceStatus);
       },
       1000 * 3 * 60
     );
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line
   }, []);
 
   const attendanceTimeClassnames: Record<AttendanceTimeStatus, string> = {
