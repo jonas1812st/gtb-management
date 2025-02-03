@@ -135,6 +135,7 @@ async function ListStudentsAmount({ listId, date }: { listId: number; date: stri
           visitations: {
             some: {
               date,
+              listId,
               end: null,
             },
           },
