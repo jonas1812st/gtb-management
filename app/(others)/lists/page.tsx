@@ -5,10 +5,10 @@ import { getAccessRights } from "@/utils/accessRights";
 import NotAllowed from "@/components/navigation/not-allowed";
 
 export default async function Page() {
-  const lists = await getLists();
-
   const rights = await getAccessRights();
   if (!rights.manageLists) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
+
+  const lists = await getLists();
 
   return (
     <ConnectionWrapper>

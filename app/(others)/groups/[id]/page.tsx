@@ -20,12 +20,10 @@ import { deleteGroup } from "../_methods/deleteGroup";
 import { GroupStudents } from "../_components/studentsList";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-
   const rights = await getAccessRights();
-
   if (!rights.manageGroups) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
+  const { id } = await params;
   const groupId = parseInt(id);
 
   if (isNaN(groupId)) return <Error error="Id not valid" btnLabel="Zur Übersicht" url="/groups" />;
@@ -76,34 +74,38 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       <GroupStudents students={groupStudents} />
 
       <div className="flex justify-between">
-        <Link href={`/groups/${group.id}/edit`}>
-          <Button size={"sm"} variant="outline">
-            Bearbeiten
-          </Button>
-        </Link>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant={"destructive"} size={"sm"}>
-              Löschen
+        {rights.updateGroup && (
+          <Link href={`/groups/${group.id}/edit`}>
+            <Button size={"sm"} variant="outline">
+              Bearbeiten
             </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Möchtest du diese Gruppe löschen?</DialogTitle>
-              <DialogDescription>
-                Diese Aktion kann nicht rückgängig gemacht werden. Diese Gruppe und ihre Daten werden permanent von diesem System gelöscht.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="outline">
-                  Abbrechen
-                </Button>
-              </DialogClose>
-              <DeleteButton action={deleteGroupFunc} redirectUrl="/groups" />
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          </Link>
+        )}
+        {rights.deleteGroup && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant={"destructive"} size={"sm"}>
+                Löschen
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Möchtest du diese Gruppe löschen?</DialogTitle>
+                <DialogDescription>
+                  Diese Aktion kann nicht rückgängig gemacht werden. Diese Gruppe und ihre Daten werden permanent von diesem System gelöscht.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    Abbrechen
+                  </Button>
+                </DialogClose>
+                <DeleteButton action={deleteGroupFunc} redirectUrl="/groups" />
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     </div>
   );

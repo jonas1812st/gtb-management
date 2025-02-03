@@ -7,7 +7,6 @@ import { ListsContextWrapper, StudentsContextWrapper } from "../_components/cont
 
 export default async function Page() {
   const rights = await getAccessRights();
-
   if (!rights.createGroup) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
   const lists = await getLists();

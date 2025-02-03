@@ -1,10 +1,18 @@
 "use server";
 
+import { getAccessRights } from "@/utils/accessRights";
 import prisma from "@/utils/prisma";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export async function deleteGroup(groupId: number) {
+  const rights = await getAccessRights();
+  if (!rights.deleteGroup)
+    return {
+      success: false,
+      message: "Access Rights Error: Not allowed.",
+    };
+
   const result = z.number().parse(groupId);
 
   try {

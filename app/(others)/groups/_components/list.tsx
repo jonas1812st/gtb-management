@@ -1,5 +1,6 @@
 "use client";
 
+import { useAccess } from "@/components/cache/accessProvider";
 import { DataTable } from "@/components/form/dataForm";
 import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
@@ -13,6 +14,8 @@ type Group = Prisma.GroupGetPayload<{
 }>;
 
 export function GroupsList({ groups }: { groups: Group[] }) {
+  const access = useAccess();
+
   const columns: ColumnDef<Group>[] = [
     {
       accessorKey: "color",
@@ -46,7 +49,9 @@ export function GroupsList({ groups }: { groups: Group[] }) {
       columns={columns}
       data={groups}
       filter={{ column: "name", placeholder: "Suche" }}
-      addItemBtn={{ type: "url", label: "Neue Gruppe", url: "/groups/create" }}
+      {...(access.createGroup && {
+        addItemBtn: { type: "url", label: "Neue Gruppe", url: "/groups/create" },
+      })}
     />
   );
 }

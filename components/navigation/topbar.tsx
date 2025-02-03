@@ -8,9 +8,11 @@ import { usePathname } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { signOut } from "next-auth/react";
 import { PopoverClose } from "@radix-ui/react-popover";
+import { useAccess } from "../cache/accessProvider";
 
 export default function TopBar() {
   const pathname = usePathname();
+  const access = useAccess();
 
   return (
     <nav className="p-3 shadow-md bg-navigation flex justify-center">
@@ -23,20 +25,22 @@ export default function TopBar() {
             {[
               { label: "Aktive Listen", url: "/active" },
               { label: "Schüler", url: "/students" },
-              { label: "Listen", url: "/lists" },
-              { label: "Gruppen", url: "/groups" },
-            ].map((element, index) => (
-              <Link
-                href={element.url}
-                className={cn(
-                  "font-medium py-2 px-3 rounded-md transition duration-100 text-navigation-foreground",
-                  pathname === element.url ? "bg-navigation-active" : "hover:bg-navigation-hover"
-                )}
-                key={index + "_top_bar_element"}
-              >
-                {element.label}
-              </Link>
-            ))}
+              { label: "Listen", url: "/lists", enabled: access.manageLists },
+              { label: "Gruppen", url: "/groups", enabled: access.manageGroups },
+            ]
+              .filter((element) => element.enabled !== false)
+              .map((element, index) => (
+                <Link
+                  href={element.url}
+                  className={cn(
+                    "font-medium py-2 px-3 rounded-md transition duration-100 text-navigation-foreground",
+                    pathname === element.url ? "bg-navigation-active" : "hover:bg-navigation-hover"
+                  )}
+                  key={index + "_top_bar_element"}
+                >
+                  {element.label}
+                </Link>
+              ))}
           </div>
         </div>
         <div className="justify-self-end">

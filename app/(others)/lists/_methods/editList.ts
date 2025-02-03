@@ -1,11 +1,19 @@
 "use server";
 
+import { getAccessRights } from "@/utils/accessRights";
 import prisma from "@/utils/prisma";
 import { CreateListInputSchema as InputSchema } from "@/utils/zodSchema";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export async function editList(data: z.infer<typeof InputSchema>, id: number) {
+  const rights = await getAccessRights();
+  if (!rights.updateList)
+    return {
+      success: false,
+      message: "Access Rights Error: Not allowed.",
+    };
+
   const result = InputSchema.parse(data);
 
   try {

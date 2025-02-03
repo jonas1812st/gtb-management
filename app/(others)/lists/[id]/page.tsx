@@ -26,14 +26,11 @@ import { DeleteButton } from "@/components/form/deleteBtn";
 dayjs.locale("de");
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-
   const rights = await getAccessRights();
+  if (!rights.manageLists) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
-  if (!rights.manageUsers) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
-
+  const { id } = await params;
   const listId = Number(id);
-
   if (id === "" || listId === 0 || isNaN(listId)) return <Error error="Id not valid." btnLabel="Zur Listenübersicht" url="/lists" />;
 
   const list = await getListById(listId);
@@ -140,35 +137,39 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </Link>
 
         <div className="flex items-center space-x-2">
-          <Link href={`/lists/${list.id}/edit`}>
-            <Button size={"sm"} variant="outline">
-              Bearbeiten
-            </Button>
-          </Link>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant={"destructive"} size={"sm"}>
-                Löschen
+          {rights.updateList && (
+            <Link href={`/lists/${list.id}/edit`}>
+              <Button size={"sm"} variant="outline">
+                Bearbeiten
               </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Möchtest du diese Liste löschen?</DialogTitle>
-                <DialogDescription>
-                  Diese Aktion kann nicht rückgängig gemacht werden. Diese <b>Liste</b> und alle ihre zugehörigen <b>Anwesenheitsdaten</b> werden
-                  permanent von diesem System gelöscht.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="button" variant="outline">
-                    Abbrechen
-                  </Button>
-                </DialogClose>
-                <DeleteButton action={deleteListFunc} redirectUrl="/lists" />
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+            </Link>
+          )}
+          {rights.deleteList && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant={"destructive"} size={"sm"}>
+                  Löschen
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Möchtest du diese Liste löschen?</DialogTitle>
+                  <DialogDescription>
+                    Diese Aktion kann nicht rückgängig gemacht werden. Diese <b>Liste</b> und alle ihre zugehörigen <b>Anwesenheitsdaten</b> werden
+                    permanent von diesem System gelöscht.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button type="button" variant="outline">
+                      Abbrechen
+                    </Button>
+                  </DialogClose>
+                  <DeleteButton action={deleteListFunc} redirectUrl="/lists" />
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       </div>
     </div>

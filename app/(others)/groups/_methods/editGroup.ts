@@ -4,8 +4,16 @@ import prisma from "@/utils/prisma";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { CreateGroupInputSchema as InputSchema } from "@/utils/zodSchema";
+import { getAccessRights } from "@/utils/accessRights";
 
 export async function editGroup(data: z.infer<typeof InputSchema>, groupId: number) {
+  const rights = await getAccessRights();
+  if (!rights.updateGroup)
+    return {
+      success: false,
+      message: "Access Rights Error: Not allowed.",
+    };
+
   const result = InputSchema.parse(data);
 
   try {

@@ -15,6 +15,7 @@ import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { cn } from "@/lib/utils";
 import { GroupLink, GroupLinkContainer } from "@/components/ui/group-link";
 import { studentByWeekDayAndListIdPrismaQuery } from "@/utils/db-prisma";
+import { getAccessRights } from "@/utils/accessRights";
 dayjs.locale("de");
 dayjs.extend(weekday);
 
@@ -51,6 +52,7 @@ async function ListItem({
 }) {
   const date = dayjs().startOf("day").toISOString();
   const weekDay = getWeekDay();
+  const access = await getAccessRights();
 
   const activationToday = list.activations.find((activation) => activation.day === weekDay)!;
 
@@ -100,9 +102,11 @@ async function ListItem({
       </CardContent>
 
       <CardFooter className="flex justify-end items-center space-x-2">
-        <Link href={`/lists/${list.id}`}>
-          <Button variant={"secondary"}>Zur Liste</Button>
-        </Link>
+        {access.manageLists && (
+          <Link href={`/lists/${list.id}`}>
+            <Button variant={"secondary"}>Zur Liste</Button>
+          </Link>
+        )}
         <Link href={`/lists/${list.id}/today`}>
           <Button>Zu den Anwesenheiten</Button>
         </Link>

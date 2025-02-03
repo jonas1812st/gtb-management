@@ -1,5 +1,6 @@
 "use client";
 
+import { useAccess } from "@/components/cache/accessProvider";
 import { DataTable } from "@/components/form/dataForm";
 import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
@@ -13,6 +14,8 @@ type List = Prisma.ListGetPayload<{
 }>;
 
 export function ListsList({ lists }: { lists: List[] }) {
+  const access = useAccess();
+
   const columns: ColumnDef<List>[] = [
     {
       accessorKey: "name",
@@ -30,7 +33,13 @@ export function ListsList({ lists }: { lists: List[] }) {
       columns={columns}
       data={lists}
       filter={{ column: "name", placeholder: "Suche" }}
-      addItemBtn={{ type: "url", label: "Neue Liste", url: "/lists/create" }}
+      {...(access.createList && {
+        addItemBtn: {
+          type: "url",
+          label: "Neue Liste",
+          url: "/lists/create",
+        },
+      })}
     />
   );
 }
