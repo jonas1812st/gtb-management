@@ -25,6 +25,7 @@ model Student {
   attendances      Attendance[]
   visitations      Visitation[]
   GroupsOnStudents GroupsOnStudents[]
+  Exception        Exception[]
 }
 
 model Attendance {
@@ -115,6 +116,7 @@ model List {
   // --- visitations & attendances ---
   Visitation Visitation[]
   Attendance Attendance[]
+  Rule       Rule[]
 }
 
 enum TimeManagement {
@@ -143,4 +145,35 @@ model ListActivation {
   endBuffer   Int // buffer in minutes
   List        List? @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId      Int?
+}
+
+model Exception {
+  id Int @id @default(autoincrement())
+
+  // -- referring to --
+  startDate     DateTime?
+  endDate       DateTime?
+  SpecificDates SpecificDate[]
+  studentId     Int
+  Student       Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  Rules         Rule[]
+
+  // --- exception options ---
+  present Boolean // true = present, false = absent
+  end     Int
+}
+
+model Rule {
+  id          Int        @id @default(autoincrement())
+  listId      Int
+  List        List       @relation(fields: [listId], references: [id], onDelete: Cascade)
+  Exception   Exception? @relation(fields: [exceptionId], references: [id])
+  exceptionId Int?
+}
+
+model SpecificDate {
+  id          String    @id @default(uuid())
+  exceptionId Int
+  date        DateTime
+  exception   Exception @relation(fields: [exceptionId], references: [id], onDelete: Cascade)
 }

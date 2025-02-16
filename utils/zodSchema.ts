@@ -51,3 +51,13 @@ export const CreateGroupInputSchema = z.object({
 });
 
 export const DateInputSchema = z.string().date().or(z.literal("today"));
+
+export const CreateExceptionInputSchema = z.object({
+  studentId: z.number(),
+  dates: z.date().array(),
+  mode: z.enum(["range", "multiple"]), // range: from-to, multiple: multiple / single dates
+  lists: z.number().array(),
+  rules: z.object({}).array(),
+});
+
+export const IdSchema = z.number().gte(1);

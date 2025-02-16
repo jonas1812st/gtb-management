@@ -56,3 +56,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* savior: https://www.bengubler.com/microblog/2024-07-02-radix-shadcn-dropdown-trigger-width */
+@layer utilities {
+  .popover-content-width-full {
+    width: var(--radix-popper-anchor-width);
+    max-height: var(--radix-popper-available-height);
+  }
+}
