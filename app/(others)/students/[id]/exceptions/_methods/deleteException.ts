@@ -1,0 +1,30 @@
+"use server";
+
+import prisma from "@/utils/prisma";
+import { revalidateTag } from "next/cache";
+import { z } from "zod";
+
+export async function deleteException(exceptionId: number) {
+  const result = z.number().parse(exceptionId);
+
+  try {
+    await prisma.exception.delete({
+      where: {
+        id: result,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Database Error: Please check your inputs.",
+    };
+  }
+
+  revalidateTag("students");
+
+  return {
+    success: true,
+    message: "The exception was successfully deleted.",
+  };
+}

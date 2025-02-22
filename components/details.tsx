@@ -6,7 +6,9 @@ export const DetailsHeading = ({ children, className }: PropsWithChildren<{ clas
   <h1 className={cn("text-xl font-semibold mb-2", className)}>{children}</h1>
 );
 
-export const DetailsContainer = ({ children }: PropsWithChildren<{}>) => <div className="border rounded-lg">{children}</div>;
+export const DetailsContainer = ({ children, className }: PropsWithChildren<{ className?: string }>) => (
+  <div className={cn("border rounded-lg", className)}>{children}</div>
+);
 
 export const DetailsTable = ({ children }: PropsWithChildren<{}>) => (
   <Table>

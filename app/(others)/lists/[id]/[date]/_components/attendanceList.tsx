@@ -2,13 +2,11 @@
 
 import { onVisiting } from "../_methods/visit";
 import { DataTable } from "@/components/form/dataForm";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { timeToString } from "@/utils/time";
-import { mdiClockEditOutline, mdiDotsVertical, mdiInformationOutline } from "@mdi/js";
+import { mdiCalendarEdit, mdiCalendarPlus, mdiClockEditOutline, mdiDotsVertical, mdiHelp, mdiInformationOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Prisma } from "@prisma/client";
-import { PopoverClose } from "@radix-ui/react-popover";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -16,6 +14,10 @@ import { useEffect, useState } from "react";
 import EditTimeDialog from "./time";
 import { AttendanceWarningDialog } from "./warnings";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { studentExceptionPresence } from "@/utils/enum-translations";
 
 type Student = Prisma.StudentGetPayload<{
   include: {
@@ -24,6 +26,11 @@ type Student = Prisma.StudentGetPayload<{
     GroupsOnStudents: {
       include: {
         group: true;
+      };
+    };
+    Exception: {
+      include: {
+        SpecificDates: true;
       };
     };
   };
@@ -36,6 +43,10 @@ const getPresentState = (student: Student, date: Date) => {
     visitation: currentVisitation,
     state: currentVisitation !== undefined ? (currentVisitation.end !== null ? ("visited" as const) : ("visiting" as const)) : ("default" as const),
   };
+};
+
+const getStudentException = (student: Student): Prisma.ExceptionGetPayload<{ include: { SpecificDates: true } }> | undefined => {
+  return student.Exception[0];
 };
 
 export function AttendanceList({
@@ -63,11 +74,23 @@ export function AttendanceList({
       cell: ({ row: { original: student } }) => {
         // !!! when changing something here, the code below at AttendanceWarningDialog.confirm has to be changed too
         const presentState = getPresentState(student, date);
+        const exception = getStudentException(student);
 
         return (
           <div className="w-[78px] flex gap-2 justify-between items-center">
-            {student.attendances[0] !== undefined ? <EndTimeNote student={student} /> : <div />}
+            {(student.attendances[0] !== undefined && exception?.presence !== "ABSENT") ||
+            (exception && exception.presence === "PRESENT" && exception.end) ? (
+              <EndTimeNote
+                student={student}
+                attendance={{
+                  end: exception?.presence === "PRESENT" && exception?.end ? exception?.end : student.attendances[0]?.end,
+                }}
+              />
+            ) : (
+              <div />
+            )}
             <Checkbox
+              disabled={exception?.presence === "ABSENT"}
               defaultChecked={presentState.state === "visiting"}
               onCheckedChange={() => {
                 // !!! when changing something here, the code below at AttendanceWarningDialog.confirm has to be changed too
@@ -109,10 +132,11 @@ export function AttendanceList({
       accessorFn: (student) => student.firstName + " " + student.lastName,
       cell: ({ row: { original: student } }) => {
         const notesExist = student.notes !== null && list.notes !== "NONE";
+        const exception = getStudentException(student);
 
         return (
           <Link href={"/students/" + student.id} className={cn("flex gap-x-2", notesExist && list.notes !== "MARKED" ? "flex-col" : "items-center")}>
-            <span>
+            <span className={cn(exception?.presence === "ABSENT" ? "line-through" : "")}>
               {student.firstName} {student.lastName}
             </span>
             {notesExist ? (
@@ -147,29 +171,70 @@ export function AttendanceList({
       enableSorting: false,
     },
     {
+      accessorKey: "exception",
+      header: "",
+
+      cell: ({ row: { original: student } }) => {
+        const exception = getStudentException(student);
+
+        return (
+          exception &&
+          exception.notes && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="light" size={"icon"} className="rounded-xl h-8 w-8 mx-auto">
+                  <Icon path={mdiHelp} size={0.8} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <h3 className="font-medium">{studentExceptionPresence[exception.presence]}</h3>
+                <p className="text-muted-foreground text-sm max-h-[397px] overflow-auto">{exception.notes}</p>
+              </PopoverContent>
+            </Popover>
+          )
+        );
+      },
+    },
+    {
       accessorKey: "visitation",
       header: "",
       enableSorting: false,
-      cell: ({ row: { original: student } }) => (
-        <div className="flex items-center">
-          <Popover>
-            <PopoverTrigger>
-              <Icon size={0.8} path={mdiDotsVertical} />
-            </PopoverTrigger>
-            <PopoverContent className="p-2 w-fit">
-              <div className="flex flex-col">
-                <PopoverClose
-                  onClick={() => setEdit(student.id)}
-                  className="p-2 hover:bg-gray-100 transition rounded-md text-left flex space-x-2 items-center pe-5"
-                >
-                  <Icon size={0.9} path={mdiClockEditOutline} />
+      cell: ({ row: { original: student } }) => {
+        const exception = getStudentException(student);
+
+        return (
+          <div className="flex items-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Icon size={0.8} path={mdiDotsVertical} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => setEdit(student.id)} disabled={exception?.presence === "ABSENT"}>
+                  <Icon size={0.8} path={mdiClockEditOutline} />
                   <span>Anwesenheit bearbeiten</span>
-                </PopoverClose>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-      ),
+                </DropdownMenuItem>
+                {exception ? (
+                  <Link href={`/students/${student.id}/exceptions/${exception.id}/edit`}>
+                    <DropdownMenuItem>
+                      <Icon size={0.8} path={mdiCalendarEdit} />
+                      <span>Ausnahme bearbeiten</span>
+                    </DropdownMenuItem>
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/students/${student.id}/exceptions/create?lists=[${list.id}]&dates=["${dayjs(date).format("YYYY-MM-DD")}"]&mode=multiple`}
+                  >
+                    <DropdownMenuItem>
+                      <Icon size={0.8} path={mdiCalendarPlus} />
+                      <span>Ausnahme hinzufügen</span>
+                    </DropdownMenuItem>
+                  </Link>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
     },
   ];
 
@@ -204,22 +269,20 @@ export function AttendanceList({
 
 type AttendanceTimeStatus = "IN_TIME" | "CLOSE_TO_TIME" | "OVER_TIME" | "DONE";
 
-const EndTimeNote = ({ student }: { student: Student }) => {
-  const currentAttendance = student.attendances[0];
-
+const EndTimeNote = ({ student, attendance }: { student: Student; attendance: Pick<Prisma.AttendanceGetPayload<{}>, "end"> | null }) => {
   const getAttendanceStatus = (attendanceStatus?: AttendanceTimeStatus) => {
     let status = attendanceStatus || "DONE";
     const currMinutes = dayjs().hour() * 60 + dayjs().minute();
 
     if (student.visitations[0] && student.visitations[0].end !== null) {
       status = "DONE";
-    } else if (currentAttendance.end > currMinutes) {
-      if (currentAttendance.end - currMinutes <= 15) {
+    } else if ((attendance?.end ?? 0) > currMinutes) {
+      if ((attendance?.end ?? 0) - currMinutes <= 15) {
         status = "CLOSE_TO_TIME";
       } else {
         status = "IN_TIME";
       }
-    } else if (currentAttendance.end <= currMinutes) {
+    } else if ((attendance?.end ?? 0) <= currMinutes) {
       status = "OVER_TIME";
     }
 
@@ -256,11 +319,11 @@ const EndTimeNote = ({ student }: { student: Student }) => {
     OVER_TIME: "bg-red-500/10 border-red-500",
   };
 
-  if (!currentAttendance) return null;
+  if (!attendance) return null;
 
   return (
     <span className={cn("rounded-xl border-2 px-1.5 py-0.5 text-sm font-medium", attendanceTimeClassnames[attendanceStatus])}>
-      {timeToString(currentAttendance?.end)}
+      {timeToString(attendance?.end)}
     </span>
   );
 };

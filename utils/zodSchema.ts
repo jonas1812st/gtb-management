@@ -1,9 +1,10 @@
-import { AttendanceStatus, ListStudentNotes, RecordTime, TimeManagement } from "@prisma/client";
+import { AttendanceStatus, ExceptionPresence, ListStudentNotes, RecordTime, TimeManagement } from "@prisma/client";
 import { z } from "zod";
 import { DEFAULT_BUFFER, DEFAULT_STUDENT_END_TIME } from "./constants";
 
 export const TimeSchema = z.number().gte(0).lte(1439); // 00:00 - 23:59 <=> 0 - 1439
 export const WeekDaySchema = z.number().gte(0).lte(6); // 0 (monday) to 6 (sunday)
+export const IdSchema = z.number().gte(1);
 
 export const CreateAttendanceInputSchema = z.object({
   day: WeekDaySchema,
@@ -46,18 +47,40 @@ export const CreateListInputSchema = z.object({
 export const CreateGroupInputSchema = z.object({
   name: z.string().trim().min(1).max(50),
   color: z.string().optional(),
-  studentIds: z.number().array(),
+  studentIds: IdSchema.array(),
   listId: z.number().nullable(),
 });
 
 export const DateInputSchema = z.string().date().or(z.literal("today"));
 
-export const CreateExceptionInputSchema = z.object({
-  studentId: z.number(),
-  dates: z.date().array(),
-  mode: z.enum(["range", "multiple"]), // range: from-to, multiple: multiple / single dates
-  lists: z.number().array(),
-  rules: z.object({}).array(),
-});
+export const CreateExceptionRuleInputSchema = z
+  .object({
+    presence: z.nativeEnum(ExceptionPresence).default("PRESENT"),
+    time: TimeSchema.optional(),
+    notes: z.string().trim().min(1).max(1000).optional(),
+  })
+  .refine(
+    (data) =>
+      (data.presence === "ABSENT" && (data.time === undefined || data.time !== undefined)) ||
+      (data.presence === "PRESENT" && data.time !== undefined),
+    {
+      path: ["time"],
+      message: "When present, end time is required",
+    }
+  );
 
-export const IdSchema = z.number().gte(1);
+export const ExceptionDateModeSchema = z.enum(["range", "multiple"]);
+export const ExceptionDatesSchema = z.date().array().min(1);
+export const ExceptionListsSchema = IdSchema.array().min(1);
+export const CreateExceptionInputSchema = z
+  .object({
+    dates: ExceptionDatesSchema,
+    mode: ExceptionDateModeSchema, // range: from-to, multiple: multiple / single dates
+    studentId: IdSchema,
+    lists: IdSchema.array().min(1),
+    rule: CreateExceptionRuleInputSchema,
+  })
+  .refine((data) => (data.mode === "multiple" && data.dates.length >= 1) || (data.mode === "range" && data.dates.length >= 2), {
+    path: ["dates"],
+    message: "Range mode requires at least two dates",
+  });

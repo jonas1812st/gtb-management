@@ -114,9 +114,9 @@ model List {
   groupColor  Boolean
 
   // --- visitations & attendances ---
-  Visitation Visitation[]
-  Attendance Attendance[]
-  Rule       Rule[]
+  Visitation        Visitation[]
+  Attendance        Attendance[]
+  ExceptionsOnLists ExceptionsOnLists[]
 }
 
 enum TimeManagement {
@@ -147,32 +147,42 @@ model ListActivation {
   listId      Int?
 }
 
-model Exception {
-  id Int @id @default(autoincrement())
+model ExceptionsOnLists {
+  exception   Exception @relation(fields: [exceptionId], references: [id], onDelete: Cascade)
+  exceptionId Int
+  list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId      Int
 
-  // -- referring to --
-  startDate     DateTime?
-  endDate       DateTime?
-  SpecificDates SpecificDate[]
-  studentId     Int
-  Student       Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  Rules         Rule[]
-
-  // --- exception options ---
-  present Boolean // true = present, false = absent
-  end     Int
+  @@id([exceptionId, listId])
 }
 
-model Rule {
-  id          Int        @id @default(autoincrement())
-  listId      Int
-  List        List       @relation(fields: [listId], references: [id], onDelete: Cascade)
-  Exception   Exception? @relation(fields: [exceptionId], references: [id])
-  exceptionId Int?
+model Exception {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  // --- date options ---
+  startDate     DateTime? // if null, it is a specific date
+  endDate       DateTime? // if null, it is a specific date
+  SpecificDates SpecificDate[]
+
+  // --- referring to ---
+  studentId         Int
+  Student           Student             @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  ExceptionsOnLists ExceptionsOnLists[]
+
+  // --- exception options ---
+  presence ExceptionPresence // true = present, false = absent
+  end      Int? // has to be set if present is false
+  notes    String?           @db.Text
+}
+
+enum ExceptionPresence {
+  PRESENT
+  ABSENT
 }
 
 model SpecificDate {
-  id          String    @id @default(uuid())
+  id          Int       @id @default(autoincrement())
   exceptionId Int
   date        DateTime
   exception   Exception @relation(fields: [exceptionId], references: [id], onDelete: Cascade)

@@ -11,7 +11,6 @@ import { mdiContentSave, mdiLoading, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
 import { InputSchema } from "../methods/schema";
 import toast from "react-hot-toast";
-import { AccessRights } from "@/utils/accessRights";
 
 export default function UserForm(
   params: (

@@ -20,6 +20,8 @@ import "dayjs/locale/de";
 import { DetailsContainer, DetailsHeading, DetailsTable, DetailsTableContent } from "@/components/details";
 import { GroupLink, GroupLinkContainer } from "@/components/ui/group-link";
 import { DeleteButton } from "@/components/form/deleteBtn";
+import { ExceptionsList } from "./_components/exceptionsList";
+import { deleteException } from "./exceptions/_methods/deleteException";
 dayjs.locale("de");
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -78,6 +80,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       <ConnectionWrapper>
         <StudentLists attendances={student.attendances} lists={studentLists} visitations={student.visitations} />
       </ConnectionWrapper>
+
+      <ExceptionsList exceptions={student.Exception} studentId={studentId} actions={{ deleteException: deleteException }} />
 
       <div className="flex items-center justify-between">
         <Link href={"/students/" + student.id + "/edit"}>

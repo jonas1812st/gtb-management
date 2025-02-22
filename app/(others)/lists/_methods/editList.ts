@@ -55,6 +55,6 @@ export async function editList(data: z.infer<typeof InputSchema>, id: number) {
 
   return {
     success: true,
-    message: "The student was successfully created.",
+    message: "The list was successfully updated.",
   };
 }

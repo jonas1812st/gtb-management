@@ -119,17 +119,17 @@ async function ListStudentsAmount({ listId, date }: { listId: number; date: stri
   "use cache";
   cacheTag("groups", "students", "lists");
 
-  const weekDay = dayjs(date).weekday();
+  const dateFormatted = dayjs(date).toDate();
 
   const listStudentsForDay = await prisma.student.count({
-    where: studentByWeekDayAndListIdPrismaQuery(listId, weekDay),
+    where: studentByWeekDayAndListIdPrismaQuery(listId, dateFormatted),
   });
 
   const activeStudentsForDay = await prisma.student.count({
     where: {
       AND: [
         {
-          ...studentByWeekDayAndListIdPrismaQuery(listId, weekDay),
+          ...studentByWeekDayAndListIdPrismaQuery(listId, dateFormatted),
         },
         {
           visitations: {

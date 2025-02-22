@@ -12,7 +12,7 @@ export async function editStudent(data: z.infer<typeof InputSchema>, id: number)
   try {
     await prisma.student.update({
       where: {
-        id: id,
+        id,
       },
       data: {
         ...result,

@@ -30,7 +30,7 @@ export default function EditTimeDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={(open) => (open === false ? closeDialog() : {})}>
-      <DialogContent>
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Anwesenheit bearbeiten</DialogTitle>
           <DialogDescription>Passe die Start- und Endzeit an oder lösche den Eintrag vollständig.</DialogDescription>

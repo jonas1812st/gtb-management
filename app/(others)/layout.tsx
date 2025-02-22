@@ -12,7 +12,7 @@ export default async function Layout({
       <Toaster />
       <Provider>
         <TopBar />
-        <main className="max-w-screen-md mx-auto py-3 px-2">{children}</main>
+        <main className="max-w-[950px] mx-auto py-3 px-2">{children}</main>
       </Provider>
     </>
   );

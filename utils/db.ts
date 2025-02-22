@@ -1,9 +1,10 @@
 import { unstable_cacheTag as cacheTag } from "next/cache";
 import prisma from "./prisma";
-import { studentByWeekDayAndListIdPrismaQuery } from "./db-prisma";
+import { exceptionByListIdAndDatePrismaQuery, studentByWeekDayAndListIdPrismaQuery } from "./db-prisma";
 import dayjs from "dayjs";
 import "dayjs/locale/de";
 import weekday from "dayjs/plugin/weekday";
+import { Prisma } from "@prisma/client";
 dayjs.locale("de");
 dayjs.extend(weekday);
 
@@ -68,23 +69,38 @@ export const getStudentById = async (id: number) => {
   "use cache";
   cacheTag("students", "groups");
 
+  const includeDefault = Prisma.validator<Prisma.StudentInclude>()({
+    attendances: true,
+    Exception: {
+      include: {
+        SpecificDates: true,
+        ExceptionsOnLists: {
+          include: {
+            list: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
+    GroupsOnStudents: {
+      include: {
+        group: true,
+      },
+    },
+    visitations: {
+      orderBy: {
+        date: "desc",
+      },
+    },
+  });
+
   const data = await prisma.student.findUnique({
     where: {
       id,
     },
-    include: {
-      attendances: true,
-      GroupsOnStudents: {
-        include: {
-          group: true,
-        },
-      },
-      visitations: {
-        orderBy: {
-          date: "desc",
-        },
-      },
-    },
+    include: includeDefault,
   });
 
   return data;
@@ -268,12 +284,12 @@ export async function getListsByWeekDay(weekDay: number) {
   return lists;
 }
 
-export const getStudentsByWeekDayAndListId = async (date: string, weekDay: number, listId: number) => {
+export const getStudentsByWeekDayAndListId = async (date: Date, listId: number) => {
   "use cache";
   cacheTag("students", "lists", "groups");
 
   const data = await prisma.student.findMany({
-    where: studentByWeekDayAndListIdPrismaQuery(listId, weekDay),
+    where: studentByWeekDayAndListIdPrismaQuery(listId, date),
     include: {
       attendances: {
         where: {
@@ -288,6 +304,18 @@ export const getStudentsByWeekDayAndListId = async (date: string, weekDay: numbe
           },
           listId,
         },
+      },
+      Exception: {
+        where: exceptionByListIdAndDatePrismaQuery(listId, date),
+        include: {
+          SpecificDates: true,
+        },
+
+        // only take the most recent created exception to avoid duplicates
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 1,
       },
       GroupsOnStudents: {
         where: {
@@ -304,3 +332,20 @@ export const getStudentsByWeekDayAndListId = async (date: string, weekDay: numbe
 
   return data;
 };
+
+export async function getExceptionById(id: number) {
+  "use cache";
+  cacheTag("lists", "students");
+
+  const exceptions = await prisma.exception.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      SpecificDates: true,
+      ExceptionsOnLists: true,
+    },
+  });
+
+  return exceptions;
+}

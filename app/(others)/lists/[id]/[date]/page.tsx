@@ -6,11 +6,7 @@ import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import { AttendanceList } from "./_components/attendanceList";
 import ConnectionWrapper from "@/components/cache/connectionWrapper";
-import { cn } from "@/lib/utils";
-import Icon from "@mdi/react";
-import { mdiInformationOutline } from "@mdi/js";
-import { DateNavigationCalendar } from "./_components/dateNavigation";
-import { timeToString } from "@/utils/time";
+import StatusBar from "./_components/statusBar";
 dayjs.locale("de");
 dayjs.extend(weekday);
 
@@ -33,41 +29,15 @@ export default async function Page({ params }: { params: Promise<{ date: string;
   }
 
   const date = dateParam === "today" ? dayjs().format("YYYY-MM-DD") : dateParam;
-  const weekDay = dayjs(date).weekday();
-  const currentActivation = list.activations.find((activation) => activation.day === weekDay);
+  const currentActivation = list.activations.find((activation) => activation.day === dayjs(date).weekday());
 
-  const students = await getStudentsByWeekDayAndListId(date, weekDay, listId);
+  const students = await getStudentsByWeekDayAndListId(dayjs(date).toDate(), listId);
 
   const isToday = dayjs().isSame(dayjs(date), "date");
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="sticky top-2 z-50 scale-[101%]">
-        <div className={cn("p-2 rounded-xl border-2 border-primary/10 bg-primary/10 relative", !isToday ? "border-red-500" : "")}>
-          <h1 className="text-3xl font-bold text-center mb-3">{list.name}</h1>
-
-          <div className="text-lg font-semibold text-center flex flex-wrap gap-2 justify-center items-center">
-            {[
-              dayjs(date).format("DD[.] MMMM YYYY"),
-              timeToString(currentActivation?.startTime ?? 0) + " - " + timeToString(currentActivation?.endTime ?? 0),
-            ].map((el, index) => (
-              <span key={index + "_time_element"} className="py-1 px-2 rounded-xl border-2 border-primary/10 bg-primary/10">
-                {el}
-              </span>
-            ))}
-          </div>
-
-          <div className="absolute bottom-2 left-2">
-            <DateNavigationCalendar date={date} listId={listId} />
-          </div>
-          {!isToday && (
-            <div className="absolute top-2 left-2">
-              <Icon path={mdiInformationOutline} className="text-red-500" size={1} />
-            </div>
-          )}
-        </div>
-        <div className="absolute top-0 left-0 w-full h-full -z-50 bg-white rounded-xl" />
-      </div>
+      <StatusBar isToday={isToday} currentActivation={currentActivation} list={list} date={date} />
 
       {!currentActivation ? (
         <Error error="List is not activated for this day." url={"/lists/" + listId} />
