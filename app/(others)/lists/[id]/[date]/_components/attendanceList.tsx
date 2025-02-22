@@ -78,8 +78,7 @@ export function AttendanceList({
 
         return (
           <div className="w-[78px] flex gap-2 justify-between items-center">
-            {(student.attendances[0] !== undefined && exception?.presence !== "ABSENT") ||
-            (exception && exception.presence === "PRESENT" && exception.end) ? (
+            {student.attendances[0] !== undefined || (exception && exception.presence === "PRESENT" && exception.end) ? (
               <EndTimeNote
                 student={student}
                 attendance={{
