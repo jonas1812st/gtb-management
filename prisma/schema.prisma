@@ -56,6 +56,13 @@ model Visitation {
   List      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId    Int
 
+  // --- notes and more options ---
+  startNotes  String?  @db.Text
+  endNotes    String?  @db.Text
+
+  // --- only important for main list ---
+  hasHomework Boolean?
+
   @@unique([date, studentId, listId])
 }
 

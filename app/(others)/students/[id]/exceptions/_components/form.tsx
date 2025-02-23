@@ -22,6 +22,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { stringToTime, timeToString } from "@/utils/time";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
+import { PropsWithChildren } from "react";
+import { cn } from "@/lib/utils";
 
 dayjs.locale("de");
 dayjs.extend(weekday);
@@ -94,7 +96,9 @@ export default function ExceptionForm(
             </div>
           </div>
 
-          <RuleSelect />
+          <RuleSelectWrapper>
+            <RuleSelect />
+          </RuleSelectWrapper>
 
           <div className="flex justify-end">
             <Button className="flex items-center space-x-2" disabled={methods.formState.isSubmitting}>
@@ -275,7 +279,26 @@ const ListSelect = ({ lists }: { lists: Prisma.ListGetPayload<{ include: { activ
   );
 };
 
-const RuleSelect = () => {
+export const RuleSelectWrapper = ({ children }: PropsWithChildren<{}>) => {
+  return (
+    <div>
+      <FormLabel htmlFor="rules-input">Regel festlegen</FormLabel>
+      {children}
+    </div>
+  );
+};
+
+export const RuleSelect = ({
+  className,
+  disabled,
+}: {
+  className?: string;
+  disabled?: Partial<{
+    presence?: boolean;
+    time?: boolean;
+    notes?: boolean;
+  }>;
+}) => {
   const {
     watch,
     register,
@@ -284,9 +307,8 @@ const RuleSelect = () => {
   } = useExceptionForm();
 
   return (
-    <div>
-      <FormLabel htmlFor="rules-input">Regel festlegen</FormLabel>
-      <div className="border rounded-lg p-3 grid grid-cols-2 gap-2">
+    <>
+      <div className={cn("border rounded-lg p-3 grid grid-cols-2 gap-2", className)}>
         <div>
           <FormLabel htmlFor="rule-present">Anwesenheit</FormLabel>
           <Controller
@@ -294,6 +316,7 @@ const RuleSelect = () => {
             name={`rule.presence`}
             render={({ field: { value, onChange } }) => (
               <Select
+                disabled={disabled?.presence}
                 value={value}
                 onValueChange={(value) => {
                   const selectedPresence = value as ExceptionPresence;
@@ -327,7 +350,7 @@ const RuleSelect = () => {
                   onChange={(e) => onChange(stringToTime(e.target.value))}
                   type="time"
                   id="rule-time"
-                  disabled={watch(`rule.presence`) === "ABSENT"}
+                  disabled={watch(`rule.presence`) === "ABSENT" || disabled?.time}
                 />
               )}
             />
@@ -343,11 +366,12 @@ const RuleSelect = () => {
             })}
             id="rule-description"
             spellCheck={false}
+            disabled={disabled?.notes}
           />
           <ErrorMessage>{errors.rule?.notes?.message}</ErrorMessage>
         </div>
       </div>
       <ErrorMessage>{errors.rule?.message}</ErrorMessage>
-    </div>
+    </>
   );
 };

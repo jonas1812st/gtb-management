@@ -9,6 +9,8 @@ import dayjs from "dayjs";
 import "dayjs/locale/de";
 import { DetailsContainer, DetailsHeading } from "@/components/details";
 import Link from "next/link";
+import { TimePopover } from "@/app/(others)/lists/[id]/[date]/_components/attendanceList";
+import { timeToString } from "@/utils/time";
 dayjs.locale("de");
 
 export const StudentLists = ({
@@ -57,7 +59,34 @@ export const StudentLists = ({
       accessorFn: (row) =>
         dayjs(row.date).minute(row.start).format("HH:mm") +
         (selectedList?.recordTime === "START_END" ? " - " + (row.end ? dayjs(row.date).minute(row.end).format("HH:mm") : "--:--") : ""),
+      cell: ({ row: { original: visitation } }) => (
+        <div className="flex space-x-1 items-center">
+          <TimePopover
+            time={timeToString(visitation.start) || "--:--"}
+            enabled={visitation.startNotes !== null}
+            notes={visitation.startNotes}
+            title={"Anmerkung Startzeit"}
+          />
+
+          {selectedList?.recordTime === "START_END" && (
+            <>
+              <span> - </span>
+              <TimePopover
+                time={timeToString(visitation.end) || "--:--"}
+                enabled={visitation.endNotes !== null}
+                notes={visitation.endNotes}
+                title={"Anmerkung Endzeit"}
+              />
+            </>
+          )}
+        </div>
+      ),
       enableSorting: false,
+    },
+    {
+      header: "Hausaufgaben",
+      accessorKey: "homework",
+      cell: ({ row: { original: visitation } }) => (visitation.hasHomework ? "Ja" : "Nein"),
     },
   ];
 

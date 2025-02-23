@@ -17,11 +17,13 @@ export async function onVisiting(
   const dateIso = dayjs(date).startOf("day").toISOString();
   const time = stringToTime(dayjs().format("HH:mm"));
 
+  let visitationEntry: Prisma.VisitationGetPayload<{}> | undefined;
+
   try {
     // Wenn der aktuelle Eintrag "Visitation" kein Ende hat, dann wird das Ende hinzugefügt oder der Eintrag gelöscht (hängt von recordTime ab)
     if (visitation?.end === null) {
       if (recordTime === "START_END") {
-        await prisma.visitation.update({
+        visitationEntry = await prisma.visitation.update({
           where: {
             date_studentId_listId: {
               date: dateIso,
@@ -37,10 +39,11 @@ export async function onVisiting(
         await deleteVisitation(studentId, listId, date);
       }
     } else {
-      await prisma.visitation.upsert({
+      visitationEntry = await prisma.visitation.upsert({
         update: {
           start: time,
           end: null,
+          endNotes: null,
         },
         where: {
           date_studentId_listId: {
@@ -64,6 +67,8 @@ export async function onVisiting(
 
   revalidateTag("lists");
   revalidateTag("students");
+
+  return visitationEntry;
 }
 
 export async function deleteVisitation(studentId: number, listId: number, date: Date) {
@@ -86,15 +91,25 @@ export async function deleteVisitation(studentId: number, listId: number, date: 
   revalidateTag("students");
 }
 
-export async function updateVisitation(studentId: number, visitation: { start: string; end: string | undefined | null }, listId: number, date: Date) {
+export async function updateVisitation(
+  studentId: number,
+  visitation: { start: string; end: string | undefined; startNotes?: string; endNotes?: string; hasHomework?: boolean },
+  listId: number,
+  date: Date
+) {
   const { end, start } = InputSchema.parse(visitation);
   const dateIso = dayjs(date).startOf("day").toISOString();
 
+  let newVisitationEntry: Prisma.VisitationGetPayload<{}> | undefined;
+
   try {
-    await prisma.visitation.upsert({
+    newVisitationEntry = await prisma.visitation.upsert({
       update: {
         start: stringToTime(start),
         end: stringToTime(end) || null,
+        startNotes: visitation.startNotes?.trim() || null,
+        endNotes: visitation.endNotes?.trim() || null,
+        hasHomework: visitation.hasHomework ?? null,
       },
       where: {
         date_studentId_listId: {
@@ -109,6 +124,9 @@ export async function updateVisitation(studentId: number, visitation: { start: s
         start: stringToTimeNonNullable(start),
         end: stringToTime(end) || null,
         listId,
+        startNotes: visitation.startNotes?.trim() || null,
+        endNotes: visitation.endNotes?.trim() || null,
+        hasHomework: visitation.hasHomework ?? null,
       },
     });
   } catch (error) {
@@ -119,4 +137,6 @@ export async function updateVisitation(studentId: number, visitation: { start: s
   revalidateTag("lists");
   revalidateTag("students");
   revalidatePath("/list");
+
+  return newVisitationEntry;
 }

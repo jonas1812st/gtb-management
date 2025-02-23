@@ -4,9 +4,20 @@ import { onVisiting } from "../_methods/visit";
 import { DataTable } from "@/components/form/dataForm";
 import { cn } from "@/lib/utils";
 import { timeToString } from "@/utils/time";
-import { mdiCalendarEdit, mdiCalendarPlus, mdiClockEditOutline, mdiDotsVertical, mdiHelp, mdiInformationOutline } from "@mdi/js";
+import {
+  mdiCalendarEdit,
+  mdiCalendarPlus,
+  mdiClockEditOutline,
+  mdiDotsVertical,
+  mdiFile,
+  mdiFileAlertOutline,
+  mdiFileDocumentOutline,
+  mdiFileOutline,
+  mdiHelp,
+  mdiInformationOutline,
+} from "@mdi/js";
 import Icon from "@mdi/react";
-import { Prisma } from "@prisma/client";
+import { Prisma, RecordTime } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -18,6 +29,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { studentExceptionPresence } from "@/utils/enum-translations";
+import { useRouter } from "next/navigation";
 
 type Student = Prisma.StudentGetPayload<{
   include: {
@@ -63,9 +75,27 @@ export function AttendanceList({
     };
   }>;
 }) {
+  const router = useRouter();
+
   const [edit, setEdit] = useState<number | null>(null);
   const [attendanceWarning, setAttendanceWarning] = useState<number | null>(null);
   const hiddenCols = ["fullName", "class", "time", "groupColor"].filter((_, i) => ![list.studentName, list.className, list.time, list.groupColor][i]);
+
+  const onVisitingWrapper = async (
+    studentId: number,
+    visitation: Prisma.VisitationGetPayload<{}> | undefined,
+    listId: number,
+    date: Date,
+    recordTime: RecordTime
+  ) => {
+    const response = await onVisiting(studentId, visitation, listId, date, recordTime);
+
+    // only redirect if it is the main list
+    if (list.isMainList)
+      router.replace("?visitation=" + response?.id, {
+        scroll: false,
+      });
+  };
 
   const columns: ColumnDef<Student>[] = [
     {
@@ -99,7 +129,7 @@ export function AttendanceList({
                   return;
                 }
 
-                onVisiting(student.id, presentState.visitation, list.id, date, list.recordTime);
+                onVisitingWrapper(student.id, presentState.visitation, list.id, date, list.recordTime);
               }}
             />
           </div>
@@ -135,7 +165,7 @@ export function AttendanceList({
 
         return (
           <Link href={"/students/" + student.id} className={cn("flex gap-x-2", notesExist && list.notes !== "MARKED" ? "flex-col" : "items-center")}>
-            <span className={cn(exception?.presence === "ABSENT" ? "line-through" : "")}>
+            <span className={cn(exception?.presence === "ABSENT" ? "line-through" : "", "truncate max-w-[200px]")}>
               {student.firstName} {student.lastName}
             </span>
             {notesExist ? (
@@ -165,32 +195,59 @@ export function AttendanceList({
         const startTime = timeToString(student.visitations[0]?.start);
         const endTime = timeToString(student.visitations[0]?.end);
 
-        return (startTime || "--:--") + (list.recordTime === "START_END" ? " - " + (endTime || "--:--") : list.recordTime === "START" ? "" : "");
+        return (
+          <div className="flex space-x-1 items-center">
+            <TimePopover
+              time={startTime || "--:--"}
+              enabled={student.visitations[0] && student.visitations[0].startNotes !== null}
+              notes={student.visitations[0]?.startNotes}
+              title={"Anmerkung Startzeit"}
+            />
+            {list.recordTime === "START_END" && (
+              <>
+                <span> - </span>
+                <TimePopover
+                  time={endTime || "--:--"}
+                  enabled={student.visitations[0] && student.visitations[0].endNotes !== null}
+                  notes={student.visitations[0]?.endNotes}
+                  title={"Anmerkung Endzeit"}
+                />
+              </>
+            )}
+          </div>
+        );
       },
       enableSorting: false,
     },
     {
-      accessorKey: "exception",
+      accessorKey: "more-information",
       header: "",
+      enableSorting: false,
 
       cell: ({ row: { original: student } }) => {
         const exception = getStudentException(student);
 
         return (
-          exception &&
-          exception.notes && (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="light" size={"icon"} className="rounded-xl h-8 w-8 mx-auto">
-                  <Icon path={mdiHelp} size={0.8} />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <h3 className="font-medium">{studentExceptionPresence[exception.presence]}</h3>
-                <p className="text-muted-foreground text-sm max-h-[397px] overflow-auto">{exception.notes}</p>
-              </PopoverContent>
-            </Popover>
-          )
+          <div className="flex space-x-1 items-center">
+            {student.visitations[0]?.hasHomework && (
+              <div className="h-[25px] w-[25px] flex items-center justify-center">
+                <Icon path={mdiFileDocumentOutline} size={1} />
+              </div>
+            )}
+            {exception && exception.notes && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="light" size={"icon"} className="rounded-lg h-[25px] w-[25px]">
+                    <Icon path={mdiHelp} size={0.7} />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <h3 className="font-medium">{studentExceptionPresence[exception.presence]}</h3>
+                  <p className="text-muted-foreground text-sm max-h-[397px] overflow-auto">{exception.notes}</p>
+                </PopoverContent>
+              </Popover>
+            )}
+          </div>
         );
       },
     },
@@ -225,7 +282,7 @@ export function AttendanceList({
                   >
                     <DropdownMenuItem>
                       <Icon size={0.8} path={mdiCalendarPlus} />
-                      <span>Ausnahme hinzufügen</span>
+                      <span>Ausnahme erstellen</span>
                     </DropdownMenuItem>
                   </Link>
                 )}
@@ -248,6 +305,7 @@ export function AttendanceList({
         visitation={students.find((student) => student.id === edit)?.visitations[0]}
         date={date}
         recordTime={list.recordTime}
+        isMainList={list.isMainList}
       />
       <AttendanceWarningDialog
         open={attendanceWarning !== null}
@@ -257,7 +315,7 @@ export function AttendanceList({
 
           if (student) {
             const presentState = getPresentState(student, date);
-            onVisiting(student.id, presentState.visitation, list.id, date, list.recordTime);
+            onVisitingWrapper(student.id, presentState.visitation, list.id, date, list.recordTime);
             setAttendanceWarning(null);
           }
         }}
@@ -324,5 +382,19 @@ const EndTimeNote = ({ student, attendance }: { student: Student; attendance: Pi
     <span className={cn("rounded-xl border-2 px-1.5 py-0.5 text-sm font-medium", attendanceTimeClassnames[attendanceStatus])}>
       {timeToString(attendance?.end)}
     </span>
+  );
+};
+
+export const TimePopover = ({ time, enabled, notes, title }: { time: string; enabled: boolean; notes: string | null; title: string }) => {
+  if (!enabled) return <span>{time}</span>;
+
+  return (
+    <Popover>
+      <PopoverTrigger className={"text-primary hover:underline"}>{time || "--:--"}</PopoverTrigger>
+      <PopoverContent>
+        <h3 className="font-medium">{title}</h3>
+        <p className="text-muted-foreground text-sm max-h-[397px] overflow-auto">{notes}</p>
+      </PopoverContent>
+    </Popover>
   );
 };

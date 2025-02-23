@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteVisitation, updateVisitation } from "../_methods/visit";
@@ -10,6 +10,9 @@ import { Prisma, RecordTime } from "@prisma/client";
 import { timeToString } from "@/utils/time";
 import { ErrorMessage, FormLabel } from "@/components/form/form";
 import { AnimatePresence, motion } from "framer-motion";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function EditTimeDialog({
   studentId,
@@ -19,6 +22,7 @@ export default function EditTimeDialog({
   closeDialog,
   visitation,
   recordTime,
+  isMainList,
 }: {
   studentId: number | null;
   listId: number;
@@ -27,6 +31,7 @@ export default function EditTimeDialog({
   closeDialog: () => void;
   visitation: Prisma.VisitationGetPayload<{}> | undefined;
   recordTime: RecordTime;
+  isMainList: boolean;
 }) {
   return (
     <Dialog open={open} onOpenChange={(open) => (open === false ? closeDialog() : {})}>
@@ -50,6 +55,7 @@ export default function EditTimeDialog({
                 date={date}
                 studentId={studentId}
                 visitation={visitation}
+                isMainList={isMainList}
               />
             </motion.div>
           )}
@@ -66,6 +72,7 @@ const EditTimeDialogContent = ({
   closeDialog,
   visitation,
   recordTime,
+  isMainList,
 }: {
   studentId: number;
   listId: number;
@@ -73,16 +80,21 @@ const EditTimeDialogContent = ({
   closeDialog: () => void;
   visitation: Prisma.VisitationGetPayload<{}> | undefined;
   recordTime: RecordTime;
+  isMainList: boolean;
 }) => {
   const {
     handleSubmit,
     register,
     formState: { errors },
+    control,
   } = useForm<z.infer<typeof InputSchema>>({
     resolver: zodResolver(InputSchema),
     defaultValues: {
       start: timeToString(visitation?.start),
       end: timeToString(visitation?.end || undefined),
+      startNotes: visitation?.startNotes ?? undefined,
+      endNotes: visitation?.endNotes ?? undefined,
+      hasHomework: visitation?.hasHomework ?? undefined,
     },
   });
 
@@ -92,6 +104,9 @@ const EditTimeDialogContent = ({
       {
         start: data.start,
         end: data.end,
+        startNotes: data.startNotes,
+        endNotes: data.endNotes,
+        hasHomework: data.hasHomework,
       },
       listId,
       date
@@ -99,7 +114,20 @@ const EditTimeDialogContent = ({
   };
 
   return (
-    <form className="grid grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit)}>
+    <form className="grid grid-cols-2 gap-x-2 gap-y-4" onSubmit={handleSubmit(onSubmit)}>
+      {isMainList && (
+        <div className="col-span-full flex space-x-2 items-center">
+          <FormLabel htmlFor="has-homework">Hausaufgaben</FormLabel>
+          <Controller
+            control={control}
+            name="hasHomework"
+            render={({ field: { value, onChange } }) => (
+              <Checkbox checked={value} onCheckedChange={(checked) => onChange(checked)} id="has-homework" className="block" />
+            )}
+          />
+        </div>
+      )}
+
       <div>
         <FormLabel htmlFor="start-time-input">Startzeit</FormLabel>
         <Input
@@ -123,6 +151,27 @@ const EditTimeDialogContent = ({
         />
         <ErrorMessage>{errors.end?.message}</ErrorMessage>
       </div>
+
+      <div className="col-span-full">
+        <FormLabel htmlFor="start-time">Notizen</FormLabel>
+        <Tabs defaultValue="start-time" id="time-notes">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="start-time">Startzeit</TabsTrigger>
+            <TabsTrigger value="end-time" disabled={recordTime !== "START_END"}>
+              Endzeit
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="start-time">
+            <Textarea spellCheck={false} {...register("startNotes")} id="start-notes-input" placeholder="Notizen zur Startzeit" />
+            <ErrorMessage>{errors.startNotes?.message}</ErrorMessage>
+          </TabsContent>
+          <TabsContent value="end-time">
+            <Textarea spellCheck={false} {...register("endNotes")} id="end-notes-input" placeholder="Notizen zur Endzeit" />
+            <ErrorMessage>{errors.endNotes?.message}</ErrorMessage>
+          </TabsContent>
+        </Tabs>
+      </div>
+
       <div className="mt-4 col-span-full flex justify-end space-x-2 items-center">
         <Button variant={"destructive"} type="button" onClick={() => deleteVisitation(studentId, listId, date).then(closeDialog)}>
           Löschen

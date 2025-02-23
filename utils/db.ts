@@ -349,3 +349,16 @@ export async function getExceptionById(id: number) {
 
   return exceptions;
 }
+
+export async function getVisitationById(id: number) {
+  "use cache";
+  cacheTag("lists", "students");
+
+  const visitation = await prisma.visitation.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return visitation;
+}
