@@ -178,12 +178,14 @@ export const OptionsAnimationWrapper = ({ children }: PropsWithChildren<{}>) => 
     closeBottom: { translateY: "110%", scale: 0.95 },
   };
 
+  /*
   useEffect(() => {
     // set timeout to close the options after 30 seconds
     const timeout = setTimeout(closeOptions, 30 * 1000);
 
     return () => clearTimeout(timeout);
   }, []);
+  */
 
   return (
     <motion.div
