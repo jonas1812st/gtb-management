@@ -118,13 +118,15 @@ const useOptionsMethods = () => {
   const router = useRouter();
   const visitation = useVisitation();
   const visitationOptions = useVisitationOptions();
-  const isStart = !visitation.end;
+  const openContext = useContext(VisitationOpenContext);
 
   const { startOptions, endOptions } = visitationOptions;
 
   const closeOptions = useCallback(async () => {
-    const startTime = timeToString(visitation.start);
+    // close the options manually for better performance
+    openContext?.setValue(false);
 
+    const startTime = timeToString(visitation.start);
     if (!startTime) return;
 
     await updateVisitation(
@@ -132,7 +134,7 @@ const useOptionsMethods = () => {
       {
         start: startTime,
         end: timeToString(visitation.end),
-        ...(isStart
+        ...(!visitation.end
           ? {
               startNotes: startOptions.text || undefined,
               hasHomework: startOptions.hasHomework,
@@ -148,7 +150,7 @@ const useOptionsMethods = () => {
     );
 
     router.replace(location.pathname, { scroll: false });
-  }, [startOptions, endOptions]);
+  }, [startOptions, endOptions, visitation, openContext, router]);
 
   return {
     startOptions,
@@ -169,7 +171,6 @@ export const CloseBtn = () => {
 
 export const OptionsAnimationWrapper = ({ children }: PropsWithChildren<{}>) => {
   const openContext = useContext(VisitationOpenContext);
-
   const { closeOptions } = useOptionsMethods();
 
   const variants = {
@@ -201,9 +202,6 @@ export const OptionsAnimationWrapper = ({ children }: PropsWithChildren<{}>) => 
       onDragEnd={(_event, info) => {
         if (info.offset.x > 100) {
           closeOptions();
-
-          // manually close for better performance
-          openContext?.setValue(false);
         }
       }}
       whileDrag={{ scale: 0.95, transition: { duration: 0.1 } }}
