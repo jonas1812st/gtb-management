@@ -6,8 +6,8 @@ export default function useScrollUp() {
 
   useEffect(() => {
     const controlNavbar = () => {
-      if (window.scrollY - lastScrollY > 0) {
-        // if scroll down hide the navbar
+      if (window.scrollY - lastScrollY > 0 && window.scrollY > 100) {
+        // if scroll down hide the navbar and the user has scrolled more than 100px
         setShow(false);
       } else {
         // if scroll up show the navbar

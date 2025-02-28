@@ -1,7 +1,7 @@
 import Error from "@/components/navigation/error";
 import ExceptionForm from "../_components/form";
 import { getStudentById, getStudentListsById } from "@/utils/db";
-import { CreateExceptionInputSchema } from "@/utils/zodSchema";
+import { CreateExceptionInputSchema, ExceptionReferrerSchema } from "@/utils/zodSchema";
 import { z } from "zod";
 
 export default async function ExceptionFormWrapper({
@@ -20,6 +20,7 @@ export default async function ExceptionFormWrapper({
       message: string;
       success: boolean;
     }>;
+    referrer?: z.infer<typeof ExceptionReferrerSchema>;
   };
 }) {
   const { id } = await params;

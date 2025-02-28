@@ -5,9 +5,9 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteVisitation, updateVisitation } from "../_methods/visit";
-import { InputSchema } from "../_methods/timeSchema";
+import { VisitationUpdateInputSchema as InputSchema } from "@/utils/zodSchema";
 import { Prisma, RecordTime } from "@prisma/client";
-import { timeToString } from "@/utils/time";
+import { stringToTime, timeToString } from "@/utils/time";
 import { ErrorMessage, FormLabel } from "@/components/form/form";
 import { AnimatePresence, motion } from "framer-motion";
 import { Textarea } from "@/components/ui/textarea";
@@ -90,8 +90,8 @@ const EditTimeDialogContent = ({
   } = useForm<z.infer<typeof InputSchema>>({
     resolver: zodResolver(InputSchema),
     defaultValues: {
-      start: timeToString(visitation?.start),
-      end: timeToString(visitation?.end || undefined),
+      start: visitation?.start,
+      end: visitation?.end || undefined,
       startNotes: visitation?.startNotes ?? undefined,
       endNotes: visitation?.endNotes ?? undefined,
       hasHomework: visitation?.hasHomework ?? undefined,
@@ -122,7 +122,7 @@ const EditTimeDialogContent = ({
             control={control}
             name="hasHomework"
             render={({ field: { value, onChange } }) => (
-              <Checkbox checked={value} onCheckedChange={(checked) => onChange(checked)} id="has-homework" className="block" />
+              <Checkbox checked={value ?? false} onCheckedChange={(checked) => onChange(checked)} id="has-homework" className="block" />
             )}
           />
         </div>
@@ -130,24 +130,29 @@ const EditTimeDialogContent = ({
 
       <div>
         <FormLabel htmlFor="start-time-input">Startzeit</FormLabel>
-        <Input
-          {...register("start", {
-            setValueAs: (value) => value || undefined,
-          })}
-          id="start-time-input"
-          type="time"
+        <Controller
+          control={control}
+          name="start"
+          render={({ field: { value, onChange } }) => (
+            <Input value={timeToString(value) ?? ""} onChange={(e) => onChange(stringToTime(e.target.value))} id="start-time-input" type="time" />
+          )}
         />
         <ErrorMessage>{errors.start?.message}</ErrorMessage>
       </div>
       <div>
         <FormLabel htmlFor="end-time-input">Endzeit (optional)</FormLabel>
-        <Input
-          {...register("end", {
-            setValueAs: (value) => value || undefined,
-          })}
-          id="end-time-input"
-          type="time"
-          disabled={recordTime !== "START_END"}
+        <Controller
+          control={control}
+          name="end"
+          render={({ field: { value, onChange } }) => (
+            <Input
+              value={timeToString(value) ?? ""}
+              onChange={(e) => onChange(stringToTime(e.target.value))}
+              id="end-time-input"
+              type="time"
+              disabled={recordTime !== "START_END"}
+            />
+          )}
         />
         <ErrorMessage>{errors.end?.message}</ErrorMessage>
       </div>

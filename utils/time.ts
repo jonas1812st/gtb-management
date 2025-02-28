@@ -9,13 +9,6 @@ export function stringToTime<T extends string | undefined>(value: T) {
   return hours * 60 + minutes;
 }
 
-export function stringToTimeNonNullable(value: string) {
-  const hours = parseInt(value.split(":")[0], 10);
-  const minutes = parseInt(value.split(":")[1], 10);
-
-  return hours * 60 + minutes;
-}
-
 export const timeToString = (value: number | undefined | null) => {
   if (!value && value !== 0) return undefined;
 

@@ -84,3 +84,67 @@ export const CreateExceptionInputSchema = z
     path: ["dates"],
     message: "Range mode requires at least two dates",
   });
+
+export const VisitationUpdateInputSchema = z
+  .object({
+    start: TimeSchema,
+    end: TimeSchema.nullish(),
+    hasHomework: z.boolean().nullish(),
+    startNotes: z
+      .string()
+      .trim()
+      .transform((value) => value || null)
+      .nullish(),
+    endNotes: z
+      .string()
+      .trim()
+      .transform((value) => value || null)
+      .nullish(),
+  })
+  .refine((values) => values.end === undefined || values.end === null || values.start <= values.end, {
+    message: "End time cannot be lower than start time.",
+    path: ["end"],
+  })
+  .refine(
+    (values) => {
+      const newValues = {
+        end: values.end || undefined,
+        endNotes: values.endNotes || undefined,
+      };
+
+      const condition =
+        (newValues.end !== undefined && newValues.endNotes !== undefined) ||
+        (newValues.end !== undefined && newValues.endNotes === undefined) ||
+        (newValues.end === undefined && newValues.endNotes === undefined);
+
+      return condition;
+    },
+    {
+      message: "Specify time before adding end time notes",
+      path: ["end"],
+    }
+  )
+  .refine(
+    (values) => {
+      const newValues = {
+        start: values.start || undefined,
+        startNotes: values.startNotes || undefined,
+      };
+
+      const condition =
+        (newValues.start !== undefined && newValues.startNotes !== undefined) ||
+        (newValues.start !== undefined && newValues.startNotes === undefined) ||
+        (newValues.start === undefined && newValues.startNotes === undefined);
+
+      return condition;
+    },
+    {
+      message: "Specify time before adding start time notes",
+      path: ["start"],
+    }
+  );
+
+export const ExceptionReferrerSchema = z
+  .string()
+  .regex(/^lists_\d+_\d{4}-\d{2}-\d{2}$/)
+  .optional();

@@ -1,6 +1,6 @@
 "use client";
 
-import { onVisiting } from "../_methods/visit";
+import { onVisiting, updateVisitation } from "../_methods/visit";
 import { DataTable } from "@/components/form/dataForm";
 import { cn } from "@/lib/utils";
 import { timeToString } from "@/utils/time";
@@ -9,10 +9,7 @@ import {
   mdiCalendarPlus,
   mdiClockEditOutline,
   mdiDotsVertical,
-  mdiFile,
-  mdiFileAlertOutline,
   mdiFileDocumentOutline,
-  mdiFileOutline,
   mdiHelp,
   mdiInformationOutline,
 } from "@mdi/js";
@@ -29,7 +26,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { studentExceptionPresence } from "@/utils/enum-translations";
-import { useRouter } from "next/navigation";
+import { useVisitationOptionsState } from "./visitationOptionsState";
+import { useShallow } from "zustand/react/shallow";
 
 type Student = Prisma.StudentGetPayload<{
   include: {
@@ -75,7 +73,20 @@ export function AttendanceList({
     };
   }>;
 }) {
-  const router = useRouter();
+  const { setVisitation, setOpen: setVisitationOpen } = useVisitationOptionsState(
+    useShallow((state) => ({
+      setVisitation: state.setVisitation,
+      setOpen: state.setOpen,
+    }))
+  );
+
+  useEffect(() => {
+    // clear visitation on unmount and close options
+    return () => {
+      setVisitation(null);
+      setVisitationOpen(false);
+    };
+  }, []);
 
   const [edit, setEdit] = useState<number | null>(null);
   const [attendanceWarning, setAttendanceWarning] = useState<number | null>(null);
@@ -89,12 +100,43 @@ export function AttendanceList({
     recordTime: RecordTime
   ) => {
     const response = await onVisiting(studentId, visitation, listId, date, recordTime);
-
     // only redirect if it is the main list
-    if (list.isMainList)
-      router.replace("?visitation=" + response?.id, {
-        scroll: false,
-      });
+    if (list.isMainList && response) {
+      setVisitation(
+        { ...response, hasHomework: true },
+        {
+          beforeUpdate: async (previous, open) => {
+            // only update if previous visitation exists and the options are still open
+            if (previous && open) {
+              const time = {
+                startTime: response.id === previous.id ? response.start : previous.start,
+                endTime: response.id === previous.id ? response.end : previous.end,
+              };
+
+              // if the response is the same as the previous one and updates start time, don't update
+              if (response.end === null && response.id === previous.id) return;
+
+              await updateVisitation(
+                previous.studentId,
+                {
+                  start: time.startTime,
+                  end: time.endTime,
+                  ...(previous.end === null
+                    ? {
+                        startNotes: previous.startNotes || null,
+                        hasHomework: previous.hasHomework,
+                      }
+                    : { endNotes: previous.endNotes || null }),
+                },
+                previous.listId,
+                previous.date
+              );
+            }
+          },
+        }
+      );
+      setVisitationOpen(true);
+    }
   };
 
   const columns: ColumnDef<Student>[] = [
@@ -270,7 +312,9 @@ export function AttendanceList({
                   <span>Anwesenheit bearbeiten</span>
                 </DropdownMenuItem>
                 {exception ? (
-                  <Link href={`/students/${student.id}/exceptions/${exception.id}/edit`}>
+                  <Link
+                    href={`/students/${student.id}/exceptions/${exception.id}/edit?referrer=lists_${list.id}_${dayjs(date).format("YYYY-MM-DD")}`}
+                  >
                     <DropdownMenuItem>
                       <Icon size={0.8} path={mdiCalendarEdit} />
                       <span>Ausnahme bearbeiten</span>
@@ -278,7 +322,7 @@ export function AttendanceList({
                   </Link>
                 ) : (
                   <Link
-                    href={`/students/${student.id}/exceptions/create?lists=[${list.id}]&dates=["${dayjs(date).format("YYYY-MM-DD")}"]&mode=multiple`}
+                    href={`/students/${student.id}/exceptions/create?lists=[${list.id}]&dates=["${dayjs(date).format("YYYY-MM-DD")}"]&mode=multiple&referrer=lists_${list.id}_${dayjs(date).format("YYYY-MM-DD")}`}
                   >
                     <DropdownMenuItem>
                       <Icon size={0.8} path={mdiCalendarPlus} />

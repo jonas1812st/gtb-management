@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, CalendarProps } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { CreateExceptionInputSchema } from "@/utils/zodSchema";
+import { CreateExceptionInputSchema, ExceptionReferrerSchema } from "@/utils/zodSchema";
 import { mdiCog, mdiContentSave, mdiLoading, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
 import { ExceptionPresence, Prisma } from "@prisma/client";
@@ -44,6 +44,7 @@ export default function ExceptionForm(
       message: string;
       success: boolean;
     }>;
+    referrer?: z.infer<typeof ExceptionReferrerSchema>;
   }
 ) {
   const { student, lists } = params;
@@ -84,7 +85,10 @@ export default function ExceptionForm(
 
   return (
     <div className="flex flex-col space-y-4">
-      <BackNavigation href={`/students/${student.id}`} title={"Ausnahme für " + student.firstName + " " + student.lastName} />
+      <BackNavigation
+        href={!params.referrer ? `/students/${student.id}` : `/${params.referrer.replaceAll("_", "/")}`}
+        title={"Ausnahme für " + student.firstName + " " + student.lastName}
+      />
       <FormProvider {...methods}>
         <form onSubmit={onSubmit} className="flex flex-col space-y-3">
           <div className="grid sm:grid-cols-5 gap-3">

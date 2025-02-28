@@ -1,11 +1,10 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { stringToTime, stringToTimeNonNullable } from "@/utils/time";
 import { Prisma, RecordTime } from "@prisma/client";
 import dayjs from "dayjs";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { InputSchema } from "./timeSchema";
+import { revalidateTag } from "next/cache";
+import { VisitationUpdateInputSchema } from "@/utils/zodSchema";
 
 export async function onVisiting(
   studentId: number,
@@ -15,7 +14,7 @@ export async function onVisiting(
   recordTime: RecordTime
 ) {
   const dateIso = dayjs(date).startOf("day").toISOString();
-  const time = stringToTime(dayjs().format("HH:mm"));
+  const time = dayjs().diff(dayjs().startOf("day"), "minute");
 
   let visitationEntry: Prisma.VisitationGetPayload<{}> | undefined;
 
@@ -55,7 +54,7 @@ export async function onVisiting(
         create: {
           date: dateIso,
           studentId,
-          start: time!,
+          start: time,
           listId,
         },
       });
@@ -91,13 +90,18 @@ export async function deleteVisitation(studentId: number, listId: number, date: 
   revalidateTag("students");
 }
 
+type Nullish<T> = T | null | undefined;
+
 export async function updateVisitation(
   studentId: number,
-  visitation: { start: string; end: string | undefined; startNotes?: string; endNotes?: string; hasHomework?: boolean },
+  visitation: { start: number; end?: Nullish<number>; startNotes?: Nullish<string>; endNotes?: Nullish<string>; hasHomework?: Nullish<boolean> },
   listId: number,
-  date: Date
+  date: Date,
+  options?: {
+    revalidate?: boolean;
+  }
 ) {
-  const { end, start } = InputSchema.parse(visitation);
+  const { end, start } = VisitationUpdateInputSchema.parse(visitation);
   const dateIso = dayjs(date).startOf("day").toISOString();
 
   let newVisitationEntry: Prisma.VisitationGetPayload<{}> | undefined;
@@ -105,11 +109,11 @@ export async function updateVisitation(
   try {
     newVisitationEntry = await prisma.visitation.upsert({
       update: {
-        start: stringToTime(start),
-        end: stringToTime(end) || null,
-        startNotes: visitation.startNotes?.trim() || null,
-        endNotes: visitation.endNotes?.trim() || null,
-        hasHomework: visitation.hasHomework ?? null,
+        start: start,
+        end: end,
+        startNotes: visitation.startNotes,
+        endNotes: visitation.endNotes,
+        hasHomework: visitation.hasHomework,
       },
       where: {
         date_studentId_listId: {
@@ -121,12 +125,12 @@ export async function updateVisitation(
       create: {
         date: dateIso,
         studentId,
-        start: stringToTimeNonNullable(start),
-        end: stringToTime(end) || null,
+        start: start,
+        end: end,
         listId,
-        startNotes: visitation.startNotes?.trim() || null,
-        endNotes: visitation.endNotes?.trim() || null,
-        hasHomework: visitation.hasHomework ?? null,
+        startNotes: visitation.startNotes,
+        endNotes: visitation.endNotes,
+        hasHomework: visitation.hasHomework,
       },
     });
   } catch (error) {
@@ -134,9 +138,10 @@ export async function updateVisitation(
     throw new Error("Something went wrong.");
   }
 
-  revalidateTag("lists");
-  revalidateTag("students");
-  revalidatePath("/list");
+  if (options?.revalidate !== false) {
+    revalidateTag("lists");
+    revalidateTag("students");
+  }
 
   return newVisitationEntry;
 }

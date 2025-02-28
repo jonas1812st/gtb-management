@@ -2,9 +2,18 @@ import Error from "@/components/navigation/error";
 import { getExceptionById } from "@/utils/db";
 import ExceptionFormWrapper from "../../_components/FormWrapper";
 import { editException } from "../../_methods/editException";
+import { ExceptionReferrerSchema } from "@/utils/zodSchema";
+import { z } from "zod";
 
-export default async function Page({ params }: { params: Promise<{ exception_id: string; id: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ exception_id: string; id: string }>;
+  searchParams: Promise<{ referrer: z.infer<typeof ExceptionReferrerSchema> }>;
+}) {
   const { exception_id, id } = await params;
+  const search = await searchParams;
   const exceptionId = parseInt(exception_id) || 0;
   const studentId = parseInt(id) || 0;
 
@@ -19,25 +28,32 @@ export default async function Page({ params }: { params: Promise<{ exception_id:
   // show error if not found
   if (!exception) return <Error error="Exception not found." url={"/students/" + studentId} btnLabel="Zur Übersicht" />;
 
-  return (
-    <ExceptionFormWrapper
-      props={{
-        action: "edit",
-        actionMethod: editException,
-        id: exceptionId,
-        values: {
-          lists: exception.ExceptionsOnLists.map((e) => e.listId),
-          studentId: exception.studentId,
-          dates: exception.startDate && exception.endDate ? [exception.startDate, exception.endDate] : exception.SpecificDates.map((e) => e.date),
-          mode: exception.startDate ? "range" : "multiple",
-          rule: {
-            presence: exception.presence,
-            notes: exception.notes ?? undefined,
-            time: exception.end ?? undefined,
+  try {
+    const referrer = ExceptionReferrerSchema.parse(search.referrer);
+
+    return (
+      <ExceptionFormWrapper
+        props={{
+          action: "edit",
+          actionMethod: editException,
+          id: exceptionId,
+          values: {
+            lists: exception.ExceptionsOnLists.map((e) => e.listId),
+            studentId: exception.studentId,
+            dates: exception.startDate && exception.endDate ? [exception.startDate, exception.endDate] : exception.SpecificDates.map((e) => e.date),
+            mode: exception.startDate ? "range" : "multiple",
+            rule: {
+              presence: exception.presence,
+              notes: exception.notes ?? undefined,
+              time: exception.end ?? undefined,
+            },
           },
-        },
-      }}
-      params={params}
-    />
-  );
+          referrer: referrer,
+        }}
+        params={params}
+      />
+    );
+  } catch (error) {
+    return <Error error="Referrer not valid." url={"/students/" + studentId} btnLabel="Zum Schüler" />;
+  }
 }

@@ -1,25 +1,18 @@
 import Error from "@/components/navigation/error";
-import { getListById, getStudentsByWeekDayAndListId, getVisitationById } from "@/utils/db";
-import { DateInputSchema, IdSchema } from "@/utils/zodSchema";
+import { getListById, getStudentsByWeekDayAndListId } from "@/utils/db";
+import { DateInputSchema } from "@/utils/zodSchema";
 import { AttendanceList } from "./_components/attendanceList";
 import ConnectionWrapper from "@/components/cache/connectionWrapper";
 import StatusBar from "./_components/statusBar";
-import VisitationOptions from "./_components/visitationOptions";
 import "dayjs/locale/de";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
+import { VisitationsOptions } from "./_components/visitationOptions";
 dayjs.locale("de");
 dayjs.extend(weekday);
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ date: string; id: string }>;
-  searchParams: Promise<{ visitation: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ date: string; id: string }> }) {
   const { date: dateParam, id } = await params;
-  const { visitation } = await searchParams;
   const listId = parseInt(id);
 
   if (isNaN(listId)) return <Error url="/lists" error="Id not valid." btnLabel="Zur Übersicht" />;
@@ -31,13 +24,6 @@ export default async function Page({
   }
   const date = dateParam === "today" ? dayjs().format("YYYY-MM-DD") : dateParam;
   const isToday = dayjs().isSame(dayjs(date), "date");
-
-  try {
-    if (visitation) IdSchema.parse(Number(visitation));
-  } catch (error) {
-    return <Error error="Visitation not valid." url={"/lists/" + listId + "/" + dateParam} btnLabel="Zu den Anwesenheiten" />;
-  }
-  const visitationData = visitation ? await getVisitationById(Number(visitation)) : null;
 
   const list = await getListById(listId);
 
@@ -58,7 +44,7 @@ export default async function Page({
       ) : (
         <ConnectionWrapper>
           <AttendanceList list={list} students={students} date={dayjs(date).toDate()} />
-          {list.isMainList && <VisitationOptions visitation={visitationData} />}
+          {list.isMainList && <VisitationsOptions />}
         </ConnectionWrapper>
       )}
     </div>
