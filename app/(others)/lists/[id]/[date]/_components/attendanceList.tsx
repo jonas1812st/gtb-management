@@ -340,7 +340,18 @@ export function AttendanceList({
 
   return (
     <>
-      <DataTable columns={columns} data={students} filter={{ column: "fullName", placeholder: "Suche" }} hiddenCols={hiddenCols} />
+      <DataTable
+        columns={columns}
+        data={students}
+        filter={{ column: "fullName", placeholder: "Suche" }}
+        hiddenCols={hiddenCols}
+        initialSorting={[
+          {
+            id: "fullName",
+            desc: false,
+          },
+        ]}
+      />
       <EditTimeDialog
         listId={list.id}
         open={edit !== null}

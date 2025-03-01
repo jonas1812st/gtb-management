@@ -26,6 +26,7 @@ interface DataTableProps<TData, TValue> {
     tableContainer?: string;
   };
   hiddenCols?: string[];
+  initialSorting?: SortingState;
 }
 
 interface AdditionalElements {
@@ -39,8 +40,9 @@ export function DataTable<TData, TValue>({
   addItemBtn,
   className,
   hiddenCols = [],
+  initialSorting,
 }: DataTableProps<TData, TValue> & AdditionalElements) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>(initialSorting ?? []);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
