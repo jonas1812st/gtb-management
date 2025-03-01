@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { PropsWithChildren } from "react";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 dayjs.locale("de");
 dayjs.extend(weekday);
@@ -48,6 +49,9 @@ export default function ExceptionForm(
   }
 ) {
   const { student, lists } = params;
+  const backUrl = !params.referrer ? `/students/${student.id}` : `/${params.referrer.replaceAll("_", "/")}`;
+
+  const router = useRouter();
 
   // form methods
   const methods = useForm<z.infer<typeof CreateExceptionInputSchema>>({
@@ -66,7 +70,7 @@ export default function ExceptionForm(
     },
   });
 
-  const { reset, handleSubmit } = methods;
+  const { reset, handleSubmit, control } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     const response = await params.actionMethod(data, params.action === "edit" ? params.id : 0);
@@ -78,6 +82,9 @@ export default function ExceptionForm(
       } else {
         toast.success("Ausnahme aktualisiert");
       }
+
+      // redirect back to the previous page
+      router.push(backUrl);
     } else {
       toast.error("Es ist ein Fehler aufgetreten");
     }
@@ -85,17 +92,36 @@ export default function ExceptionForm(
 
   return (
     <div className="flex flex-col space-y-4">
-      <BackNavigation
-        href={!params.referrer ? `/students/${student.id}` : `/${params.referrer.replaceAll("_", "/")}`}
-        title={"Ausnahme für " + student.firstName + " " + student.lastName}
-      />
+      <BackNavigation href={backUrl} title={"Ausnahme für " + student.firstName + " " + student.lastName} />
       <FormProvider {...methods}>
         <form onSubmit={onSubmit} className="flex flex-col space-y-3">
           <div className="grid sm:grid-cols-5 gap-3">
             <div className="sm:col-span-2">
               <CalendarInput />
             </div>
-            <div className="sm:col-span-3">
+            <div className="sm:col-span-3 flex flex-col space-y-3">
+              <Controller
+                control={control}
+                name="dates"
+                render={({ field: { value } }) => (
+                  <div>
+                    <FormLabel htmlFor="dates-list">Ausgewählte Tage</FormLabel>
+                    {value.length === 0 ? (
+                      <div className="border rounded-lg p-3">
+                        <i>Keine Tage ausgewählt</i>
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap gap-1.5">
+                        {value.map((date) => (
+                          <span key={date.toString() + "_date_element"} className="text-sm p-1.5 border rounded-md">
+                            {dayjs(date).format("DD.MM.YYYY")}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              />
               <ListSelect lists={lists} />
             </div>
           </div>
