@@ -106,7 +106,7 @@ export default function ExceptionForm(
                 render={({ field: { value } }) => (
                   <div>
                     <FormLabel htmlFor="dates-list">Ausgewählte Tage</FormLabel>
-                    {value.length === 0 ? (
+                    {value === undefined || value.length === 0 ? (
                       <div className="border rounded-lg p-3">
                         <i>Keine Tage ausgewählt</i>
                       </div>
