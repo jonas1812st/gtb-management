@@ -146,5 +146,5 @@ export const VisitationUpdateInputSchema = z
 
 export const ExceptionReferrerSchema = z
   .string()
-  .regex(/^lists_\d+_\d{4}-\d{2}-\d{2}$/)
+  .regex(/^lists_\d+_(\d{4}-\d{2}-\d{2}|today)$/)
   .optional();
