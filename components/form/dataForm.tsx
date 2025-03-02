@@ -40,9 +40,9 @@ export function DataTable<TData, TValue>({
   addItemBtn,
   className,
   hiddenCols = [],
-  initialSorting,
+  initialSorting = [],
 }: DataTableProps<TData, TValue> & AdditionalElements) {
-  const [sorting, setSorting] = React.useState<SortingState>(initialSorting ?? []);
+  const [sorting, setSorting] = React.useState<SortingState>(initialSorting);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
@@ -51,8 +51,6 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
       columnFilters,
-    },
-    initialState: {
       columnVisibility: hiddenCols.reduce((acc, curr) => ((acc[curr] = false), acc), {} as Record<string, boolean>),
     },
     onSortingChange: setSorting,

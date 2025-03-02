@@ -90,6 +90,9 @@ export const StudentLists = ({
     },
   ];
 
+  // only show homework column if the selected list is the main list
+  const hiddenCols = selectedList?.isMainList === true ? [] : ["homework"];
+
   return (
     <div className="flex flex-col space-y-2">
       <div className="flex gap-x-2 items-end justify-between">
@@ -135,7 +138,7 @@ export const StudentLists = ({
           </div>
         )}
         <div className="max-h-[400px] overflow-auto p-3">
-          <DataTable columns={columns} data={visitations.filter((visitation) => visitation.listId === selectedListId)} />
+          <DataTable columns={columns} data={visitations.filter((visitation) => visitation.listId === selectedListId)} hiddenCols={hiddenCols} />
         </div>
       </DetailsContainer>
     </div>
