@@ -50,17 +50,17 @@ export default function DayNotes({
               const result = await onSave(
                 notes !== null
                   ? {
-                    ...initialNotes,
-                    notes,
-                  }
+                      ...initialNotes,
+                      notes,
+                    }
                   : null
               );
 
               if (result.success) {
                 setOpen(false);
-                toast.success("Notizen erfolgreich gespeichert.");
+                toast.success("Notizen gespeichert");
               } else {
-                toast.error("Fehler beim Speichern der Notizen.");
+                toast.error("Fehler beim Speichern der Notizen");
               }
             }}
           >
