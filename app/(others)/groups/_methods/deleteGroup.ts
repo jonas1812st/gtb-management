@@ -1,11 +1,12 @@
 "use server";
 
+import { ApiResponseMessage } from "@/types/global";
 import { getAccessRights } from "@/utils/accessRights";
 import prisma from "@/utils/prisma";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
-export async function deleteGroup(groupId: number) {
+export async function deleteGroup(groupId: number): Promise<ApiResponseMessage> {
   const rights = await getAccessRights();
   if (!rights.deleteGroup)
     return {

@@ -149,6 +149,22 @@ export const getListById = async (id: number) => {
   return data;
 };
 
+export const getDayNotesByListIdAndDate = async (listId: number, date: Date) => {
+  "use cache";
+  cacheTag("day-notes", "lists");
+
+  const data = await prisma.dayNotes.findUnique({
+    where: {
+      date_listId: {
+        date: dayjs(date).startOf("day").toISOString(),
+        listId,
+      },
+    },
+  });
+
+  return data;
+};
+
 export const getLists = async () => {
   "use cache";
   cacheTag("lists", "groups");

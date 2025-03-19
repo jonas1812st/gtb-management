@@ -5,8 +5,9 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { CreateGroupInputSchema as InputSchema } from "@/utils/zodSchema";
 import { getAccessRights } from "@/utils/accessRights";
+import { ApiResponseMessage } from "@/types/global";
 
-export async function createGroup(data: z.infer<typeof InputSchema>) {
+export async function createGroup(data: z.infer<typeof InputSchema>): Promise<ApiResponseMessage> {
   const rights = await getAccessRights();
   if (!rights.createGroup)
     return {

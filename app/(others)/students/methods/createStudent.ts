@@ -5,8 +5,9 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
 import { AttendanceZodSchemaType } from "./types";
+import { ApiResponseMessage } from "@/types/global";
 
-export async function createStudent(data: z.infer<typeof InputSchema>) {
+export async function createStudent(data: z.infer<typeof InputSchema>): Promise<ApiResponseMessage> {
   const result = InputSchema.parse(data);
 
   try {

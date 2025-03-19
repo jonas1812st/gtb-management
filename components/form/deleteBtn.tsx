@@ -1,14 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { ApiResponseMessage } from "@/types/global";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export const DeleteButton = (params: {
-  action: () => Promise<{
-    success: boolean;
-    message: string;
-  }>;
+  action: () => Promise<ApiResponseMessage>;
   redirectUrl: string;
   toast?: {
     success?: string;

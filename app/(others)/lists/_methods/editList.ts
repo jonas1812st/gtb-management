@@ -1,12 +1,13 @@
 "use server";
 
+import { ApiResponseMessage } from "@/types/global";
 import { getAccessRights } from "@/utils/accessRights";
 import prisma from "@/utils/prisma";
 import { CreateListInputSchema as InputSchema } from "@/utils/zodSchema";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
-export async function editList(data: z.infer<typeof InputSchema>, id: number) {
+export async function editList(data: z.infer<typeof InputSchema>, id: number): Promise<ApiResponseMessage> {
   const rights = await getAccessRights();
   if (!rights.updateList)
     return {

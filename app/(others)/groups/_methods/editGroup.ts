@@ -5,8 +5,9 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { CreateGroupInputSchema as InputSchema } from "@/utils/zodSchema";
 import { getAccessRights } from "@/utils/accessRights";
+import { ApiResponseMessage } from "@/types/global";
 
-export async function editGroup(data: z.infer<typeof InputSchema>, groupId: number) {
+export async function editGroup(data: z.infer<typeof InputSchema>, groupId: number): Promise<ApiResponseMessage> {
   const rights = await getAccessRights();
   if (!rights.updateGroup)
     return {

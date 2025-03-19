@@ -15,6 +15,7 @@ import { ErrorMessage, FormLabel } from "@/components/form/form";
 import dayjs from "dayjs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DAYS, DEFAULT_STUDENT_END_TIME } from "@/utils/constants";
+import { ApiResponseMessage } from "@/types/global";
 
 export default function StudentForm(
   params: (
@@ -36,13 +37,7 @@ export default function StudentForm(
       }[];
     }
   ) & {
-    actionMethod: (
-      data: z.infer<typeof CreateStudentInputSchema>,
-      id: number
-    ) => Promise<{
-      message: string;
-      success: boolean;
-    }>;
+    actionMethod: (data: z.infer<typeof CreateStudentInputSchema>, id: number) => Promise<ApiResponseMessage>;
   }
 ) {
   const attendancesSortFunction = (a: z.infer<typeof CreateAttendanceInputSchema>, b: z.infer<typeof CreateAttendanceInputSchema>) => {

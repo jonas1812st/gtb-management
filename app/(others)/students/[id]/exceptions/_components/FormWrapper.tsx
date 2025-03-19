@@ -3,6 +3,7 @@ import ExceptionForm from "../_components/form";
 import { getStudentById, getStudentListsById } from "@/utils/db";
 import { CreateExceptionInputSchema, ExceptionReferrerSchema } from "@/utils/zodSchema";
 import { z } from "zod";
+import { ApiResponseMessage } from "@/types/global";
 
 export default async function ExceptionFormWrapper({
   params,
@@ -13,13 +14,7 @@ export default async function ExceptionFormWrapper({
     | { action: "create"; defaultValues?: Partial<z.infer<typeof CreateExceptionInputSchema>> }
     | { action: "edit"; values: z.infer<typeof CreateExceptionInputSchema>; id: number }
   ) & {
-    actionMethod: (
-      data: z.infer<typeof CreateExceptionInputSchema>,
-      id: number
-    ) => Promise<{
-      message: string;
-      success: boolean;
-    }>;
+    actionMethod: (data: z.infer<typeof CreateExceptionInputSchema>, id: number) => Promise<ApiResponseMessage>;
     referrer?: z.infer<typeof ExceptionReferrerSchema>;
   };
 }) {

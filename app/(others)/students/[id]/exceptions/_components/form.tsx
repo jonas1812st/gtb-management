@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import { PropsWithChildren } from "react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { ApiResponseMessage } from "@/types/global";
 
 dayjs.locale("de");
 dayjs.extend(weekday);
@@ -38,13 +39,7 @@ export default function ExceptionForm(
   ) & {
     student: Prisma.StudentGetPayload<{}>;
     lists: Prisma.ListGetPayload<{ include: { activations: true } }>[];
-    actionMethod: (
-      data: z.infer<typeof CreateExceptionInputSchema>,
-      id: number
-    ) => Promise<{
-      message: string;
-      success: boolean;
-    }>;
+    actionMethod: (data: z.infer<typeof CreateExceptionInputSchema>, id: number) => Promise<ApiResponseMessage>;
     referrer?: z.infer<typeof ExceptionReferrerSchema>;
   }
 ) {
@@ -60,12 +55,12 @@ export default function ExceptionForm(
       ...(params.action === "edit"
         ? params.values
         : {
-            mode: "multiple",
-            rule: {
-              presence: "ABSENT",
-            },
-            ...params.defaultValues,
-          }),
+          mode: "multiple",
+          rule: {
+            presence: "ABSENT",
+          },
+          ...params.defaultValues,
+        }),
       studentId: student.id,
     },
   });
@@ -216,9 +211,9 @@ const CalendarInput = () => {
                 selected={
                   value && value.length <= 2
                     ? {
-                        from: value[0],
-                        to: value[value.length - 1],
-                      }
+                      from: value[0],
+                      to: value[value.length - 1],
+                    }
                     : undefined
                 }
                 onSelect={(dates) => dates && updateValue(Object.values(dates).filter((date): date is Date => !!date))}

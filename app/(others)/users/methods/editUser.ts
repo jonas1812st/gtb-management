@@ -7,8 +7,9 @@ import prisma from "@/utils/prisma";
 import { getAccessRights } from "@/utils/accessRights";
 import { canManage, isHighestRole } from "@/utils/roles";
 import { getUserById } from "@/utils/db";
+import { ApiResponseMessage } from "@/types/global";
 
-export async function editUser(data: z.infer<typeof InputSchema>, id: number) {
+export async function editUser(data: z.infer<typeof InputSchema>, id: number): Promise<ApiResponseMessage> {
   const rights = await getAccessRights();
   const isHighest = await isHighestRole();
   const user = await getUserById(id);

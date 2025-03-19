@@ -5,8 +5,9 @@ import { InputSchema } from "./schema";
 import { auth } from "@/auth";
 import prisma from "@/utils/prisma";
 import bcrypt from "bcrypt";
+import { ApiResponseMessage } from "@/types/global";
 
-export async function setPassword(data: z.infer<typeof InputSchema>) {
+export async function setPassword(data: z.infer<typeof InputSchema>): Promise<ApiResponseMessage> {
   const result = InputSchema.parse(data);
   const session = await auth();
 

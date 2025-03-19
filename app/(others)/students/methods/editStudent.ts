@@ -5,8 +5,9 @@ import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
 import { revalidateTag } from "next/cache";
 import prisma from "@/utils/prisma";
 import { AttendanceZodSchemaType } from "./types";
+import { ApiResponseMessage } from "@/types/global";
 
-export async function editStudent(data: z.infer<typeof InputSchema>, id: number) {
+export async function editStudent(data: z.infer<typeof InputSchema>, id: number): Promise<ApiResponseMessage> {
   const result = InputSchema.parse(data);
 
   try {

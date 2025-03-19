@@ -27,6 +27,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { timeToString } from "@/utils/time";
 import { studentExceptionPresence } from "@/utils/enum-translations";
+import { ApiResponseMessage } from "@/types/global";
 
 dayjs.locale("de");
 
@@ -40,7 +41,7 @@ export const ExceptionsList = ({
   exceptions: ExceptionItem[];
   studentId: number;
   actions: {
-    deleteException: (id: number) => Promise<{ success: boolean; message: string }>;
+    deleteException: (id: number) => Promise<ApiResponseMessage>;
   };
 }) => {
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -106,8 +107,8 @@ export const ExceptionsList = ({
                   ? dayjs(exception.startDate).format("DD.MM.YY") + " - " + dayjs(exception.endDate).format("DD.MM.YY")
                   : exception.SpecificDates.length <= 2
                     ? exception.SpecificDates.sort((dateA, dateB) => (dayjs(dateA.date).isAfter(dateB.date) ? 1 : -1))
-                        .map((date) => dayjs(date.date).format("DD.MM.YY"))
-                        .join(", ")
+                      .map((date) => dayjs(date.date).format("DD.MM.YY"))
+                      .join(", ")
                     : exception.SpecificDates.length + " Tage ausgewählt"}
               </Button>
             </PopoverTrigger>

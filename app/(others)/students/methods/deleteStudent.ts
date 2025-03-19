@@ -1,10 +1,11 @@
 "use server";
 
+import { ApiResponseMessage } from "@/types/global";
 import prisma from "@/utils/prisma";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
-export async function deleteStudent(studentId: number) {
+export async function deleteStudent(studentId: number): Promise<ApiResponseMessage> {
   const result = z.number().parse(studentId);
 
   try {

@@ -5,8 +5,9 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { CreateExceptionInputSchema as InputSchema } from "@/utils/zodSchema";
 import { formatDatesCreate } from "./format";
+import { ApiResponseMessage } from "@/types/global";
 
-export async function createException(data: z.infer<typeof InputSchema>) {
+export async function createException(data: z.infer<typeof InputSchema>): Promise<ApiResponseMessage> {
   const result = InputSchema.parse(data);
 
   try {

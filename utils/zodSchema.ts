@@ -148,3 +148,9 @@ export const ExceptionReferrerSchema = z
   .string()
   .regex(/^lists_\d+_(\d{4}-\d{2}-\d{2}|today)$/)
   .optional();
+
+export const CreateDayNotesInputSchema = z.object({
+  date: z.date(),
+  listId: IdSchema,
+  notes: z.string().trim().min(1).max(1000),
+});

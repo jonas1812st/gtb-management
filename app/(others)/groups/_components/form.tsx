@@ -14,6 +14,7 @@ import { useListsContext, useStudentsContext } from "./context";
 import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/form/dataForm";
+import { ApiResponseMessage } from "@/types/global";
 
 const useGroupFormContext = () => useFormContext<z.infer<typeof CreateGroupInputSchema>>();
 
@@ -26,13 +27,7 @@ export default function GroupForm(
       id: number;
     }
   ) & {
-    actionMethod: (
-      data: z.infer<typeof CreateGroupInputSchema>,
-      id: number
-    ) => Promise<{
-      message: string;
-      success: boolean;
-    }>;
+    actionMethod: (data: z.infer<typeof CreateGroupInputSchema>, id: number) => Promise<ApiResponseMessage>;
   }
 ) {
   const methods = useForm<z.infer<typeof CreateGroupInputSchema>>({

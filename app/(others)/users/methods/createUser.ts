@@ -6,8 +6,9 @@ import { z } from "zod";
 import { Role } from "@prisma/client";
 import { getAccessRights } from "@/utils/accessRights";
 import { revalidateTag } from "next/cache";
+import { ApiResponseMessage } from "@/types/global";
 
-export async function createUser(data: z.infer<typeof InputSchema>) {
+export async function createUser(data: z.infer<typeof InputSchema>): Promise<ApiResponseMessage> {
   const rights = await getAccessRights();
   if (!rights.createUser)
     return {
