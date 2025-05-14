@@ -28,5 +28,5 @@ export const useVisitationOptionsState = create<VisitationOptionsState>((set) =>
 
       return { visitation };
     }),
-  clearVisitation: () => set({ visitation: null }),
+  clearVisitation: () => set({ visitation: null, open: false }),
 }));

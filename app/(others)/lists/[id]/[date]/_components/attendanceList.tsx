@@ -73,18 +73,22 @@ export function AttendanceList({
     };
   }>;
 }) {
-  const { setVisitation, setOpen: setVisitationOpen } = useVisitationOptionsState(
+  const {
+    setVisitation,
+    setOpen: setVisitationOpen,
+    clearVisitation,
+  } = useVisitationOptionsState(
     useShallow((state) => ({
       setVisitation: state.setVisitation,
       setOpen: state.setOpen,
+      clearVisitation: state.clearVisitation,
     }))
   );
 
   useEffect(() => {
     // clear visitation on unmount and close options
     return () => {
-      setVisitation(null);
-      setVisitationOpen(false);
+      clearVisitation();
     };
   }, []);
 

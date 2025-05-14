@@ -19,6 +19,7 @@ import { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 import { useVisitationOptionsState } from "./visitationOptionsState";
 import { updateVisitation } from "../_methods/visit";
+import { usePageChangeEffect } from "@/lib/usePageChangeEffect";
 
 const useVisitationMethods = () => {
   const { visitation, setOpen } = useVisitationOptionsState(
@@ -58,10 +59,29 @@ export const VisitationsOptions = () => {
       open: state.open,
     }))
   );
+  const { saveVisitation } = useVisitationMethods();
+
+  usePageChangeEffect(open, async () => {
+    console.log("popstate and not saved");
+    await saveVisitation();
+  });
+
+  useEffect(() => {
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!open) return;
+      e.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleWindowClose);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleWindowClose);
+    };
+  }, [open]);
 
   return (
     <AnimatePresence>
-      {visitation && open && (
+      {visitation && open === true && (
         <VisitationsAnimationWrapper key={visitation.id + (!visitation.end ? "_start" : "_end") + "_visitation"}>
           <Card className="w-[500px]">
             <CardHeader>
