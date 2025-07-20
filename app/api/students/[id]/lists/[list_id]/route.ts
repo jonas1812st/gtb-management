@@ -3,7 +3,10 @@ import { IdSchema } from "@/utils/zodSchema";
 import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 
-export async function GET(_request: Request, { params }: { params: Promise<{ id: string; list_id: string; weekday: string }> }) {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string; list_id: string; weekday: string }> }
+) {
   const { id, list_id } = await params;
 
   try {

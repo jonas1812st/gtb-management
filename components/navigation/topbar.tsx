@@ -88,14 +88,19 @@ export default function TopBar() {
 const PopoverBtn = ({ children, onClick }: { children: React.ReactNode; onClick?: (() => void) | string }) => {
   if (typeof onClick !== "string")
     return (
-      <PopoverClose className="p-2 transition hover:bg-muted rounded-md text-left flex items-center space-x-2" onClick={onClick}>
+      <PopoverClose
+        className="p-2 transition hover:bg-muted rounded-md text-left flex items-center space-x-2"
+        onClick={onClick}
+      >
         {children}
       </PopoverClose>
     );
   else
     return (
       <Link href={onClick}>
-        <PopoverClose className="p-2 transition hover:bg-muted rounded-md text-left flex items-center space-x-2 w-full">{children}</PopoverClose>
+        <PopoverClose className="p-2 transition hover:bg-muted rounded-md text-left flex items-center space-x-2 w-full">
+          {children}
+        </PopoverClose>
       </Link>
     );
 };

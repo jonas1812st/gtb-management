@@ -6,7 +6,10 @@ import { CreateDayNotesInputSchema as InputSchema } from "@/utils/zodSchema";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
-export async function saveDayNote(data: z.infer<typeof InputSchema> | null, noteId?: number): Promise<ApiResponseMessage> {
+export async function saveDayNote(
+  data: z.infer<typeof InputSchema> | null,
+  noteId?: number
+): Promise<ApiResponseMessage> {
   if (noteId !== undefined && data === null) {
     try {
       await prisma.dayNotes.delete({

@@ -67,7 +67,10 @@ export default function GroupForm(
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit, (data) => console.error("error", data, getValues()))} className="flex flex-col space-y-10">
+      <form
+        onSubmit={handleSubmit(onSubmit, (data) => console.error("error", data, getValues()))}
+        className="flex flex-col space-y-10"
+      >
         <MetaInput />
 
         <ListInput />
@@ -154,7 +157,12 @@ const ListInput = () => {
       cell: ({ row: { original: list } }) => {
         return (
           <div className="flex justify-center">
-            <input id={list.id + "_list_select"} type="radio" checked={list.id === watch("listId")} onChange={() => setValue("listId", list.id)} />
+            <input
+              id={list.id + "_list_select"}
+              type="radio"
+              checked={list.id === watch("listId")}
+              onChange={() => setValue("listId", list.id)}
+            />
           </div>
         );
       },

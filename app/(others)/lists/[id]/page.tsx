@@ -31,7 +31,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   const { id } = await params;
   const listId = Number(id);
-  if (id === "" || listId === 0 || isNaN(listId)) return <Error error="Id not valid." btnLabel="Zur Listenübersicht" url="/lists" />;
+  if (id === "" || listId === 0 || isNaN(listId))
+    return <Error error="Id not valid." btnLabel="Zur Listenübersicht" url="/lists" />;
 
   const list = await getListById(listId);
 
@@ -155,8 +156,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 <DialogHeader>
                   <DialogTitle>Möchtest du diese Liste löschen?</DialogTitle>
                   <DialogDescription>
-                    Diese Aktion kann nicht rückgängig gemacht werden. Diese <b>Liste</b> und alle ihre zugehörigen <b>Anwesenheitsdaten</b> werden
-                    permanent von diesem System gelöscht.
+                    Diese Aktion kann nicht rückgängig gemacht werden. Diese <b>Liste</b> und alle ihre zugehörigen{" "}
+                    <b>Anwesenheitsdaten</b> werden permanent von diesem System gelöscht.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
@@ -183,7 +184,10 @@ const DisplayOptions = ({ options }: { options: Record<string, boolean | ListStu
         const value = options[el];
 
         return (
-          <span key={el + "_table_display_option"} className={cn("text-sm p-1.5 border rounded-md", value === false ? "line-through" : "")}>
+          <span
+            key={el + "_table_display_option"}
+            className={cn("text-sm p-1.5 border rounded-md", value === false ? "line-through" : "")}
+          >
             {el}
             {value !== false && value !== true ? ": " + listStudentNotesTranslation[value] : ""}
           </span>

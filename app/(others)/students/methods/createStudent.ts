@@ -16,7 +16,9 @@ export async function createStudent(data: z.infer<typeof InputSchema>): Promise<
         ...result,
         attendances: {
           createMany: {
-            data: result.attendances.filter((attendance): attendance is AttendanceZodSchemaType => attendance.status !== "DEFAULT"),
+            data: result.attendances.filter(
+              (attendance): attendance is AttendanceZodSchemaType => attendance.status !== "DEFAULT"
+            ),
           },
         },
       },

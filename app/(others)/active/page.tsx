@@ -75,7 +75,9 @@ async function ListItem({
                 <div
                   className={cn(
                     "text-sm rounded-full border w-8 h-8 flex items-center justify-center",
-                    list.activations.some((activation) => activation.day === index) ? "border-primary/40 bg-primary/20 border-2" : ""
+                    list.activations.some((activation) => activation.day === index)
+                      ? "border-primary/40 bg-primary/20 border-2"
+                      : ""
                   )}
                   key={weekDay + "_weekDay_item"}
                 >
@@ -144,5 +146,9 @@ async function ListStudentsAmount({ listId, date }: { listId: number; date: stri
     },
   });
 
-  return <span className="px-2 py-0.5 rounded-xl bg-primary/20 text-sm">{activeStudentsForDay + " / " + listStudentsForDay}</span>;
+  return (
+    <span className="px-2 py-0.5 rounded-xl bg-primary/20 text-sm">
+      {activeStudentsForDay + " / " + listStudentsForDay}
+    </span>
+  );
 }

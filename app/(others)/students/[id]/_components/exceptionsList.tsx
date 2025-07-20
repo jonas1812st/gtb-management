@@ -22,7 +22,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { timeToString } from "@/utils/time";
@@ -31,7 +36,9 @@ import { ApiResponseMessage } from "@/types/global";
 
 dayjs.locale("de");
 
-type ExceptionItem = Prisma.ExceptionGetPayload<{ include: { SpecificDates: true; ExceptionsOnLists: { include: { list: true } } } }>;
+type ExceptionItem = Prisma.ExceptionGetPayload<{
+  include: { SpecificDates: true; ExceptionsOnLists: { include: { list: true } } };
+}>;
 
 export const ExceptionsList = ({
   exceptions,
@@ -123,7 +130,11 @@ export const ExceptionsList = ({
                   }}
                 />
               ) : (
-                <Calendar {...defaultCalendarProps} mode={"multiple"} selected={exception.SpecificDates.map((date) => date.date)} />
+                <Calendar
+                  {...defaultCalendarProps}
+                  mode={"multiple"}
+                  selected={exception.SpecificDates.map((date) => date.date)}
+                />
               )}
             </PopoverContent>
           </Popover>
@@ -225,7 +236,8 @@ export const ExceptionsList = ({
           <DialogHeader>
             <DialogTitle>Möchtest du diese Ausnahme löschen?</DialogTitle>
             <DialogDescription>
-              Diese Aktion kann nicht rückgängig gemacht werden. Diese Ausnahme wird permanent von diesem System gelöscht.
+              Diese Aktion kann nicht rückgängig gemacht werden. Diese Ausnahme wird permanent von diesem System
+              gelöscht.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

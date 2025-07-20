@@ -122,7 +122,12 @@ const EditTimeDialogContent = ({
             control={control}
             name="hasHomework"
             render={({ field: { value, onChange } }) => (
-              <Checkbox checked={value ?? false} onCheckedChange={(checked) => onChange(checked)} id="has-homework" className="block" />
+              <Checkbox
+                checked={value ?? false}
+                onCheckedChange={(checked) => onChange(checked)}
+                id="has-homework"
+                className="block"
+              />
             )}
           />
         </div>
@@ -134,7 +139,12 @@ const EditTimeDialogContent = ({
           control={control}
           name="start"
           render={({ field: { value, onChange } }) => (
-            <Input value={timeToString(value) ?? ""} onChange={(e) => onChange(stringToTime(e.target.value))} id="start-time-input" type="time" />
+            <Input
+              value={timeToString(value) ?? ""}
+              onChange={(e) => onChange(stringToTime(e.target.value))}
+              id="start-time-input"
+              type="time"
+            />
           )}
         />
         <ErrorMessage>{errors.start?.message}</ErrorMessage>
@@ -167,18 +177,32 @@ const EditTimeDialogContent = ({
             </TabsTrigger>
           </TabsList>
           <TabsContent value="start-time">
-            <Textarea spellCheck={false} {...register("startNotes")} id="start-notes-input" placeholder="Notizen zur Startzeit" />
+            <Textarea
+              spellCheck={false}
+              {...register("startNotes")}
+              id="start-notes-input"
+              placeholder="Notizen zur Startzeit"
+            />
             <ErrorMessage>{errors.startNotes?.message}</ErrorMessage>
           </TabsContent>
           <TabsContent value="end-time">
-            <Textarea spellCheck={false} {...register("endNotes")} id="end-notes-input" placeholder="Notizen zur Endzeit" />
+            <Textarea
+              spellCheck={false}
+              {...register("endNotes")}
+              id="end-notes-input"
+              placeholder="Notizen zur Endzeit"
+            />
             <ErrorMessage>{errors.endNotes?.message}</ErrorMessage>
           </TabsContent>
         </Tabs>
       </div>
 
       <div className="mt-4 col-span-full flex justify-end space-x-2 items-center">
-        <Button variant={"destructive"} type="button" onClick={() => deleteVisitation(studentId, listId, date).then(closeDialog)}>
+        <Button
+          variant={"destructive"}
+          type="button"
+          onClick={() => deleteVisitation(studentId, listId, date).then(closeDialog)}
+        >
           Löschen
         </Button>
         <Button type="submit">Speichern</Button>

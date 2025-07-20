@@ -21,7 +21,9 @@ export async function editStudent(data: z.infer<typeof InputSchema>, id: number)
           deleteMany: {
             studentId: id,
           },
-          create: result.attendances.filter((attendance): attendance is AttendanceZodSchemaType => attendance.status !== "DEFAULT"),
+          create: result.attendances.filter(
+            (attendance): attendance is AttendanceZodSchemaType => attendance.status !== "DEFAULT"
+          ),
         },
       },
     });

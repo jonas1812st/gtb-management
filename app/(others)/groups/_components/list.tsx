@@ -21,7 +21,9 @@ export function GroupsList({ groups }: { groups: Group[] }) {
       accessorKey: "color",
       header: "Farbe",
       enableSorting: false,
-      cell: ({ row: { original: group } }) => <div className="h-5 w-5 rounded-full" style={{ backgroundColor: group.color ?? "grey" }} />,
+      cell: ({ row: { original: group } }) => (
+        <div className="h-5 w-5 rounded-full" style={{ backgroundColor: group.color ?? "grey" }} />
+      ),
     },
     {
       accessorKey: "name",

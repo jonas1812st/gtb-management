@@ -1,6 +1,14 @@
 import { cn } from "@/lib/utils";
 
-export const FormLabel = ({ children, htmlFor, className }: { children: React.ReactNode; htmlFor: string; className?: string }) => (
+export const FormLabel = ({
+  children,
+  htmlFor,
+  className,
+}: {
+  children: React.ReactNode;
+  htmlFor: string;
+  className?: string;
+}) => (
   <label htmlFor={htmlFor} className={cn("text-gray-600 font-medium text-sm", className)}>
     {children}
   </label>

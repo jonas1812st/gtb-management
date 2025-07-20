@@ -109,7 +109,10 @@ export default function ListForm(
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit, (data) => console.error("error", data, getValues()))} className="flex flex-col space-y-10">
+      <form
+        onSubmit={handleSubmit(onSubmit, (data) => console.error("error", data, getValues()))}
+        className="flex flex-col space-y-10"
+      >
         <NameInput />
 
         <TimeInput />
@@ -253,7 +256,14 @@ const TimeInput = () => {
           const formatToTime = (time: number, options?: { startBuffer?: number; endBuffer?: number }) =>
             dayjs()
               .hour(0)
-              .minute(time + (options && options.startBuffer ? -options.startBuffer : options && options.endBuffer ? options.endBuffer : 0))
+              .minute(
+                time +
+                  (options && options.startBuffer
+                    ? -options.startBuffer
+                    : options && options.endBuffer
+                      ? options.endBuffer
+                      : 0)
+              )
               .format("HH:mm");
 
           return (
@@ -404,7 +414,9 @@ const MoreOptionsInput = () => {
           value: (
             <>
               <FormLabel htmlFor="manage-time">Zeitverwaltung</FormLabel>
-              <InputDescription className="mb-1">Zeiten können zentral oder individuell festgelegt werden.</InputDescription>
+              <InputDescription className="mb-1">
+                Zeiten können zentral oder individuell festgelegt werden.
+              </InputDescription>
 
               <ErrorMessage>{errors.manageTime?.message}</ErrorMessage>
             </>
@@ -498,7 +510,9 @@ const MoreOptionsInput = () => {
             <Controller
               control={control}
               name="table.className"
-              render={({ field: { value, onChange } }) => <Switch id="table-class-name" checked={value} onCheckedChange={onChange} />}
+              render={({ field: { value, onChange } }) => (
+                <Switch id="table-class-name" checked={value} onCheckedChange={onChange} />
+              )}
             />
           ),
         },
@@ -513,7 +527,9 @@ const MoreOptionsInput = () => {
             <Controller
               control={control}
               name="table.time"
-              render={({ field: { value, onChange } }) => <Switch id="table-time" checked={value} onCheckedChange={onChange} />}
+              render={({ field: { value, onChange } }) => (
+                <Switch id="table-time" checked={value} onCheckedChange={onChange} />
+              )}
             />
           ),
         },
@@ -528,7 +544,9 @@ const MoreOptionsInput = () => {
             <Controller
               control={control}
               name="table.studentName"
-              render={({ field: { value, onChange } }) => <Switch id="table-student-name" checked={value} onCheckedChange={onChange} />}
+              render={({ field: { value, onChange } }) => (
+                <Switch id="table-student-name" checked={value} onCheckedChange={onChange} />
+              )}
             />
           ),
         },
@@ -543,7 +561,9 @@ const MoreOptionsInput = () => {
             <Controller
               control={control}
               name="table.groupColor"
-              render={({ field: { value, onChange } }) => <Switch id="table-group-color" checked={value} onCheckedChange={onChange} />}
+              render={({ field: { value, onChange } }) => (
+                <Switch id="table-group-color" checked={value} onCheckedChange={onChange} />
+              )}
             />
           ),
         },

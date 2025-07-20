@@ -63,7 +63,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 },
                 {
                   label: "Liste",
-                  value: group.list ? <Link href={`/lists/${group.list.id}`}>{group.list.name}</Link> : <i>Keine Liste</i>,
+                  value: group.list ? (
+                    <Link href={`/lists/${group.list.id}`}>{group.list.name}</Link>
+                  ) : (
+                    <i>Keine Liste</i>
+                  ),
                 },
               ]}
             />
@@ -92,7 +96,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               <DialogHeader>
                 <DialogTitle>Möchtest du diese Gruppe löschen?</DialogTitle>
                 <DialogDescription>
-                  Diese Aktion kann nicht rückgängig gemacht werden. Diese Gruppe und ihre Daten werden permanent von diesem System gelöscht.
+                  Diese Aktion kann nicht rückgängig gemacht werden. Diese Gruppe und ihre Daten werden permanent von
+                  diesem System gelöscht.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>

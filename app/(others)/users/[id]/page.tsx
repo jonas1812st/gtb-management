@@ -28,7 +28,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const session = await auth();
   const rights = await getAccessRights();
 
-  if (!rights.manageUsers && id !== session?.user?.userId.toString()) return <NotAllowed label="Zur Verwaltung" url="/manage" />;
+  if (!rights.manageUsers && id !== session?.user?.userId.toString())
+    return <NotAllowed label="Zur Verwaltung" url="/manage" />;
 
   const userId = parseInt(id) || 0;
 
@@ -58,7 +59,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 },
                 { label: "Rolle", value: user.role },
                 // only show that the user has not set his password to the owner -- Security risk
-                ...(user.password === "not set" && (await isHighestRole()) ? [{ label: "Passwort gesetzt", value: "Nein" }] : []),
+                ...(user.password === "not set" && (await isHighestRole())
+                  ? [{ label: "Passwort gesetzt", value: "Nein" }]
+                  : []),
               ].map((information, index) => (
                 <Tr key={index + "_information_row"}>
                   <td className="font-semibold text-gray-600 p-3">{information.label}</td>
@@ -90,7 +93,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               <DialogHeader>
                 <DialogTitle>Möchtest du diesen Benutzer löschen?</DialogTitle>
                 <DialogDescription>
-                  Diese Aktion kann nicht rückgängig gemacht werden. Dieser Benutzer und seine Daten werden permanent von diesem System gelöscht.
+                  Diese Aktion kann nicht rückgängig gemacht werden. Dieser Benutzer und seine Daten werden permanent
+                  von diesem System gelöscht.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>

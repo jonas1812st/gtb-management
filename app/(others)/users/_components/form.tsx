@@ -81,7 +81,11 @@ export default function UserForm(
             control={control}
             name="role"
             render={({ field: { onChange, value } }) => (
-              <Select onValueChange={onChange} value={value} disabled={params.action === "edit" ? !params.rights.updateUserRole : false}>
+              <Select
+                onValueChange={onChange}
+                value={value}
+                disabled={params.action === "edit" ? !params.rights.updateUserRole : false}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

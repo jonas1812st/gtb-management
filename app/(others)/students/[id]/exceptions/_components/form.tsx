@@ -220,7 +220,13 @@ const CalendarInput = () => {
                 max={7 * 4} // 4 weeks
               />
             ) : (
-              <Calendar {...calendarProps} mode="multiple" selected={value} onSelect={(dates) => dates && updateValue(dates)} max={7} />
+              <Calendar
+                {...calendarProps}
+                mode="multiple"
+                selected={value}
+                onSelect={(dates) => dates && updateValue(dates)}
+                max={7}
+              />
             );
           }}
         />
@@ -251,7 +257,9 @@ const ListSelect = ({ lists }: { lists: Prisma.ListGetPayload<{ include: { activ
           const difference = dayjs(dates[1]).diff(dayjs(dates[0]), "days");
 
           // get all weekdays in difference and remove duplicates
-          const weekdays = [...new Set(Array.from({ length: difference + 1 }, (_, i) => dayjs(dates[0]).add(i, "day").weekday()))];
+          const weekdays = [
+            ...new Set(Array.from({ length: difference + 1 }, (_, i) => dayjs(dates[0]).add(i, "day").weekday())),
+          ];
 
           return weekdays.some((weekday) => weekday === activation.day);
         }

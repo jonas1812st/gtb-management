@@ -94,7 +94,13 @@ type Nullish<T> = T | null | undefined;
 
 export async function updateVisitation(
   studentId: number,
-  visitation: { start: number; end?: Nullish<number>; startNotes?: Nullish<string>; endNotes?: Nullish<string>; hasHomework?: Nullish<boolean> },
+  visitation: {
+    start: number;
+    end?: Nullish<number>;
+    startNotes?: Nullish<string>;
+    endNotes?: Nullish<string>;
+    hasHomework?: Nullish<boolean>;
+  },
   listId: number,
   date: Date,
   options?: {

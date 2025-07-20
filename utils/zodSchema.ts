@@ -80,10 +80,13 @@ export const CreateExceptionInputSchema = z
     lists: IdSchema.array().min(1),
     rule: CreateExceptionRuleInputSchema,
   })
-  .refine((data) => (data.mode === "multiple" && data.dates.length >= 1) || (data.mode === "range" && data.dates.length >= 2), {
-    path: ["dates"],
-    message: "Range mode requires at least two dates",
-  });
+  .refine(
+    (data) => (data.mode === "multiple" && data.dates.length >= 1) || (data.mode === "range" && data.dates.length >= 2),
+    {
+      path: ["dates"],
+      message: "Range mode requires at least two dates",
+    }
+  );
 
 export const VisitationUpdateInputSchema = z
   .object({

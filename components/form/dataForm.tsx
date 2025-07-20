@@ -72,7 +72,12 @@ export function DataTable<TData, TValue>({
               </Button>
             </Link>
           ) : addItemBtn && addItemBtn.type === "click" ? (
-            <Button className="flex items-center space-x-2" size={"sm"} variant={"secondary"} onClick={addItemBtn.onClick}>
+            <Button
+              className="flex items-center space-x-2"
+              size={"sm"}
+              variant={"secondary"}
+              onClick={addItemBtn.onClick}
+            >
               <Icon size={0.7} path={mdiPlus} />
               <span>{addItemBtn.label}</span>
             </Button>
@@ -101,7 +106,10 @@ export function DataTable<TData, TValue>({
                     {header.isPlaceholder ? null : (
                       <div
                         {...{
-                          className: cn("flex items-center", header.column.getCanSort() ? "cursor-pointer select-none" : ""),
+                          className: cn(
+                            "flex items-center",
+                            header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                          ),
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
@@ -169,7 +177,9 @@ const Table = ({ children, className }: { children: React.ReactNode; className?:
 
 const TableHeader = ({ children }: { children?: React.ReactNode }) => <thead>{children}</thead>;
 
-const TableBody = ({ children }: { children?: React.ReactNode }) => <tbody className="[&_tr:last-child]:border-0">{children}</tbody>;
+const TableBody = ({ children }: { children?: React.ReactNode }) => (
+  <tbody className="[&_tr:last-child]:border-0">{children}</tbody>
+);
 
 const TableRow = ({ children, ...props }: { children: React.ReactNode }) => (
   <tr className="border-b" {...props}>
@@ -177,13 +187,30 @@ const TableRow = ({ children, ...props }: { children: React.ReactNode }) => (
   </tr>
 );
 
-const TableHead = ({ children, colSpan, className }: { children?: React.ReactNode; colSpan?: number; className?: string }) => (
+const TableHead = ({
+  children,
+  colSpan,
+  className,
+}: {
+  children?: React.ReactNode;
+  colSpan?: number;
+  className?: string;
+}) => (
   <th className={cn("p-4", className)} colSpan={colSpan}>
     {children}
   </th>
 );
 
-const TableCell = ({ children, colSpan, className, ...props }: { children?: React.ReactNode; colSpan?: number; className?: string }) => (
+const TableCell = ({
+  children,
+  colSpan,
+  className,
+  ...props
+}: {
+  children?: React.ReactNode;
+  colSpan?: number;
+  className?: string;
+}) => (
   <td className={cn("p-4", className)} colSpan={colSpan} {...props}>
     {children}
   </td>

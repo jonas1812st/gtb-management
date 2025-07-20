@@ -29,8 +29,12 @@ export const StudentLists = ({
   const [selectedListId, setSelectedListId] = useState(lists[0]?.id ?? null);
   const selectedList = lists.find((list) => list.id === selectedListId);
 
-  const presentEntries = attendances.filter((attendance) => attendance.listId === selectedListId && attendance.status === "PRESENT");
-  const absentEntries = attendances.filter((attendance) => attendance.listId === selectedListId && attendance.status === "ABSENT");
+  const presentEntries = attendances.filter(
+    (attendance) => attendance.listId === selectedListId && attendance.status === "PRESENT"
+  );
+  const absentEntries = attendances.filter(
+    (attendance) => attendance.listId === selectedListId && attendance.status === "ABSENT"
+  );
 
   const attendingDays = selectedList?.activations
     .filter((activation) => !absentEntries.some((entry) => activation.day === entry.day))
@@ -58,7 +62,9 @@ export const StudentLists = ({
       header: "Zeiten",
       accessorFn: (row) =>
         dayjs(row.date).minute(row.start).format("HH:mm") +
-        (selectedList?.recordTime === "START_END" ? " - " + (row.end ? dayjs(row.date).minute(row.end).format("HH:mm") : "--:--") : ""),
+        (selectedList?.recordTime === "START_END"
+          ? " - " + (row.end ? dayjs(row.date).minute(row.end).format("HH:mm") : "--:--")
+          : ""),
       cell: ({ row: { original: visitation } }) => (
         <div className="flex space-x-1 items-center">
           <TimePopover
@@ -138,7 +144,11 @@ export const StudentLists = ({
           </div>
         )}
         <div className="max-h-[400px] overflow-auto p-3">
-          <DataTable columns={columns} data={visitations.filter((visitation) => visitation.listId === selectedListId)} hiddenCols={hiddenCols} />
+          <DataTable
+            columns={columns}
+            data={visitations.filter((visitation) => visitation.listId === selectedListId)}
+            hiddenCols={hiddenCols}
+          />
         </div>
       </DetailsContainer>
     </div>

@@ -40,7 +40,10 @@ export default function StudentForm(
     actionMethod: (data: z.infer<typeof CreateStudentInputSchema>, id: number) => Promise<ApiResponseMessage>;
   }
 ) {
-  const attendancesSortFunction = (a: z.infer<typeof CreateAttendanceInputSchema>, b: z.infer<typeof CreateAttendanceInputSchema>) => {
+  const attendancesSortFunction = (
+    a: z.infer<typeof CreateAttendanceInputSchema>,
+    b: z.infer<typeof CreateAttendanceInputSchema>
+  ) => {
     if (a.day < b.day) return -1;
     if (a.day > b.day) return 1;
 
@@ -107,7 +110,10 @@ export default function StudentForm(
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit, (data) => console.error("error", data, getValues()))} className="flex flex-col space-y-3">
+      <form
+        onSubmit={handleSubmit(onSubmit, (data) => console.error("error", data, getValues()))}
+        className="flex flex-col space-y-3"
+      >
         <div className="grid grid-cols-2 gap-2">
           <div>
             <FormLabel htmlFor="firstName">Vorname</FormLabel>
@@ -173,7 +179,9 @@ export default function StudentForm(
           {params.action === "create" ? (
             <ListAttendanceInput list={{ id: params.mainList.id, name: params.mainList.name }} />
           ) : params.action === "edit" ? (
-            params.lists.map((list) => <ListAttendanceInput key={list.id + "_list_attendance_input"} list={{ id: list.id, name: list.name }} />)
+            params.lists.map((list) => (
+              <ListAttendanceInput key={list.id + "_list_attendance_input"} list={{ id: list.id, name: list.name }} />
+            ))
           ) : null}
           <ErrorMessage>{errors.attendances !== undefined ? errors.attendances.message : ""}</ErrorMessage>
         </div>
@@ -224,12 +232,24 @@ const ListAttendanceInput = ({ list }: { list: { id: number; name: string } }) =
                 <div className="flex space-x-2 items-center">
                   <Checkbox
                     id={"checkbox-day-" + attendanceFieldIndex + "-list-" + list.id}
-                    checked={attendanceField.status === "PRESENT" ? true : attendanceField.status === "ABSENT" ? false : "indeterminate"}
+                    checked={
+                      attendanceField.status === "PRESENT"
+                        ? true
+                        : attendanceField.status === "ABSENT"
+                          ? false
+                          : "indeterminate"
+                    }
                     onCheckedChange={(checked) =>
-                      setValue(`attendances.${attendanceFieldIndex}`, { ...attendanceField, status: checked ? "PRESENT" : "ABSENT" })
+                      setValue(`attendances.${attendanceFieldIndex}`, {
+                        ...attendanceField,
+                        status: checked ? "PRESENT" : "ABSENT",
+                      })
                     }
                   />
-                  <FormLabel className="select-none" htmlFor={"checkbox-day-" + attendanceFieldIndex + "-list-" + list.id}>
+                  <FormLabel
+                    className="select-none"
+                    htmlFor={"checkbox-day-" + attendanceFieldIndex + "-list-" + list.id}
+                  >
                     {day}
                   </FormLabel>
                   {attendanceField?.status !== "DEFAULT" && (
@@ -273,7 +293,9 @@ const ListAttendanceInput = ({ list }: { list: { id: number; name: string } }) =
                   )}
                 />
               ) : null}
-              <ErrorMessage>{errors.attendances !== undefined ? errors.attendances[attendanceFieldIndex]?.end?.message : ""}</ErrorMessage>
+              <ErrorMessage>
+                {errors.attendances !== undefined ? errors.attendances[attendanceFieldIndex]?.end?.message : ""}
+              </ErrorMessage>
             </div>
           );
         })}

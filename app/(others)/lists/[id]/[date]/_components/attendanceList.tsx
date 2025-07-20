@@ -22,7 +22,12 @@ import { useEffect, useState } from "react";
 import EditTimeDialog from "./time";
 import { AttendanceWarningDialog } from "./warnings";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { studentExceptionPresence } from "@/utils/enum-translations";
@@ -47,15 +52,24 @@ type Student = Prisma.StudentGetPayload<{
 }>;
 
 const getPresentState = (student: Student, date: Date) => {
-  const currentVisitation = student.visitations.find((visitation) => visitation.date.toISOString() === dayjs(date).startOf("day").toISOString());
+  const currentVisitation = student.visitations.find(
+    (visitation) => visitation.date.toISOString() === dayjs(date).startOf("day").toISOString()
+  );
 
   return {
     visitation: currentVisitation,
-    state: currentVisitation !== undefined ? (currentVisitation.end !== null ? ("visited" as const) : ("visiting" as const)) : ("default" as const),
+    state:
+      currentVisitation !== undefined
+        ? currentVisitation.end !== null
+          ? ("visited" as const)
+          : ("visiting" as const)
+        : ("default" as const),
   };
 };
 
-const getStudentException = (student: Student): Prisma.ExceptionGetPayload<{ include: { SpecificDates: true } }> | undefined => {
+const getStudentException = (
+  student: Student
+): Prisma.ExceptionGetPayload<{ include: { SpecificDates: true } }> | undefined => {
   return student.Exception[0];
 };
 
@@ -90,7 +104,9 @@ export function AttendanceList({
 
   const [edit, setEdit] = useState<number | null>(null);
   const [attendanceWarning, setAttendanceWarning] = useState<number | null>(null);
-  const hiddenCols = ["fullName", "class", "time", "groupColor"].filter((_, i) => ![list.studentName, list.className, list.time, list.groupColor][i]);
+  const hiddenCols = ["fullName", "class", "time", "groupColor"].filter(
+    (_, i) => ![list.studentName, list.className, list.time, list.groupColor][i]
+  );
 
   const onVisitingWrapper = async (
     studentId: number,
@@ -150,11 +166,13 @@ export function AttendanceList({
 
         return (
           <div className="w-[78px] flex gap-2 justify-between items-center">
-            {student.attendances[0] !== undefined || (exception && exception.presence === "PRESENT" && exception.end) ? (
+            {student.attendances[0] !== undefined ||
+            (exception && exception.presence === "PRESENT" && exception.end) ? (
               <EndTimeNote
                 student={student}
                 attendance={{
-                  end: exception?.presence === "PRESENT" && exception?.end ? exception?.end : student.attendances[0]?.end,
+                  end:
+                    exception?.presence === "PRESENT" && exception?.end ? exception?.end : student.attendances[0]?.end,
                 }}
               />
             ) : (
@@ -206,7 +224,10 @@ export function AttendanceList({
         const exception = getStudentException(student);
 
         return (
-          <Link href={"/students/" + student.id} className={cn("flex gap-x-2", notesExist && list.notes !== "MARKED" ? "flex-col" : "items-center")}>
+          <Link
+            href={"/students/" + student.id}
+            className={cn("flex gap-x-2", notesExist && list.notes !== "MARKED" ? "flex-col" : "items-center")}
+          >
             <span className={cn(exception?.presence === "ABSENT" ? "line-through" : "", "truncate max-w-[200px]")}>
               {student.firstName} {student.lastName}
             </span>
@@ -381,7 +402,13 @@ export function AttendanceList({
 
 type AttendanceTimeStatus = "IN_TIME" | "CLOSE_TO_TIME" | "OVER_TIME" | "DONE";
 
-const EndTimeNote = ({ student, attendance }: { student: Student; attendance: Pick<Prisma.AttendanceGetPayload<{}>, "end"> | null }) => {
+const EndTimeNote = ({
+  student,
+  attendance,
+}: {
+  student: Student;
+  attendance: Pick<Prisma.AttendanceGetPayload<{}>, "end"> | null;
+}) => {
   const getAttendanceStatus = (attendanceStatus?: AttendanceTimeStatus) => {
     let status = attendanceStatus || "DONE";
     const currMinutes = dayjs().hour() * 60 + dayjs().minute();
@@ -434,13 +461,28 @@ const EndTimeNote = ({ student, attendance }: { student: Student; attendance: Pi
   if (!attendance) return null;
 
   return (
-    <span className={cn("rounded-xl border-2 px-1.5 py-0.5 text-sm font-medium", attendanceTimeClassnames[attendanceStatus])}>
+    <span
+      className={cn(
+        "rounded-xl border-2 px-1.5 py-0.5 text-sm font-medium",
+        attendanceTimeClassnames[attendanceStatus]
+      )}
+    >
       {timeToString(attendance?.end)}
     </span>
   );
 };
 
-export const TimePopover = ({ time, enabled, notes, title }: { time: string; enabled: boolean; notes: string | null; title: string }) => {
+export const TimePopover = ({
+  time,
+  enabled,
+  notes,
+  title,
+}: {
+  time: string;
+  enabled: boolean;
+  notes: string | null;
+  title: string;
+}) => {
   if (!enabled) return <span>{time}</span>;
 
   return (

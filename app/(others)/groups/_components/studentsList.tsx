@@ -15,7 +15,9 @@ export const GroupStudents = ({ students }: { students: Prisma.StudentGetPayload
       accessorKey: "name",
       header: "Name",
       accessorFn: (student) => student.firstName + " " + student.lastName,
-      cell: ({ row: { original: student } }) => <Link href={`/students/${student.id}`}>{student.firstName + " " + student.lastName}</Link>,
+      cell: ({ row: { original: student } }) => (
+        <Link href={`/students/${student.id}`}>{student.firstName + " " + student.lastName}</Link>
+      ),
     },
     {
       accessorKey: "class",

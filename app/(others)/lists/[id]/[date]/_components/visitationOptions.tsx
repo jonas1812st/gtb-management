@@ -70,7 +70,9 @@ export const VisitationsOptions = () => {
                 <CloseBtn />
               </div>
             </CardHeader>
-            <CardContent>{!visitation.end ? <VisitationStartButtonsOptions /> : <VisitationEndButtonsOptions />}</CardContent>
+            <CardContent>
+              {!visitation.end ? <VisitationStartButtonsOptions /> : <VisitationEndButtonsOptions />}
+            </CardContent>
           </Card>
         </VisitationsAnimationWrapper>
       )}
@@ -120,7 +122,11 @@ const VisitationsAnimationWrapper = ({ children }: PropsWithChildren<{}>) => {
   );
 };
 
-const VisitationAnimateSwitchScreen = ({ children, animationKey, direction }: PropsWithChildren<{ animationKey: string; direction: 1 | -1 }>) => {
+const VisitationAnimateSwitchScreen = ({
+  children,
+  animationKey,
+  direction,
+}: PropsWithChildren<{ animationKey: string; direction: 1 | -1 }>) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const directionValue = direction === 1 ? "100%" : "-100%";
@@ -190,7 +196,10 @@ export const VisitationStartButtonsOptions = () => {
   };
 
   return (
-    <VisitationAnimateSwitchScreen direction={nextText || nextTime ? 1 : -1} animationKey={!nextText && !nextTime ? "initial" : "next"}>
+    <VisitationAnimateSwitchScreen
+      direction={nextText || nextTime ? 1 : -1}
+      animationKey={!nextText && !nextTime ? "initial" : "next"}
+    >
       {!nextText && !nextTime ? (
         <div className="flex flex-col space-y-2">
           <div className="relative group">
@@ -271,7 +280,11 @@ export const VisitationEndButtonsOptions = () => {
         <div className="flex flex-col space-y-2">
           <div className="grid grid-cols-2 gap-2">
             {endOptions.map((option) => (
-              <Button key={option.value + "_end_option"} variant={"light"} onClick={() => onSelectEndOption(option.value)}>
+              <Button
+                key={option.value + "_end_option"}
+                variant={"light"}
+                onClick={() => onSelectEndOption(option.value)}
+              >
                 {option.label}
               </Button>
             ))}
@@ -347,7 +360,15 @@ const VisitationEndTimeInput = ({ returnBack }: { returnBack: () => void }) => {
   );
 };
 
-const VisitationTextInput = ({ value, setValue, returnBack }: { value: string; setValue: (value: string) => void; returnBack: () => void }) => {
+const VisitationTextInput = ({
+  value,
+  setValue,
+  returnBack,
+}: {
+  value: string;
+  setValue: (value: string) => void;
+  returnBack: () => void;
+}) => {
   return (
     <div className="flex flex-col">
       <VisitationNavigation

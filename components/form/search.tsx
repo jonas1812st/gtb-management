@@ -25,5 +25,7 @@ export const SearchStudentsInput = ({
     }, 500);
   };
 
-  return <Input type="text" onChange={(e) => filterStudents(e.target.value)} placeholder="Suchen" className="w-[340px]" />;
+  return (
+    <Input type="text" onChange={(e) => filterStudents(e.target.value)} placeholder="Suchen" className="w-[340px]" />
+  );
 };

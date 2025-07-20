@@ -63,7 +63,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   value:
                     (student.GroupsOnStudents?.length !== 0 ? (
                       <GroupLinkContainer>
-                        {student.GroupsOnStudents?.map(({ group }) => <GroupLink key={group.id + "_group_link"} group={group} />)}
+                        {student.GroupsOnStudents?.map(({ group }) => (
+                          <GroupLink key={group.id + "_group_link"} group={group} />
+                        ))}
                       </GroupLinkContainer>
                     ) : undefined) || "Keine Gruppen",
                 },
@@ -81,7 +83,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <StudentLists attendances={student.attendances} lists={studentLists} visitations={student.visitations} />
       </ConnectionWrapper>
 
-      <ExceptionsList exceptions={student.Exception} studentId={studentId} actions={{ deleteException: deleteException }} />
+      <ExceptionsList
+        exceptions={student.Exception}
+        studentId={studentId}
+        actions={{ deleteException: deleteException }}
+      />
 
       <div className="flex items-center justify-between">
         <Link href={"/students/" + student.id + "/edit"}>
@@ -99,7 +105,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             <DialogHeader>
               <DialogTitle>Möchtest du diesen Schüler löschen?</DialogTitle>
               <DialogDescription>
-                Diese Aktion kann nicht rückgängig gemacht werden. Dieser Schüler und seine Daten werden permanent von diesem System gelöscht.
+                Diese Aktion kann nicht rückgängig gemacht werden. Dieser Schüler und seine Daten werden permanent von
+                diesem System gelöscht.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>

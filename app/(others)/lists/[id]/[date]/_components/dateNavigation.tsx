@@ -55,7 +55,10 @@ export const DateNavigationBackward = ({ date, listId }: { date: string; listId:
 };
 
 const DateNavigationLink = ({ href, children }: PropsWithChildren<{ href: string }>) => (
-  <Link href={href} className="text-muted-foreground transition hover:text-foreground p-2 bg-primary/10 hover:bg-primary/30 rounded-xl">
+  <Link
+    href={href}
+    className="text-muted-foreground transition hover:text-foreground p-2 bg-primary/10 hover:bg-primary/30 rounded-xl"
+  >
     {children}
   </Link>
 );

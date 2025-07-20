@@ -7,14 +7,19 @@ import { getMainList } from "@/utils/db";
 export default async function Page() {
   const mainList = await getMainList();
 
-  if (!mainList) return <Error error="Die Anwesenheitsliste existiert nicht." url="/students" btnLabel="Zur Schülerübersicht" />;
+  if (!mainList)
+    return <Error error="Die Anwesenheitsliste existiert nicht." url="/students" btnLabel="Zur Schülerübersicht" />;
 
   return (
     <ConnectionWrapper>
       <StudentForm
         action="create"
         actionMethod={createStudent}
-        mainList={{ id: mainList.id, name: mainList.name, activeDays: mainList.activations.map((activation) => activation.day) }}
+        mainList={{
+          id: mainList.id,
+          name: mainList.name,
+          activeDays: mainList.activations.map((activation) => activation.day),
+        }}
       />
     </ConnectionWrapper>
   );

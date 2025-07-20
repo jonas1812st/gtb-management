@@ -54,7 +54,10 @@ export default function Form(params: { session: Session | null }) {
   };
 
   return (
-    <form className="w-full max-w-sm border rounded-lg pb-8 pt-3 px-8 flex flex-col space-y-5" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="w-full max-w-sm border rounded-lg pb-8 pt-3 px-8 flex flex-col space-y-5"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="flex flex-col space-y-1">
         <h2 className="text-2xl font-semibold">Erster Login</h2>
         <p className="text-sm text-gray-600">Gib ein starkes Passwort ein, um dich zu registrieren.</p>

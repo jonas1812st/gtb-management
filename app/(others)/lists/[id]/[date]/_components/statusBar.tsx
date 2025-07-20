@@ -40,7 +40,12 @@ export default async function StatusBar({
 
   return (
     <div className="sticky z-10 scale-[101%] top-3">
-      <div className={cn("p-2 rounded-xl border-2 border-primary/10 bg-primary/10 relative", !isToday ? "border-red-500" : "")}>
+      <div
+        className={cn(
+          "p-2 rounded-xl border-2 border-primary/10 bg-primary/10 relative",
+          !isToday ? "border-red-500" : ""
+        )}
+      >
         <h1 className="text-3xl font-bold text-center mb-3">{list.name}</h1>
 
         <div className="text-lg font-semibold text-center flex flex-wrap gap-2 justify-center items-center">
@@ -48,7 +53,10 @@ export default async function StatusBar({
             dayjs(date).format("DD[.] MMMM YYYY"),
             timeToString(currentActivation?.startTime ?? 0) + " - " + timeToString(currentActivation?.endTime ?? 0),
           ].map((el, index) => (
-            <span key={index + "_time_element"} className="py-1 px-2 rounded-xl border-2 border-primary/10 bg-primary/10">
+            <span
+              key={index + "_time_element"}
+              className="py-1 px-2 rounded-xl border-2 border-primary/10 bg-primary/10"
+            >
               {el}
             </span>
           ))}
@@ -68,7 +76,9 @@ export default async function StatusBar({
             onSave={saveDayNoteWrapper}
           />
           {dayNotes && (
-            <span className="absolute flex justify-center items-center -top-1.5 -right-1.5 size-5 bg-yellow-400 rounded-full font-bold">!</span>
+            <span className="absolute flex justify-center items-center -top-1.5 -right-1.5 size-5 bg-yellow-400 rounded-full font-bold">
+              !
+            </span>
           )}
         </div>
         {!isToday && (

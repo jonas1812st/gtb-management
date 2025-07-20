@@ -18,6 +18,12 @@ export const ListsContextWrapper = ({
   return <ListsContext.Provider value={value}>{children}</ListsContext.Provider>;
 };
 
-export const StudentsContextWrapper = ({ children, value }: { children: React.ReactNode; value: Prisma.StudentGetPayload<{}>[] }) => {
+export const StudentsContextWrapper = ({
+  children,
+  value,
+}: {
+  children: React.ReactNode;
+  value: Prisma.StudentGetPayload<{}>[];
+}) => {
   return <StudentsContext.Provider value={value}>{children}</StudentsContext.Provider>;
 };

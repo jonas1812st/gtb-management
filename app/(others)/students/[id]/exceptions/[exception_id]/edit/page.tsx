@@ -20,7 +20,8 @@ export default async function Page({
   if (id === "" || studentId === 0) return <Error error="Id not valid." url="/students" btnLabel="Zur Übersicht" />;
 
   // check if exception id is valid
-  if (exception_id === "" || exceptionId === 0) return <Error error="Id not valid." url={"/students/" + studentId} btnLabel="Zum Schüler" />;
+  if (exception_id === "" || exceptionId === 0)
+    return <Error error="Id not valid." url={"/students/" + studentId} btnLabel="Zum Schüler" />;
 
   // fetch list by id
   const exception = await getExceptionById(exceptionId);
@@ -40,7 +41,10 @@ export default async function Page({
           values: {
             lists: exception.ExceptionsOnLists.map((e) => e.listId),
             studentId: exception.studentId,
-            dates: exception.startDate && exception.endDate ? [exception.startDate, exception.endDate] : exception.SpecificDates.map((e) => e.date),
+            dates:
+              exception.startDate && exception.endDate
+                ? [exception.startDate, exception.endDate]
+                : exception.SpecificDates.map((e) => e.date),
             mode: exception.startDate ? "range" : "multiple",
             rule: {
               presence: exception.presence,
