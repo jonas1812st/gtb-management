@@ -20,22 +20,22 @@ import { ApiResponseMessage } from "@/types/global";
 export default function StudentForm(
   params: (
     | {
-      action: "create";
-      mainList: {
-        id: number;
-        name: string;
-        activeDays: number[];
-      };
-    }
+        action: "create";
+        mainList: {
+          id: number;
+          name: string;
+          activeDays: number[];
+        };
+      }
     | {
-      action: "edit";
-      values: z.infer<typeof CreateStudentInputSchema>;
-      id: number;
-      lists: {
+        action: "edit";
+        values: z.infer<typeof CreateStudentInputSchema>;
         id: number;
-        name: string;
-      }[];
-    }
+        lists: {
+          id: number;
+          name: string;
+        }[];
+      }
   ) & {
     actionMethod: (data: z.infer<typeof CreateStudentInputSchema>, id: number) => Promise<ApiResponseMessage>;
   }
@@ -52,24 +52,24 @@ export default function StudentForm(
     defaultValues:
       params.action === "edit"
         ? {
-          ...params.values,
-          attendances: params.values.attendances.sort(attendancesSortFunction),
-        }
+            ...params.values,
+            attendances: params.values.attendances.sort(attendancesSortFunction),
+          }
         : {
-          lastName: "",
-          firstName: "",
-          grade: undefined,
-          notes: "",
-          className: "",
-          attendances: params.mainList.activeDays
-            .map((day) => ({
-              day,
-              status: "DEFAULT" as const,
-              listId: params.mainList.id,
-              end: DEFAULT_STUDENT_END_TIME,
-            }))
-            .sort(attendancesSortFunction),
-        },
+            lastName: "",
+            firstName: "",
+            grade: undefined,
+            notes: "",
+            className: "",
+            attendances: params.mainList.activeDays
+              .map((day) => ({
+                day,
+                status: "DEFAULT" as const,
+                listId: params.mainList.id,
+                end: DEFAULT_STUDENT_END_TIME,
+              }))
+              .sort(attendancesSortFunction),
+          },
   });
 
   const {

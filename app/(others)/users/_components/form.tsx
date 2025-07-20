@@ -17,14 +17,14 @@ export default function UserForm(
   params: (
     | { action: "create" }
     | {
-      action: "edit";
-      values: z.infer<typeof InputSchema>;
-      id: number;
-      rights: {
-        updateUsername: boolean;
-        updateUserRole: boolean;
-      };
-    }
+        action: "edit";
+        values: z.infer<typeof InputSchema>;
+        id: number;
+        rights: {
+          updateUsername: boolean;
+          updateUserRole: boolean;
+        };
+      }
   ) & {
     actionMethod: (data: z.infer<typeof InputSchema>, id: number) => Promise<ApiResponseMessage>;
   }
@@ -41,9 +41,9 @@ export default function UserForm(
       params.action === "edit"
         ? params.values
         : {
-          username: "",
-          role: "DEFAULT",
-        },
+            username: "",
+            role: "DEFAULT",
+          },
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof InputSchema>> = async (data) => {

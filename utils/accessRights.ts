@@ -4,9 +4,11 @@ export async function getAccessRights() {
   const session = await auth();
 
   // manage => the element can be seen (both list or details)
-  // create => the element can created
+  // create => the element can be created
   // updated => the element can be edited
   // delete => the element can be deleted
+
+  // execute => the element can be executed
 
   let rights = {
     // users
@@ -26,6 +28,10 @@ export async function getAccessRights() {
     updateGroup: false,
     deleteGroup: false,
     createGroup: false,
+
+    // actions
+    manageActions: false,
+    executeActions: false,
   };
 
   if (session?.user?.role === "ADMIN" || session?.user?.role === "OWNER") {
@@ -43,6 +49,9 @@ export async function getAccessRights() {
     rights.updateGroup = true;
     rights.deleteGroup = true;
     rights.createGroup = true;
+
+    rights.manageActions = true;
+    rights.executeActions = true;
   }
 
   return rights;

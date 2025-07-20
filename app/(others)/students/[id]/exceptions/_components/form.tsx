@@ -55,12 +55,12 @@ export default function ExceptionForm(
       ...(params.action === "edit"
         ? params.values
         : {
-          mode: "multiple",
-          rule: {
-            presence: "ABSENT",
-          },
-          ...params.defaultValues,
-        }),
+            mode: "multiple",
+            rule: {
+              presence: "ABSENT",
+            },
+            ...params.defaultValues,
+          }),
       studentId: student.id,
     },
   });
@@ -211,9 +211,9 @@ const CalendarInput = () => {
                 selected={
                   value && value.length <= 2
                     ? {
-                      from: value[0],
-                      to: value[value.length - 1],
-                    }
+                        from: value[0],
+                        to: value[value.length - 1],
+                      }
                     : undefined
                 }
                 onSelect={(dates) => dates && updateValue(Object.values(dates).filter((date): date is Date => !!date))}

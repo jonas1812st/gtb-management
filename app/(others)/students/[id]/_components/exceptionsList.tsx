@@ -107,8 +107,8 @@ export const ExceptionsList = ({
                   ? dayjs(exception.startDate).format("DD.MM.YY") + " - " + dayjs(exception.endDate).format("DD.MM.YY")
                   : exception.SpecificDates.length <= 2
                     ? exception.SpecificDates.sort((dateA, dateB) => (dayjs(dateA.date).isAfter(dateB.date) ? 1 : -1))
-                      .map((date) => dayjs(date.date).format("DD.MM.YY"))
-                      .join(", ")
+                        .map((date) => dayjs(date.date).format("DD.MM.YY"))
+                        .join(", ")
                     : exception.SpecificDates.length + " Tage ausgewählt"}
               </Button>
             </PopoverTrigger>
