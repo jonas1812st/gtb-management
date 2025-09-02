@@ -73,7 +73,7 @@ export default async function StatusBar({
               listId: list.id,
               notes: dayNotes?.notes,
             }}
-            onSave={saveDayNoteWrapper}
+            onSaveAction={saveDayNoteWrapper}
           />
           {dayNotes && (
             <span className="absolute flex justify-center items-center -top-1.5 -right-1.5 size-5 bg-yellow-400 rounded-full font-bold">

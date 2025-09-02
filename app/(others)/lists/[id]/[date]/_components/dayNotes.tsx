@@ -22,10 +22,10 @@ import { z } from "zod";
 
 export default function DayNotes({
   notes: initialNotes,
-  onSave,
+  onSaveAction,
 }: {
   notes: Omit<OptionalBy<Prisma.DayNotesGetPayload<{}>, "notes">, "id">;
-  onSave: (notes: z.infer<typeof CreateDayNotesInputSchema> | null) => Promise<ApiResponseMessage>;
+  onSaveAction: (notes: z.infer<typeof CreateDayNotesInputSchema> | null) => Promise<ApiResponseMessage>;
 }) {
   const [notes, setNotes] = useState<string | null>(initialNotes?.notes ?? null);
   const [open, setOpen] = useState(false);
@@ -55,7 +55,7 @@ export default function DayNotes({
         <DialogFooter>
           <Button
             onClick={async () => {
-              const result = await onSave(
+              const result = await onSaveAction(
                 notes !== null
                   ? {
                       ...initialNotes,
