@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Student {
-  id               Int                @id @default(autoincrement())
+  id               Int                @id @default(autoincrement()) // TODO: replace all IDs with non-incremental strings (uuid) -> better for UX
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   firstName        String
