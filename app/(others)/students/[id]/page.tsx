@@ -19,7 +19,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/de";
 import { DetailsContainer, DetailsHeading, DetailsTable, DetailsTableContent } from "@/components/details";
 import { GroupLink, GroupLinkContainer } from "@/components/ui/group-link";
-import { DeleteButton } from "@/components/form/deleteBtn";
+import { ActionButton } from "@/components/form/actionBtn";
 import { ExceptionsList } from "./_components/exceptionsList";
 import { deleteException } from "./exceptions/_methods/deleteException";
 dayjs.locale("de");
@@ -115,7 +115,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   Abbrechen
                 </Button>
               </DialogClose>
-              <DeleteButton action={deleteStudentFunc} redirectUrl="/students" />
+              <ActionButton action={deleteStudentFunc} redirectUrl="/students" />
             </DialogFooter>
           </DialogContent>
         </Dialog>

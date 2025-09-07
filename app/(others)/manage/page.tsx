@@ -58,7 +58,7 @@ export default async function Page() {
 const ManageCard = ({
   title,
   description,
-  links: { primary, secondary },
+  links: { primary, secondary = undefined },
 }: {
   title: string;
   description: string;
@@ -67,7 +67,7 @@ const ManageCard = ({
       url: string;
       label: string;
     };
-    secondary:
+    secondary?:
       | {
           url: string;
           label: string;

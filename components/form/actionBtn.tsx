@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import toast from "react-hot-toast";
 
-export const DeleteButton = (params: {
+export const ActionButton = (params: {
   action: () => Promise<ApiResponseMessage>;
   /** only use if you really want to redirect right after deleting */
   redirectUrl?: string;
@@ -27,7 +27,7 @@ export const DeleteButton = (params: {
 }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const onDelete = () =>
+  const onAction = () =>
     startTransition(async () => {
       const response = await params.action();
 
@@ -48,14 +48,7 @@ export const DeleteButton = (params: {
     });
 
   return (
-    <Button
-      loading={isPending}
-      type="submit"
-      variant={"destructive"}
-      onClick={onDelete}
-      className="flex items-center space-x-2"
-      icon={{ path: mdiDelete }}
-    >
+    <Button loading={isPending} type="submit" variant={"destructive"} onClick={onAction} icon={{ path: mdiDelete }}>
       {params.label || "Endgültig löschen"}
     </Button>
   );

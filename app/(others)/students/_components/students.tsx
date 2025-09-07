@@ -14,8 +14,7 @@ import Icon from "@mdi/react";
 import { mdiClose, mdiDelete, mdiStar } from "@mdi/js";
 import useScrollUp from "@/lib/useScrollUp";
 import { FormLabel } from "@/components/form/form";
-import { ModalComponent, RemoveStudentsModalContent } from "./actionModals";
-import { deleteStudents } from "../methods/deleteStudent";
+import { ModalComponent, RemoveStudentsModalContent, StudentActionsModalContent } from "./actionModals";
 
 type Students = Prisma.StudentGetPayload<{}>[];
 
@@ -140,7 +139,14 @@ const ActionBar = ({
                         id: "actions",
                         variant: "default",
                         icon: mdiStar,
-                        dialogContent: <></>,
+                        dialogContent: (
+                          <>
+                            <StudentActionsModalContent
+                              students={selectedStudents}
+                              callBackOnSuccess={() => setSelectedStudents([])}
+                            />
+                          </>
+                        ),
                       },
                       {
                         id: "remove",
@@ -149,11 +155,8 @@ const ActionBar = ({
                         dialogContent: (
                           <>
                             <RemoveStudentsModalContent
-                              students={students.map((student) => student.id)}
+                              students={selectedStudents}
                               callBackOnSuccess={() => setSelectedStudents([])}
-                              action={() => {
-                                return deleteStudents(selectedStudents);
-                              }}
                             />
                           </>
                         ),

@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/de";
 import Link from "next/link";
 import Error from "@/components/navigation/error";
-import { DeleteButton } from "@/components/form/deleteBtn";
+import { ActionButton } from "@/components/form/actionBtn";
 import { deleteUser } from "../methods/deleteUser";
 import { getAccessRights } from "@/utils/accessRights";
 import NotAllowed from "@/components/navigation/not-allowed";
@@ -103,7 +103,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     Abbrechen
                   </Button>
                 </DialogClose>
-                <DeleteButton action={deleteUserFunc} redirectUrl="/users" />
+                <ActionButton action={deleteUserFunc} redirectUrl="/users" />
               </DialogFooter>
             </DialogContent>
           </Dialog>

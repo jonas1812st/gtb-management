@@ -1,5 +1,5 @@
 import { DetailsContainer, DetailsHeading, DetailsTable, DetailsTableContent } from "@/components/details";
-import { DeleteButton } from "@/components/form/deleteBtn";
+import { ActionButton } from "@/components/form/actionBtn";
 import Error from "@/components/navigation/error";
 import NotAllowed from "@/components/navigation/not-allowed";
 import { Button } from "@/components/ui/button";
@@ -106,7 +106,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     Abbrechen
                   </Button>
                 </DialogClose>
-                <DeleteButton action={deleteGroupFunc} redirectUrl="/groups" />
+                <ActionButton action={deleteGroupFunc} redirectUrl="/groups" />
               </DialogFooter>
             </DialogContent>
           </Dialog>

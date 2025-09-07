@@ -22,7 +22,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/de";
 import { deleteList } from "../_methods/deleteList";
 import Link from "next/link";
-import { DeleteButton } from "@/components/form/deleteBtn";
+import { ActionButton } from "@/components/form/actionBtn";
 dayjs.locale("de");
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -166,7 +166,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                       Abbrechen
                     </Button>
                   </DialogClose>
-                  <DeleteButton action={deleteListFunc} redirectUrl="/lists" />
+                  <ActionButton action={deleteListFunc} redirectUrl="/lists" />
                 </DialogFooter>
               </DialogContent>
             </Dialog>
