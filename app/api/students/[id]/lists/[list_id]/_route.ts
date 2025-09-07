@@ -1,4 +1,4 @@
-import { getStudentListsById, getStudentsByWeekDay, getStudentsByWeekDayAndListId } from "@/utils/db";
+import { getStudentsByWeekDayAndListId } from "@/utils/db";
 import { IdSchema } from "@/utils/zodSchema";
 import dayjs from "dayjs";
 import { NextResponse } from "next/server";

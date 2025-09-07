@@ -5,30 +5,38 @@ import prisma from "@/utils/prisma";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
-export async function deleteStudent(studentId: number): Promise<ApiResponseMessage> {
-  const result = z.number().parse(studentId);
+export async function deleteStudents(studentIds: number[]): Promise<ApiResponseMessage> {
+  const result = z.number().array().parse(studentIds);
 
   try {
     // delete related attendances
     await prisma.attendance.deleteMany({
       where: {
-        studentId: result,
+        studentId: {
+          in: result,
+        },
       },
     });
     await prisma.groupsOnStudents.deleteMany({
       where: {
-        studentId: result,
+        studentId: {
+          in: result,
+        },
       },
     });
     await prisma.visitation.deleteMany({
       where: {
-        studentId: result,
+        studentId: {
+          in: result,
+        },
       },
     });
 
-    await prisma.student.delete({
+    await prisma.student.deleteMany({
       where: {
-        id: result,
+        id: {
+          in: result,
+        },
       },
     });
   } catch (error) {
@@ -42,8 +50,11 @@ export async function deleteStudent(studentId: number): Promise<ApiResponseMessa
   revalidateTag("students");
   revalidateTag("lists");
 
+  const responseMessage =
+    studentIds.length > 1 ? "The student was successfully deleted." : "The students were successfully deleted.";
+
   return {
     success: true,
-    message: "The student was successfully deleted.",
+    message: responseMessage,
   };
 }

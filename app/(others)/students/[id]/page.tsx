@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Link from "next/link";
-import { deleteStudent } from "../methods/deleteStudent";
+import { deleteStudents } from "../methods/deleteStudent";
 import Error from "@/components/navigation/error";
 import { getStudentById, getStudentListsById } from "@/utils/db";
 import { StudentLists } from "./_components/studentDetails";
@@ -39,7 +39,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const deleteStudentFunc = async () => {
     "use server";
 
-    return await deleteStudent(student.id);
+    return await deleteStudents([student.id]);
   };
 
   return (

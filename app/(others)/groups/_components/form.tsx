@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CreateGroupInputSchema } from "@/utils/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { mdiContentSave, mdiLoading, mdiPlus } from "@mdi/js";
-import Icon from "@mdi/react";
+import { mdiContentSave, mdiPlus } from "@mdi/js";
 import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -78,13 +77,11 @@ export default function GroupForm(
         <StudentsInput />
 
         <div className="flex justify-end">
-          <Button className="flex items-center space-x-2" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <Icon size={0.8} path={mdiLoading} className="animate-spin" />
-            ) : (
-              <Icon size={0.8} path={params.action === "create" ? mdiPlus : mdiContentSave} />
-            )}
-            <span>{params.action === "create" ? "Erstellen" : "Speichern"}</span>
+          <Button
+            loading={isSubmitting}
+            icon={{ path: params.action === "create" ? mdiPlus : mdiContentSave, size: 0.8 }}
+          >
+            {params.action === "create" ? "Erstellen" : "Speichern"}
           </Button>
         </div>
       </form>

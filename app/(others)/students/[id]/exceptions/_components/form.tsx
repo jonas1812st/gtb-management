@@ -6,7 +6,7 @@ import { Calendar, CalendarProps } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { CreateExceptionInputSchema, ExceptionReferrerSchema } from "@/utils/zodSchema";
-import { mdiCog, mdiContentSave, mdiLoading, mdiPlus } from "@mdi/js";
+import { mdiCog, mdiContentSave, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
 import { ExceptionPresence, Prisma } from "@prisma/client";
 import { Controller, FormProvider, useForm, useFormContext } from "react-hook-form";
@@ -126,13 +126,11 @@ export default function ExceptionForm(
           </RuleSelectWrapper>
 
           <div className="flex justify-end">
-            <Button className="flex items-center space-x-2" disabled={methods.formState.isSubmitting}>
-              {methods.formState.isSubmitting ? (
-                <Icon size={0.8} path={mdiLoading} className="animate-spin" />
-              ) : (
-                <Icon size={0.8} path={params.action === "create" ? mdiPlus : mdiContentSave} />
-              )}
-              <span>{params.action === "create" ? "Erstellen" : "Speichern"}</span>
+            <Button
+              loading={methods.formState.isSubmitting}
+              icon={{ path: params.action === "create" ? mdiPlus : mdiContentSave, size: 0.8 }}
+            >
+              {params.action === "create" ? "Erstellen" : "Speichern"}
             </Button>
           </div>
         </form>

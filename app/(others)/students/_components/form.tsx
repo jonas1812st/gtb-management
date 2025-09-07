@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import Icon from "@mdi/react";
-import { mdiArrowULeftTop, mdiContentSave, mdiLoading, mdiPlus } from "@mdi/js";
+import { mdiArrowULeftTop, mdiContentSave, mdiPlus } from "@mdi/js";
 import toast from "react-hot-toast";
 import { stringToTime } from "@/utils/time";
 import { CreateAttendanceInputSchema, CreateStudentInputSchema } from "@/utils/zodSchema";
@@ -187,13 +187,11 @@ export default function StudentForm(
         </div>
 
         <div className="flex justify-end">
-          <Button className="flex items-center space-x-2" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <Icon size={0.8} path={mdiLoading} className="animate-spin" />
-            ) : (
-              <Icon size={0.8} path={params.action === "create" ? mdiPlus : mdiContentSave} />
-            )}
-            <span>{params.action === "create" ? "Erstellen" : "Speichern"}</span>
+          <Button
+            loading={isSubmitting}
+            icon={{ path: params.action === "create" ? mdiPlus : mdiContentSave, size: 0.8 }}
+          >
+            {params.action === "create" ? "Erstellen" : "Speichern"}
           </Button>
         </div>
       </form>

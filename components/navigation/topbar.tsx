@@ -16,7 +16,7 @@ export default function TopBar() {
   const pathname = usePathname();
   const access = useAccess();
 
-  const show = useScrollUp();
+  const { show } = useScrollUp();
 
   return (
     <motion.nav

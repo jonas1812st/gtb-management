@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Icon from "@mdi/react";
-import { mdiContentSave, mdiLoading, mdiMinus, mdiPencil, mdiPlus } from "@mdi/js";
+import { mdiContentSave, mdiMinus, mdiPencil, mdiPlus } from "@mdi/js";
 import toast from "react-hot-toast";
 import { stringToTime } from "@/utils/time";
 import dayjs from "dayjs";
@@ -29,7 +29,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { DEFAULT_BUFFER, DEFAULT_END_TIME, DEFAULT_START_TIME } from "@/utils/constants";
 import { useRef, useState } from "react";
 import { listStudentNotesTranslation } from "@/utils/enum-translations";
-import { List, ListStudentNotes } from "@prisma/client";
+import { ListStudentNotes } from "@prisma/client";
 import { ApiResponseMessage } from "@/types/global";
 
 dayjs.locale("de");
@@ -120,13 +120,11 @@ export default function ListForm(
         <MoreOptionsInput />
 
         <div className="flex justify-end">
-          <Button className="flex items-center space-x-2" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <Icon size={0.8} path={mdiLoading} className="animate-spin" />
-            ) : (
-              <Icon size={0.8} path={params.action === "create" ? mdiPlus : mdiContentSave} />
-            )}
-            <span>{params.action === "create" ? "Erstellen" : "Speichern"}</span>
+          <Button
+            loading={isSubmitting}
+            icon={{ path: params.action === "create" ? mdiPlus : mdiContentSave, size: 0.8 }}
+          >
+            {params.action === "create" ? "Erstellen" : "Speichern"}
           </Button>
         </div>
       </form>

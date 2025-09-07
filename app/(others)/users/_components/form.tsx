@@ -7,8 +7,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { mdiContentSave, mdiLoading, mdiPlus } from "@mdi/js";
-import Icon from "@mdi/react";
+import { mdiContentSave, mdiPlus } from "@mdi/js";
 import { InputSchema } from "../methods/schema";
 import toast from "react-hot-toast";
 import { ApiResponseMessage } from "@/types/global";
@@ -104,13 +103,11 @@ export default function UserForm(
       </div>
 
       <div className="flex justify-end">
-        <Button className="flex items-center space-x-2" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <Icon size={0.8} path={mdiLoading} className="animate-spin" />
-          ) : (
-            <Icon size={0.8} path={params.action === "create" ? mdiPlus : mdiContentSave} />
-          )}
-          <span>{params.action === "create" ? "Erstellen" : "Speichern"}</span>
+        <Button
+          loading={isSubmitting}
+          icon={{ path: params.action === "create" ? mdiPlus : mdiContentSave, size: 0.8 }}
+        >
+          {params.action === "create" ? "Erstellen" : "Speichern"}
         </Button>
       </div>
     </form>
