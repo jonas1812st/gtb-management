@@ -14,7 +14,7 @@ import Icon from "@mdi/react";
 import { mdiClose, mdiDelete, mdiStar } from "@mdi/js";
 import useScrollUp from "@/lib/useScrollUp";
 import { FormLabel } from "@/components/form/form";
-import { ModalComponent, RemoveStudentsModalContent, SimpleModalContent } from "./actionModals";
+import { ModalComponent, RemoveStudentsModalContent } from "./actionModals";
 import { deleteStudents } from "../methods/deleteStudent";
 
 type Students = Prisma.StudentGetPayload<{}>[];
