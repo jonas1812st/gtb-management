@@ -2,7 +2,7 @@
 
 import { ApiResponseMessage } from "@/types/global";
 import prisma from "@/utils/prisma";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 
 export async function deleteException(exceptionId: number): Promise<ApiResponseMessage> {
@@ -22,7 +22,7 @@ export async function deleteException(exceptionId: number): Promise<ApiResponseM
     };
   }
 
-  revalidateTag("students");
+  updateTag("students");
 
   return {
     success: true,

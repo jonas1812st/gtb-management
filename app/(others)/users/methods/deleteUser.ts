@@ -6,7 +6,7 @@ import { getAccessRights } from "@/utils/accessRights";
 import { getUserById } from "@/utils/db";
 import prisma from "@/utils/prisma";
 import { canManage } from "@/utils/roles";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 
 export async function deleteUser(userId: number): Promise<ApiResponseMessage> {
@@ -45,7 +45,7 @@ export async function deleteUser(userId: number): Promise<ApiResponseMessage> {
     };
   }
 
-  revalidateTag("users");
+  updateTag("users");
 
   return {
     success: true,

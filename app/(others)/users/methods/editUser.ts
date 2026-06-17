@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { InputSchema } from "../methods/schema";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import prisma from "@/utils/prisma";
 import { getAccessRights } from "@/utils/accessRights";
 import { canManage, isHighestRole } from "@/utils/roles";
@@ -46,7 +46,7 @@ export async function editUser(data: z.infer<typeof InputSchema>, id: number): P
     };
   }
 
-  revalidateTag("lists");
+  updateTag("lists");
 
   return {
     success: true,

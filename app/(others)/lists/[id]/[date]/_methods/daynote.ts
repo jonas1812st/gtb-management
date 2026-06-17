@@ -3,7 +3,7 @@
 import { ApiResponseMessage } from "@/types/global";
 import prisma from "@/utils/prisma";
 import { CreateDayNotesInputSchema as InputSchema } from "@/utils/zodSchema";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 
 export async function saveDayNote(
@@ -24,7 +24,7 @@ export async function saveDayNote(
       };
     }
 
-    revalidateTag("day-notes");
+    updateTag("day-notes");
 
     return {
       success: true,
@@ -33,7 +33,7 @@ export async function saveDayNote(
   }
 
   if (noteId === undefined && data === null) {
-    revalidateTag("day-notes");
+    updateTag("day-notes");
 
     return {
       success: true,
@@ -64,7 +64,7 @@ export async function saveDayNote(
     };
   }
 
-  revalidateTag("day-notes");
+  updateTag("day-notes");
 
   return {
     success: true,

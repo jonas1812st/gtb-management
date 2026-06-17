@@ -3,7 +3,7 @@
 import prisma from "@/utils/prisma";
 import { Prisma, RecordTime } from "@prisma/client";
 import dayjs from "dayjs";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { VisitationUpdateInputSchema } from "@/utils/zodSchema";
 
 export async function onVisiting(
@@ -64,8 +64,8 @@ export async function onVisiting(
     throw new Error("Something went wrong.");
   }
 
-  revalidateTag("lists");
-  revalidateTag("students");
+  updateTag("lists");
+  updateTag("students");
 
   return visitationEntry;
 }
@@ -86,8 +86,8 @@ export async function deleteVisitation(studentId: number, listId: number, date: 
     throw new Error("Something went wrong.");
   }
 
-  revalidateTag("lists");
-  revalidateTag("students");
+  updateTag("lists");
+  updateTag("students");
 }
 
 type Nullish<T> = T | null | undefined;
@@ -145,8 +145,8 @@ export async function updateVisitation(
   }
 
   if (options?.revalidate !== false) {
-    revalidateTag("lists");
-    revalidateTag("students");
+    updateTag("lists");
+    updateTag("students");
   }
 
   return newVisitationEntry;

@@ -5,7 +5,7 @@ import { InputSchema } from "./schema";
 import { z } from "zod";
 import { Role } from "@prisma/client";
 import { getAccessRights } from "@/utils/accessRights";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { ApiResponseMessage } from "@/types/global";
 
 export async function createUser(data: z.infer<typeof InputSchema>): Promise<ApiResponseMessage> {
@@ -29,7 +29,7 @@ export async function createUser(data: z.infer<typeof InputSchema>): Promise<Api
     };
   }
 
-  revalidateTag("users");
+  updateTag("users");
 
   return {
     success: true,

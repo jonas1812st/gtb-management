@@ -3,7 +3,7 @@
 import { ApiResponseMessage } from "@/types/global";
 import { getAccessRights } from "@/utils/accessRights";
 import prisma from "@/utils/prisma";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 
 export async function deleteGroup(groupId: number): Promise<ApiResponseMessage> {
@@ -30,7 +30,7 @@ export async function deleteGroup(groupId: number): Promise<ApiResponseMessage> 
     };
   }
 
-  revalidateTag("groups");
+  updateTag("groups");
 
   return {
     success: true,

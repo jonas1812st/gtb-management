@@ -1,0 +1,208 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma_client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id               Int                @id @default(autoincrement()) // TODO: replace all IDs with non-incremental strings (uuid) -> better for UX
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  firstName        String
+  lastName         String
+  notes            String?            @db.Text
+  grade            Int
+  className        String
+  attendances      Attendance[]
+  visitations      Visitation[]
+  GroupsOnStudents GroupsOnStudents[]
+  Exception        Exception[]
+}
+
+model Attendance {
+  id        Int              @id @default(autoincrement())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  day       Int
+  end       Int
+  status    AttendanceStatus @default(PRESENT)
+  Student   Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+  List      List             @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    Int
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
+
+model Visitation {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  start     Int
+  end       Int?
+  Student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+  List      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    Int
+
+  // --- notes and more options ---
+  startNotes String? @db.Text
+  endNotes   String? @db.Text
+
+  // --- only important for main list ---
+  hasHomework Boolean?
+
+  @@unique([date, studentId, listId])
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  role     Role   @default(DEFAULT)
+  username String @unique
+  password String
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  DEFAULT
+}
+
+model Group {
+  id               Int                @id @default(autoincrement())
+  name             String
+  color            String?
+  GroupsOnStudents GroupsOnStudents[]
+  list             List?              @relation(fields: [listId], references: [id], onDelete: SetNull)
+  listId           Int?
+
+  // -- important for default group --
+  isMainGroup Boolean @default(false)
+}
+
+model GroupsOnStudents {
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   Int
+
+  @@id([studentId, groupId])
+}
+
+model List {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // -- important for default list --
+  isMainList Boolean @default(false)
+
+  // --- list options ---
+  recordTime  RecordTime
+  manageTime  TimeManagement   @default(STUDENT) // decides if the list or the student manages their start and end time 
+  Group       Group[]
+  activations ListActivation[]
+
+  // --- table options ---
+  studentName Boolean
+  className   Boolean
+  time        Boolean
+  notes       ListStudentNotes
+  groupColor  Boolean
+
+  // --- visitations & attendances ---
+  Visitation        Visitation[]
+  Attendance        Attendance[]
+  ExceptionsOnLists ExceptionsOnLists[]
+  DayNotes          DayNotes[]
+}
+
+model DayNotes {
+  id     Int      @id @default(autoincrement())
+  date   DateTime
+  listId Int
+  list   List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  notes  String   @db.Text
+
+  @@unique([date, listId])
+}
+
+enum TimeManagement {
+  LIST
+  STUDENT
+}
+
+enum RecordTime {
+  START
+  START_END
+}
+
+enum ListStudentNotes {
+  NONE
+  MARKED
+  SHORTENED
+  FULL
+}
+
+model ListActivation {
+  id          Int   @id @default(autoincrement())
+  day         Int // 0 (monday) to 6 (sunday)
+  startTime   Int
+  startBuffer Int // buffer in minutes
+  endTime     Int
+  endBuffer   Int // buffer in minutes
+  List        List? @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId      Int?
+}
+
+model ExceptionsOnLists {
+  exception   Exception @relation(fields: [exceptionId], references: [id], onDelete: Cascade)
+  exceptionId Int
+  list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId      Int
+
+  @@id([exceptionId, listId])
+}
+
+model Exception {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  // --- date options ---
+  startDate     DateTime? // if null, it is a specific date
+  endDate       DateTime? // if null, it is a specific date
+  SpecificDates SpecificDate[]
+
+  // --- referring to ---
+  studentId         Int
+  Student           Student             @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  ExceptionsOnLists ExceptionsOnLists[]
+
+  // --- exception options ---
+  presence ExceptionPresence // true = present, false = absent
+  end      Int? // has to be set if present is false
+  notes    String?           @db.Text
+}
+
+enum ExceptionPresence {
+  PRESENT
+  ABSENT
+}
+
+model SpecificDate {
+  id          Int       @id @default(autoincrement())
+  exceptionId Int
+  date        DateTime
+  exception   Exception @relation(fields: [exceptionId], references: [id], onDelete: Cascade)
+}

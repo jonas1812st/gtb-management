@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
 import { AttendanceZodSchemaType } from "./types";
@@ -30,8 +30,8 @@ export async function createStudent(data: z.infer<typeof InputSchema>): Promise<
     };
   }
 
-  revalidateTag("lists");
-  revalidateTag("students");
+  updateTag("lists");
+  updateTag("students");
 
   return {
     success: true,

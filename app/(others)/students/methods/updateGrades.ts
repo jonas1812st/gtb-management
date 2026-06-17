@@ -3,7 +3,7 @@
 import { ApiResponseMessage } from "@/types/global";
 import { getAccessRights } from "@/utils/accessRights";
 import prisma from "@/utils/prisma";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 
 // HACK: Maybe add a intentional delay of 3-5 seconds to this server action AND OTHERS. This is a common design strategy to convey the feeling of executing something important as it takes some time to finish the job
@@ -45,8 +45,8 @@ export async function updateStudentGrades(studentIds: number[], direction: 1 | -
     };
   }
 
-  revalidateTag("students");
-  revalidateTag("lists");
+  updateTag("students");
+  updateTag("lists");
 
   return {
     success: true,

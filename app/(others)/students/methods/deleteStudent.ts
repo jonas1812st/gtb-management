@@ -2,7 +2,7 @@
 
 import { ApiResponseMessage } from "@/types/global";
 import prisma from "@/utils/prisma";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 
 export async function deleteStudents(studentIds: number[]): Promise<ApiResponseMessage> {
@@ -47,8 +47,8 @@ export async function deleteStudents(studentIds: number[]): Promise<ApiResponseM
     };
   }
 
-  revalidateTag("students");
-  revalidateTag("lists");
+  updateTag("students");
+  updateTag("lists");
 
   const responseMessage =
     studentIds.length > 1 ? "The student was successfully deleted." : "The students were successfully deleted.";

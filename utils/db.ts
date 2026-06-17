@@ -1,4 +1,4 @@
-import { unstable_cacheTag as cacheTag } from "next/cache";
+import { cacheTag } from "next/cache";
 import prisma from "./prisma";
 import { exceptionByListIdAndDatePrismaQuery, studentByWeekDayAndListIdPrismaQuery } from "./db-prisma";
 import dayjs from "dayjs";

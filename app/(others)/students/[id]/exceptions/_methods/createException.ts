@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/utils/prisma";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 import { CreateExceptionInputSchema as InputSchema } from "@/utils/zodSchema";
 import { formatDatesCreate } from "./format";
@@ -35,7 +35,7 @@ export async function createException(data: z.infer<typeof InputSchema>): Promis
     };
   }
 
-  revalidateTag("students");
+  updateTag("students");
 
   return {
     success: true,

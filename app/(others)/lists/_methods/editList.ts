@@ -4,7 +4,7 @@ import { ApiResponseMessage } from "@/types/global";
 import { getAccessRights } from "@/utils/accessRights";
 import prisma from "@/utils/prisma";
 import { CreateListInputSchema as InputSchema } from "@/utils/zodSchema";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { z } from "zod";
 
 export async function editList(data: z.infer<typeof InputSchema>, id: number): Promise<ApiResponseMessage> {
@@ -51,8 +51,8 @@ export async function editList(data: z.infer<typeof InputSchema>, id: number): P
     };
   }
 
-  revalidateTag("lists");
-  revalidateTag("groups");
+  updateTag("lists");
+  updateTag("groups");
 
   return {
     success: true,

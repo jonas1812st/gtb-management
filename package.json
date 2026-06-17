@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "tsc": "npx prisma generate && npx tsc --noEmit",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
@@ -37,7 +37,7 @@
     "dayjs": "^1.11.13",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.363.0",
-    "next": "^15.5.1-canary.9",
+    "next": "^16.2.9",
     "next-auth": "^5.0.0-beta.25",
     "react": "^16.8 || ^17.0 || ^18.0 || ^19.0",
     "react-day-picker": "^8.10.1",

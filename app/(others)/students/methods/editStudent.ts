@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { CreateStudentInputSchema as InputSchema } from "@/utils/zodSchema";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import prisma from "@/utils/prisma";
 import { AttendanceZodSchemaType } from "./types";
 import { ApiResponseMessage } from "@/types/global";
@@ -34,8 +34,8 @@ export async function editStudent(data: z.infer<typeof InputSchema>, id: number)
     };
   }
 
-  revalidateTag("students");
-  revalidateTag("lists");
+  updateTag("students");
+  updateTag("lists");
 
   return {
     success: true,
