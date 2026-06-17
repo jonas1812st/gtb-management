@@ -100,7 +100,7 @@ export function AttendanceList({
       setVisitation(null);
       setVisitationOpen(false);
     };
-  }, []);
+  }, [setVisitation, setVisitationOpen]);
 
   const [edit, setEdit] = useState<number | null>(null);
   const [attendanceWarning, setAttendanceWarning] = useState<number | null>(null);

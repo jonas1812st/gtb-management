@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: gtb_management_prod
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  nextjs:
+    build: .
+    container_name: nextjs_app
+    ports:
+      - "3000:3005"
+    depends_on:
+      - mysql
+    environment:
+      NODE_ENV: production
+
+      # --- DB, AUTH SECRETS AND HASHING ---
+      DATABASE_URL: mysql://app_user:app_password@mysql:3306/gtb_management_prod
+      AUTH_SECRET: my_secret_auth_secret
+      NEXTAUTH_URL: http://localhost:3005/      
+      NEXT_PUBLIC_APP_URL: http://localhost:3005/ 
+      SALT_ROUNDS: 12
+
+      # --- FOR INITIALIZATION ---
+      ADMIN_USER: admin
+      ADMIN_PASS: super_secret_app_password
+
+      MAIN_LIST_NAME: Allgemeine Anwesenheitsliste
+      MAIN_GROUP_NAME: Alle
+      MAIN_GROUP_COLOR: #d3d3d3
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+
+volumes:
+  mysql_data:

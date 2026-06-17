@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "./generated/prisma_client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 
 export async function studentAddToMainGroupMiddleware(

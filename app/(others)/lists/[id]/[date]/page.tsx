@@ -8,6 +8,7 @@ import "dayjs/locale/de";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import { VisitationsOptions } from "./_components/visitationOptions";
+import { connection } from "next/server";
 dayjs.locale("de");
 dayjs.extend(weekday);
 
@@ -22,14 +23,15 @@ export default async function Page({ params }: { params: Promise<{ date: string;
   } catch (error) {
     return <Error error="Date not valid." url={"/lists/" + listId} btnLabel="Zur Liste" />;
   }
-  const date = dateParam === "today" ? dayjs().format("YYYY-MM-DD") : dateParam;
-  const isToday = dayjs().isSame(dayjs(date), "date");
-
   const list = await getListById(listId);
 
   if (!list) {
     return <Error error="List does not exist." url={"/lists"} btnLabel="Zur Übersicht" />;
   }
+
+  await connection(); // FIX: maybe remove this and move the "new Date()"-Function to the client components
+  const date = dateParam === "today" ? dayjs().format("YYYY-MM-DD") : dateParam;
+  const isToday = dayjs().isSame(dayjs(date), "date");
 
   const currentActivation = list.activations.find((activation) => activation.day === dayjs(date).weekday());
 

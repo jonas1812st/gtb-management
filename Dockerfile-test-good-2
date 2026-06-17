@@ -1,0 +1,15 @@
+FROM node:lts-alpine
+
+WORKDIR /usr/src/app
+
+COPY package.json package-lock.json ./
+
+RUN npm clean-install
+RUN npm install next@canary # FIX: somehow the canary version is not installed when running "npm ci" or "npm run install"
+
+COPY . .
+
+CMD npm run db:deploy # run migrations for prisma
+CMD npm run build # build the application
+
+CMD ["npm", "run", "start"]

@@ -1,5 +1,5 @@
 import { studentAddToMainGroupMiddleware } from "@/prisma/middlewares";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@/prisma/generated/prisma_client";
 
 const prismaClientSingleton = () => {
   const client = new PrismaClient();
