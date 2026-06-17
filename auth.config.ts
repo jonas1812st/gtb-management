@@ -7,6 +7,9 @@ export const authConfig = {
   },
   callbacks: {
     async authorized({ request, auth }) {
+      if (request.nextUrl.pathname.endsWith("/auth/setup")) {
+        return true;
+      }
       // Logged in users are authenticated, otherwise redirect to login page
       const isLoggedIn = !!auth?.user;
       if (isLoggedIn && request.nextUrl.pathname.endsWith("/auth/login")) {
