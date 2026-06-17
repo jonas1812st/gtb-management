@@ -51,6 +51,7 @@ export const authConfig = {
   providers: [],
   session: {
     maxAge: 60 * 60 * 12, // idle session expires after 12 hours
+    strategy: "jwt",
   },
   trustHost: true,
   secret: process.env.AUTH_SECRET,
