@@ -5,13 +5,12 @@ import { InputSchema } from "../methods/schema";
 import { updateTag } from "next/cache";
 import prisma from "@/utils/prisma";
 import { getAccessRights } from "@/utils/accessRights";
-import { canManage, isHighestRole } from "@/utils/roles";
+import { canManage, isRoleHighest } from "@/utils/roles";
 import { getUserById } from "@/utils/db";
 import { ApiResponseMessage } from "@/types/global";
 
 export async function editUser(data: z.infer<typeof InputSchema>, id: number): Promise<ApiResponseMessage> {
   const rights = await getAccessRights();
-  const isHighest = await isHighestRole();
   const user = await getUserById(id);
 
   if (!user)
@@ -27,6 +26,7 @@ export async function editUser(data: z.infer<typeof InputSchema>, id: number): P
     };
 
   const result = InputSchema.parse(data);
+  const highestRole = isRoleHighest(user.role);
 
   try {
     await prisma.user.update({
@@ -35,8 +35,8 @@ export async function editUser(data: z.infer<typeof InputSchema>, id: number): P
       },
       data: {
         ...result,
-        // prevent owner from removing his own owner rule
-        role: isHighest ? user.role : result.role,
+        // prevent any changes to the role if the user has the highest role (e.g. OWNER)
+        role: highestRole ? user.role : result.role,
       },
     });
   } catch (error) {
@@ -47,6 +47,7 @@ export async function editUser(data: z.infer<typeof InputSchema>, id: number): P
   }
 
   updateTag("lists");
+  updateTag("users");
 
   return {
     success: true,

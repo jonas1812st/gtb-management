@@ -3,7 +3,7 @@ import { editUser } from "../../methods/editUser";
 import Error from "@/components/navigation/error";
 import { getAccessRights } from "@/utils/accessRights";
 import NotAllowed from "@/components/navigation/not-allowed";
-import { canManage, getIsHighestRole } from "@/utils/roles";
+import { canManage, isRoleHighest } from "@/utils/roles";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@mdi/react";
@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         rights={{
           updateUsername: true,
           // role can only be updated if the user role is below the own role and if the user is not the owner himself
-          updateUserRole: !getIsHighestRole(user.role),
+          updateUserRole: !isRoleHighest(user.role),
         }}
         id={userId}
         values={{ role: user.role, username: user.username }}

@@ -24,6 +24,9 @@ export const ActionButton = (params: {
     error?: string;
   };
   label?: string;
+  icon?: {
+    path: string;
+  };
 }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -48,7 +51,13 @@ export const ActionButton = (params: {
     });
 
   return (
-    <Button loading={isPending} type="submit" variant={"destructive"} onClick={onAction} icon={{ path: mdiDelete }}>
+    <Button
+      loading={isPending}
+      type="submit"
+      variant={"destructive"}
+      onClick={onAction}
+      icon={params.icon ?? { path: mdiDelete }}
+    >
       {params.label || "Endgültig löschen"}
     </Button>
   );

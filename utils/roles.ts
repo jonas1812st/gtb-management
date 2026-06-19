@@ -8,13 +8,17 @@ export function getRoles() {
   return roles;
 }
 
-export async function isHighestRole() {
+/**
+ * Checks if the current user has the highest role (OWNER).
+ *
+ * @return {Promise<boolean>} True if the current user has the highest role, false otherwise.
+ */
+export async function isCurrentUserHighestRole(): Promise<boolean> {
   const session = await auth();
-  const roles = getRoles();
 
   if (session?.user?.role) {
     const myRole = session?.user?.role;
-    const isHighest = roles.indexOf(myRole) === roles.length - 1;
+    const isHighest = isRoleHighest(myRole);
 
     return isHighest;
   } else {
@@ -22,7 +26,12 @@ export async function isHighestRole() {
   }
 }
 
-export function getIsHighestRole(role: Role) {
+/**
+ * Checks if the given role is the highest role (OWNER).
+ * @param role The role to check.
+ * @returns {True} if the given role is the highest role, false otherwise.
+ */
+export function isRoleHighest(role: Role): boolean {
   const roles = getRoles();
 
   const isHighest = roles.indexOf(role) === roles.length - 1;
@@ -47,5 +56,6 @@ export async function canManage(roleToEdit: Role) {
 
     return true;
   }
+
   return false;
 }

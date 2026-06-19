@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import prisma from "@/utils/prisma";
 import bcrypt from "bcrypt";
 import { ApiResponseMessage } from "@/types/global";
+import { updateTag } from "next/cache";
 
 export async function setPassword(data: z.infer<typeof InputSchema>): Promise<ApiResponseMessage> {
   const result = InputSchema.parse(data);
@@ -32,6 +33,8 @@ export async function setPassword(data: z.infer<typeof InputSchema>): Promise<Ap
       message: "Database Error: Please check your inputs.",
     };
   }
+
+  updateTag("users");
 
   return {
     success: true,

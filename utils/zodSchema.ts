@@ -157,3 +157,5 @@ export const CreateDayNotesInputSchema = z.object({
   listId: IdSchema,
   notes: z.string().trim().min(1).max(1000),
 });
+
+export const PasswordSchema = z.string().min(6, "Das Passwort muss mindestens 6 Zeichen lang sein").max(30);
