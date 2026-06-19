@@ -100,7 +100,7 @@ export function AttendanceList({
       setVisitation(null);
       setVisitationOpen(false);
     };
-  }, []);
+  }, [setVisitation, setVisitationOpen]);
 
   const [edit, setEdit] = useState<number | null>(null);
   const [attendanceWarning, setAttendanceWarning] = useState<number | null>(null);
@@ -293,7 +293,7 @@ export function AttendanceList({
         return (
           <div className="flex space-x-1 items-center">
             {student.visitations[0]?.hasHomework && (
-              <div className="h-[25px] w-[25px] flex items-center justify-center">
+              <div className="h-[25px] w-[25px] flex items-center justify-center" title="Hausaufgaben">
                 <Icon path={mdiFileDocumentOutline} size={1} />
               </div>
             )}

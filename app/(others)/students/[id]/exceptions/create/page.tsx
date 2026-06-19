@@ -17,36 +17,42 @@ export default async function Page({
 }) {
   const search = await searchParams;
 
+  let parsedData = null;
   try {
     const mode = ExceptionDateModeSchema.parse(search.mode);
     const dates = ExceptionDatesSchema.parse(JSON.parse(search.dates).map((date: string) => dayjs(date).toDate()));
     const listIds = ExceptionListsSchema.parse(JSON.parse(search.lists));
     const referrer = ExceptionReferrerSchema.parse(search.referrer);
+    parsedData = { mode, dates, listIds, referrer };
+  } catch (error) {
+    // Fallback to rendering without defaults
+  }
 
+  if (parsedData) {
     return (
       <ExceptionFormWrapper
         props={{
           action: "create",
           actionMethod: createException,
           defaultValues: {
-            dates,
-            mode,
-            lists: listIds,
+            dates: parsedData.dates,
+            mode: parsedData.mode,
+            lists: parsedData.listIds,
           },
-          referrer: referrer,
-        }}
-        params={params}
-      />
-    );
-  } catch (error) {
-    return (
-      <ExceptionFormWrapper
-        props={{
-          action: "create",
-          actionMethod: createException,
+          referrer: parsedData.referrer,
         }}
         params={params}
       />
     );
   }
+
+  return (
+    <ExceptionFormWrapper
+      props={{
+        action: "create",
+        actionMethod: createException,
+      }}
+      params={params}
+    />
+  );
 }

@@ -29,35 +29,36 @@ export default async function Page({
   // show error if not found
   if (!exception) return <Error error="Exception not found." url={"/students/" + studentId} btnLabel="Zur Übersicht" />;
 
-  try {
-    const referrer = ExceptionReferrerSchema.parse(search.referrer);
-
-    return (
-      <ExceptionFormWrapper
-        props={{
-          action: "edit",
-          actionMethod: editException,
-          id: exceptionId,
-          values: {
-            lists: exception.ExceptionsOnLists.map((e) => e.listId),
-            studentId: exception.studentId,
-            dates:
-              exception.startDate && exception.endDate
-                ? [exception.startDate, exception.endDate]
-                : exception.SpecificDates.map((e) => e.date),
-            mode: exception.startDate ? "range" : "multiple",
-            rule: {
-              presence: exception.presence,
-              notes: exception.notes ?? undefined,
-              time: exception.end ?? undefined,
-            },
-          },
-          referrer: referrer,
-        }}
-        params={params}
-      />
-    );
-  } catch (error) {
+  const parseResult = ExceptionReferrerSchema.safeParse(search.referrer);
+  if (!parseResult.success) {
     return <Error error="Referrer not valid." url={"/students/" + studentId} btnLabel="Zum Schüler" />;
   }
+
+  const referrer = parseResult.data;
+
+  return (
+    <ExceptionFormWrapper
+      props={{
+        action: "edit",
+        actionMethod: editException,
+        id: exceptionId,
+        values: {
+          lists: exception.ExceptionsOnLists.map((e) => e.listId),
+          studentId: exception.studentId,
+          dates:
+            exception.startDate && exception.endDate
+              ? [exception.startDate, exception.endDate]
+              : exception.SpecificDates.map((e) => e.date),
+          mode: exception.startDate ? "range" : "multiple",
+          rule: {
+            presence: exception.presence,
+            notes: exception.notes ?? undefined,
+            time: exception.end ?? undefined,
+          },
+        },
+        referrer: referrer,
+      }}
+      params={params}
+    />
+  );
 }

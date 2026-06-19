@@ -72,7 +72,7 @@ Starte den Next.js-Produktionsserver:
 npm run build && npm run start -p 8080
 ```
 
-Die Anwendung läuft nun unter [http://localhost:3000](http://localhost:3000).
+Die Anwendung läuft nun unter [http://localhost:8080](http://localhost:8080).
 
 ---
 
