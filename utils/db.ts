@@ -134,7 +134,7 @@ export const getStudentListsById = async (id: number) => {
 
 export const getListById = async (id: number) => {
   "use cache";
-  cacheTag("lists");
+  cacheTag("lists", "groups");
 
   const data = await prisma.list.findUnique({
     where: {
