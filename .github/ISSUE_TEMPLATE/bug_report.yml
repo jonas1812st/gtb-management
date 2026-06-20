@@ -1,0 +1,89 @@
+name: Fehler melden
+description: Hilf uns, GTB-Management zu verbessern, indem du einen Fehler meldest.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke, dass du dir die Zeit nimmst, diesen Fehler zu melden! Bitte fülle das Formular so vollständig wie möglich aus.
+
+        > **Hinweis:** Bitte melde Sicherheitslücken **nicht** über dieses Formular. Lies stattdessen unsere [Sicherheitsrichtlinie](../../SECURITY.md).
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Beschreibung des Fehlers
+      description: Eine klare und präzise Beschreibung des Problems.
+      placeholder: "Wenn ich auf ... klicke, passiert ... anstatt ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte zur Reproduktion
+      description: Wie kann der Fehler zuverlässig reproduziert werden?
+      placeholder: |
+        1. Gehe zu '...'
+        2. Klicke auf '...'
+        3. Scrolle nach unten zu '...'
+        4. Fehler tritt auf
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Erwartetes Verhalten
+      description: Was hättest du erwartet, was passiert?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Tatsächliches Verhalten
+      description: Was passiert stattdessen?
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Welche Version von GTB-Management verwendest du?
+      placeholder: "z. B. 0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Betriebssystem
+      options:
+        - Linux
+        - Windows
+        - macOS
+        - Andere
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevante Logs / Screenshots
+      description: |
+        Füge hier Fehlermeldungen aus der Browser-Konsole, dem Next.js-Server-Terminal oder Screenshots ein.
+        Tipp: Bilder können per Drag & Drop eingefügt werden.
+      render: shell
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checkliste
+      options:
+        - label: Ich habe die offenen Issues durchsucht und keinen Duplicate gefunden.
+          required: true
+        - label: Ich habe die neueste Version des Projekts getestet.
+          required: false

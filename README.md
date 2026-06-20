@@ -1,6 +1,19 @@
+<div align="center">
+
 # GTB-Management
 
-GTB-Management ist eine moderne Webanwendung zur Verwaltung von Schüler:innen, Anwesenheiten und Gruppen in der Ganztagsbetreuung (GTB) einer Schule. 
+**Moderne Webanwendung zur Verwaltung von Anwesenheiten, Schüler:innen und Gruppen in der Ganztagsbetreuung.**
+
+[![Lizenz: MIT](https://img.shields.io/badge/Lizenz-MIT-blue.svg)](LICENSE)
+[![Node.js Version](https://img.shields.io/badge/Node.js-%3E%3D18-brightgreen)](https://nodejs.org/)
+[![PRs willkommen](https://img.shields.io/badge/PRs-willkommen-brightgreen.svg)](CONTRIBUTING.md)
+[![Changelog](https://img.shields.io/badge/Changelog-ansehen-orange)](CHANGELOG.md)
+
+</div>
+
+---
+
+GTB-Management ist eine moderne Webanwendung zur Verwaltung von Schüler:innen, Anwesenheiten und Gruppen in der Ganztagsbetreuung (GTB) einer Schule.
 
 Das Projekt basiert auf **Next.js 16 (App Router)** und nutzt **Prisma ORM** zur Datenbankverwaltung.
 
@@ -19,10 +32,15 @@ Das Projekt basiert auf **Next.js 16 (App Router)** und nutzt **Prisma ORM** zur
 
 ## Technologien
 
-- **Framework**: Next.js 16 (React 19, Turbopack)
-- **Datenbank**: MySQL & Prisma ORM
-- **Authentifizierung**: NextAuth.js (v5 Beta)
-- **Styling**: Tailwind CSS & Radix UI (shadcn/ui)
+| Bereich | Technologie |
+|---------|-------------|
+| Framework | Next.js 16 (React 19, Turbopack) |
+| Datenbank | MySQL 8 & Prisma ORM |
+| Authentifizierung | NextAuth.js v5 Beta (JWT) |
+| Styling | Tailwind CSS & Radix UI (shadcn/ui) |
+| State Management | TanStack Query, Zustand |
+| Formulare & Validierung | React Hook Form, Zod |
+| Animationen | Framer Motion |
 
 ---
 
@@ -31,8 +49,8 @@ Das Projekt basiert auf **Next.js 16 (App Router)** und nutzt **Prisma ORM** zur
 ### Voraussetzungen
 
 Stelle sicher, dass folgende Software auf deinem System installiert ist:
-- **Node.js** (Version 18 oder höher empfohlen)
-- **MySQL** (laufender Datenbankserver)
+- **Node.js** (Version 18 oder höher)
+- **MySQL** (laufender Datenbankserver, Version 8 empfohlen)
 
 ### 1. Repository klonen und Abhängigkeiten installieren
 
@@ -69,7 +87,7 @@ npx prisma migrate deploy
 Starte den Next.js-Produktionsserver:
 
 ```bash
-npm run build && npm run start -p 8080
+npm run build && npm run start
 ```
 
 Die Anwendung läuft nun unter [http://localhost:8080](http://localhost:8080).
@@ -90,13 +108,27 @@ Um das System sicher in Betrieb zu nehmen, ist kein manueller Datenbank-Eintrag 
 
 ## Entwickler-Skripte
 
-Folgende Befehle stehen zur Verfügung:
+| Befehl | Beschreibung |
+|--------|-------------|
+| `npm run dev` | Startet den lokalen Entwicklungsserver mit Turbopack |
+| `npm run build` | Erstellt eine optimierte Produktionsversion |
+| `npm run start` | Startet den Produktionsserver (erfordert vorherigen Build) |
+| `npm run tsc` | Führt TypeScript-Typprüfungen aus |
+| `npm run lint` | Prüft den Code mit ESLint |
 
-- `npm run dev`: Startet den lokalen Entwicklungsserver mit Turbopack.
-- `npm run build`: Erstellt eine optimierte Produktionsversion der Anwendung.
-- `npm run start`: Startet den Produktionsserver (erfordert einen vorherigen Build).
-- `npm run tsc`: Führt Typprüfungen über TypeScript aus.
-- `npm run lint`: Prüft den Code mit ESLint auf Programmierrichtlinien.
+---
+
+## Beitragen
+
+Beiträge sind herzlich willkommen! Bitte lies unsere **[Beitragsrichtlinien (CONTRIBUTING.md)](CONTRIBUTING.md)** und unseren **[Verhaltenskodex (CODE_OF_CONDUCT.md)](CODE_OF_CONDUCT.md)**, bevor du deinen ersten Pull Request einreichst.
+
+Für Sicherheitslücken beachte bitte unsere **[Sicherheitsrichtlinie (SECURITY.md)](SECURITY.md)**.
+
+---
+
+## Changelog
+
+Alle wichtigen Änderungen werden im **[CHANGELOG.md](CHANGELOG.md)** dokumentiert.
 
 ---
 

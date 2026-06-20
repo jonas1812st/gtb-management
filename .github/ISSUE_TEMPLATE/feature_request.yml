@@ -1,0 +1,50 @@
+name: Feature-Anfrage
+description: Schlage eine neue Funktion oder Verbesserung für GTB-Management vor.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke für deinen Vorschlag! Bitte beschreibe deine Idee so klar wie möglich.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Welches Problem löst dieses Feature?
+      description: Beschreibe klar, welchen Mangel oder welche Einschränkung du erlebst.
+      placeholder: "Ich bin oft frustriert, wenn ich ... muss, weil ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Vorgeschlagene Lösung
+      description: Beschreibe deine Wunschlösung so konkret wie möglich.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Überlegte Alternativen
+      description: Welche anderen Lösungsansätze hast du in Betracht gezogen?
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Zusätzlicher Kontext
+      description: Füge weiteren Kontext, Mockups oder Screenshots zu deiner Feature-Anfrage hinzu.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checkliste
+      options:
+        - label: Ich habe die offenen Issues durchsucht und keine ähnliche Anfrage gefunden.
+          required: true
