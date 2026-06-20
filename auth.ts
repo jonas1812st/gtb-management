@@ -21,6 +21,33 @@ async function getUser(username: string) {
 
 export const config = NextAuth({
   ...authConfig,
+  callbacks: {
+    ...authConfig.callbacks,
+    async session({ session, token }) {
+      if (session) {
+        session.user.username = token.username;
+        session.user.role = token.role;
+        session.user.isNew = token.isNew;
+        session.user.userId = token.userId;
+
+        if (token.userId) {
+          try {
+            const user = await prisma.user.findUnique({
+              where: { id: Number(token.userId) },
+              select: { role: true, password: true },
+            });
+            if (user) {
+              session.user.role = user.role;
+              session.user.isNew = user.password === "not set";
+            }
+          } catch (error) {
+            console.error("Error fetching user role from database:", error);
+          }
+        }
+      }
+      return session;
+    },
+  },
   providers: [
     Credentials({
       name: "Credentials",
