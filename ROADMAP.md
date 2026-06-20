@@ -3,7 +3,7 @@
 > **Hinweis**: Diese Roadmap ist eine theoretische Vorausschau, kein verbindlicher Entwicklungsplan.
 > Die hier aufgeführten Features werden **nur dann umgesetzt, wenn ein konkreter Bedarf entsteht** – sei es durch Feedback aus dem produktiven Einsatz, durch Issues aus der Community oder durch eigene Notwendigkeit.
 >
-> Wer ein bestimmtes Feature benötigt oder priorisieren möchte, ist herzlich eingeladen, ein [Feature Request Issue](../../issues/new?template=feature_request.yml) zu eröffnen.
+> Wer ein bestimmtes Feature benötigt oder priorisieren möchte, ist herzlich eingeladen, ein **Feature Request Issue** zu eröffnen.
 
 ---
 
