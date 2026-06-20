@@ -2,9 +2,6 @@
 	"name": "gtb-management",
 	"version": "0.1.0",
 	"private": true,
-	"prisma": {
-		"seed": "node prisma/seed.js"
-	},
 	"scripts": {
 		"dev": "next dev -p 8080",
 		"build": "next build",
