@@ -29,6 +29,14 @@ Das System deckt den grundlegenden Betreuungsalltag bereits vollständig ab:
 
 Diese Features würden den Alltag in der GTB am stärksten verbessern und wären die ersten Kandidaten für eine Umsetzung.
 
+#### 🏷️ Gruppenfilter in der Anwesenheitsansicht
+
+In GTBs mit mehreren Gruppen pro Liste (z. B. „Rot", „Blau", „Grün") betreut häufig jeder Betreuer nur eine Teilgruppe. Aktuell sieht jeder Betreuer auf `/lists/[id]/[date]` jedoch immer alle Schüler der gesamten Liste.
+
+Denkbar wäre ein Filter-Control oberhalb der Tabelle, mit dem sich die Ansicht auf eine oder mehrere Gruppen einschränken lässt – ähnlich wie der bereits vorhandene Namens-Suchfilter, aber gruppenbasiert. Der gewählte Filter könnte für die aktuelle Sitzung im Browser gespeichert werden, sodass ein Betreuer nicht bei jedem Seitenaufruf neu filtern muss.
+
+---
+
 #### 📄 Export-Funktionen (PDF / CSV)
 
 Regelmäßige Nachweise für Eltern, Schulleitung oder das Sozialamt erfordern druckbare Dokumente. Denkbar wären:
