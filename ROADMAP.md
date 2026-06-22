@@ -35,8 +35,6 @@ In GTBs mit mehreren Gruppen pro Liste (z. B. „Rot", „Blau", „Grün") betr
 
 Denkbar wäre ein Filter-Control oberhalb der Tabelle, mit dem sich die Ansicht auf eine oder mehrere Gruppen einschränken lässt – ähnlich wie der bereits vorhandene Namens-Suchfilter, aber gruppenbasiert. Der gewählte Filter könnte für die aktuelle Sitzung im Browser gespeichert werden, sodass ein Betreuer nicht bei jedem Seitenaufruf neu filtern muss.
 
----
-
 #### 📄 Export-Funktionen (PDF / CSV)
 
 Regelmäßige Nachweise für Eltern, Schulleitung oder das Sozialamt erfordern druckbare Dokumente. Denkbar wären:
