@@ -5,6 +5,7 @@ import prisma from "@/utils/prisma";
 import bcrypt from "bcrypt";
 import { ApiResponseMessage } from "@/types/global";
 import { InputSchema } from "./schema";
+import { updateTag } from "next/cache";
 
 export async function createOwner(data: z.infer<typeof InputSchema>): Promise<ApiResponseMessage> {
   const result = InputSchema.parse(data);
@@ -80,6 +81,7 @@ export async function createOwner(data: z.infer<typeof InputSchema>): Promise<Ap
       }
     });
 
+    updateTag("lists");
 
     return {
       success: true,
